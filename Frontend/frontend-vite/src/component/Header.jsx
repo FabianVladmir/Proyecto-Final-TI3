@@ -21,7 +21,7 @@ function Header(props) {
                     <ul className="menu menu-horizontal p-0">
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/horario">Horario</Link></li>
-                        <li><Link to="/">Reservar</Link></li>
+                        <li><Link to="/reservar">Reservar</Link></li>
                     </ul>
                 </div>
                 <div className="navbar-end">
