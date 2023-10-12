@@ -20,7 +20,7 @@ function Header(props) {
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal p-0">
                         <li><Link to="/">Home</Link></li>
-                        <li><Link to="/">Horario</Link></li>
+                        <li><Link to="/horario">Horario</Link></li>
                         <li><Link to="/">Reservar</Link></li>
                     </ul>
                 </div>
