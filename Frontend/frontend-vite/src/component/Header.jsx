@@ -12,7 +12,7 @@ function Header(props) {
             <div className="navbar bg-base-100">
                 <div className="navbar-start">
                     <Link to="/">
-                        <a href="#" className="btn btn-ghost normal-case text-xl">
+                        <a className="btn btn-ghost normal-case text-xl">
                             <img src={Logo} alt="Logo" style={styleLogo} />
                         </a>
                     </Link>
