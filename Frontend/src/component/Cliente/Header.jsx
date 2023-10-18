@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import Logo from '../assets/ce-epcc.png';
+import Logo from '../../assets/ce-epcc.png';
 const styleLogo = {
     width: '48px', // Ajusta el ancho de la imagen
     height: '48px', // Ajusta la altura de la imagen
@@ -19,13 +19,13 @@ function Header(props) {
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal p-0">
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/horario">Horario</Link></li>
-                        <li><Link to="/reservar">Reservar</Link></li>
+                        <li><Link to="/client">Home</Link></li>
+                        <li><Link to="/client/horario">Horario</Link></li>
+                        <li><Link to="/client/reservar">Reservar</Link></li>
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to="/iniciarsesion"><a className="btn">Iniciar Sesión</a></Link>
+                    <Link to="/client"><a className="btn">Mi cuenta</a></Link>
                 </div>
             </div>
 

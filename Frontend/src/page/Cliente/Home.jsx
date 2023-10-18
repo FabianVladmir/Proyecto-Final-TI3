@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from '../assets/ESCUELA-TELECOMUNICACIONES-UNSA-878x426.jpg'
+import Logo from '../../assets/ESCUELA-TELECOMUNICACIONES-UNSA-878x426.jpg'
 
 import Calendar from 'flat-color-icons/svg/calendar.svg'
 import OverTime from 'flat-color-icons/svg/overtime.svg'
