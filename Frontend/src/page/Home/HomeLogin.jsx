@@ -13,6 +13,7 @@ const styleLogo = {
 
 const blueText = {
     color: 'blue', // Cambiar el color del texto a azul
+    fontSize: '1.0rem', // Tamaño de fuente más grande
 };
 
 const centerText = {
@@ -22,10 +23,15 @@ const centerText = {
     height: '100%',
 };
 
+const heroStyles = {
+    marginTop: '-80px', // Margen superior negativo para mover el hero hacia arriba
+};
+
+
 function HomeLogin(props) {
     return (
         <div>
-            <div className="hero min-h-screen bg-base-200">
+            <div className="hero min-h-screen bg-base-200" style={heroStyles}>
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className="card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100" style={cardStyles}>
                         <div className="text-center lg:text-center">
@@ -55,7 +61,7 @@ function HomeLogin(props) {
 
                             <Link to="/">
                                 <div className="col-span-2 text-center">
-                                    <button type="submit" className="bg-blue-500 text-white rounded p-2">
+                                    <button type="submit" className="bg-blue-600 text-white rounded p-2">
                                         Crear Cuenta
                                     </button>
                                 </div>

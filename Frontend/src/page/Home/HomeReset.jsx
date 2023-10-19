@@ -14,8 +14,8 @@ const cardStyles = {
 
 const blueText = {
     color: 'blue', // Cambiar el color del texto a azul
+    fontSize: '1.0rem', // Tamaño de fuente más grande
 };
-
 const centerText = {
     display: 'flex',
     alignItems: 'center',
@@ -65,7 +65,7 @@ function RegistroForm() {
                                 </div>
                             </div>
                             <div  className="text-center mt-4">
-                                <button type="submit" className="bg-blue-500 text-white rounded p-1">
+                                <button type="submit" className="bg-blue-600 text-white rounded p-1">
                                     REINICIAR CONTRASEÑA
                                 </button>
                             </div>
