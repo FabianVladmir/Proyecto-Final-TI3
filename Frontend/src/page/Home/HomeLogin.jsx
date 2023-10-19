@@ -32,7 +32,7 @@ function HomeLogin(props) {
                             <a className="mx-auto flex items-center justify-center">
                                 <img src={Logo} alt="Logo" style={styleLogo} />
                             </a>
-                            <h1 className="text-3xl font-bold">INICIA SESION</h1>
+                            <h1 className="text-3xl font-bold">INICIAR SESION</h1>
                         </div>
                         <div className="card-body">
                             <div className="form-control">
@@ -48,19 +48,21 @@ function HomeLogin(props) {
                                 <input type="text" placeholder="password" className="input input-bordered" />
                             </div>
                             <div className="text-center">
-                                <Link to="cambiarcontraseña" className="label-text-alt link link-hover" style={blueText}>
+                                <Link to="" className="label-text-alt link link-hover" style={blueText}>
                                     Olvidaste tu contraseña?
                                 </Link>
                             </div>
-                            
+
                             <Link to="/">
-                                <div className="form-control mt-6">
-                                    <button className="btn btn-primary">Login</button>
+                                <div className="col-span-2 text-center">
+                                    <button type="submit" className="bg-blue-500 text-white rounded p-2">
+                                        Crear Cuenta
+                                    </button>
                                 </div>
                             </Link>
                             <div className="text-center" style={centerText}>
                                 <label className="label">No tienes una cuenta? </label>
-                                <Link to="registrar" className="label-text-alt link link-hover" style={blueText}>
+                                <Link to="/registrar" className="label-text-alt link link-hover" style={blueText}>
                                     Registrarse
                                 </Link>
                             </div>
