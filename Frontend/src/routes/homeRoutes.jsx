@@ -4,8 +4,8 @@ import { Route, Routes } from 'react-router-dom';
 import HeaderHome from '../component/Home/Header';
 import Home from '../page/Home/Home';
 import Login from '../page/Home/HomeLogin';
-import Register from '../page/Home/HomeRegister'
-
+import Register from '../page/Home/HomeRegister';
+import Reset from '../page/Home/HomeReset';
 function HomeRoutes() {
   return (
     <div>
@@ -14,6 +14,7 @@ function HomeRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login />} />
         <Route path="registrar" element={<Register />} />
+        <Route path="reiniciar" element={<Reset />} />
 
         <Route
           path="*"

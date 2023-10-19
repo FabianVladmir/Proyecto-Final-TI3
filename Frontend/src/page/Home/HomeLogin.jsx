@@ -32,7 +32,7 @@ function HomeLogin(props) {
                             <a className="mx-auto flex items-center justify-center">
                                 <img src={Logo} alt="Logo" style={styleLogo} />
                             </a>
-                            <h1 className="text-3xl font-bold">INICIAR SESION</h1>
+                            <h1 className="text-3xl font-bold">INICIA SESION</h1>
                         </div>
                         <div className="card-body">
                             <div className="form-control">
@@ -48,7 +48,7 @@ function HomeLogin(props) {
                                 <input type="text" placeholder="password" className="input input-bordered" />
                             </div>
                             <div className="text-center">
-                                <Link to="" className="label-text-alt link link-hover" style={blueText}>
+                                <Link to="/reiniciar" className="label-text-alt link link-hover" style={blueText}>
                                     Olvidaste tu contraseña?
                                 </Link>
                             </div>
