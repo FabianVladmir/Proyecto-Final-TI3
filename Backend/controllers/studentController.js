@@ -1,14 +1,15 @@
 import Student from "../models/Student.js";
 
 const signIn = async (req,res) => {
-    // const {email, nombre} = req.body;
-    // filtrar usuarios duplicados
-    // const existeUsuario = await Veterinario.findOne({email});
+    const {email} = req.body;
 
-    // if(existeUsuario){
-    //     const error = new Error("Usuario existente");
-    //     return res.status(400).json({msg: error.message});
-    // }
+    // check if a student already exists
+    const existsStudent = await Student.findOne({email});
+
+    if(existsStudent){
+        const error = new Error("Estudiante existente");
+        return res.status(400).json({msg: error.message});
+    }
 
     try {
         //Save mew student
@@ -24,7 +25,7 @@ const signIn = async (req,res) => {
         
         res.json(studentSave)
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
     
 }
