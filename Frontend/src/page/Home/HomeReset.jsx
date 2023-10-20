@@ -27,7 +27,7 @@ const heroStyles = {
     marginTop: '-80px', // Margen superior negativo para mover el hero hacia arriba
 };
 
-function RegistroForm() {
+function ResetPassword() {
     const [formData, setFormData] = useState({
         correo: '',
     });
@@ -83,4 +83,4 @@ function RegistroForm() {
     );
 }
 
-export default RegistroForm;
+export default ResetPassword;
