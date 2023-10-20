@@ -1,5 +1,7 @@
 import React from 'react';
 import Logo from '../../assets/ESCUELA-TELECOMUNICACIONES-UNSA-878x426.jpg'
+import { Link } from 'react-router-dom';
+
 
 import Calendar from 'flat-color-icons/svg/calendar.svg'
 import OverTime from 'flat-color-icons/svg/overtime.svg'
@@ -39,20 +41,29 @@ function Home(props) {
             <div style={infoContainerStyles}>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <p>Ver Horarios</p>
-                        <img src={Calendar} alt="ver Horarios" />
+                        <Link to="/client/horario">
+                            <p>Ver Horarios</p>
+                            <img src={Calendar} alt="ver Horarios" />
+                        </Link>
+                        
                     </a>
                 </div>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <p>Reservar Horarios</p>
-                        <img src={OverTime} alt="Reservar Horarios" />
-                        </a>
+                        <Link to="/client/reservar">
+                            <p>Reservar Horarios</p>
+                            <img src={OverTime} alt="Reservar Horarios" />
+                        </Link>
+                        
+                    </a>
                 </div>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <p>Ver equipos</p>
-                        <img src={MultipleSmarphones} alt="Ver equipos" />
+                        <Link>
+                            <p>Ver equipos</p>
+                            <img src={MultipleSmarphones} alt="Ver equipos" />
+                        </Link>
+                        
                     </a>
                 </div>
             </div>
