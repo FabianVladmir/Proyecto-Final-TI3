@@ -11,7 +11,7 @@ function Header(props) {
         <div>
             <div className="navbar bg-base-100">
                 <div className="navbar-start">
-                    <Link to="">
+                    <Link to="home">
                         <a className="btn btn-ghost normal-case text-xl">
                             <img src={Logo} alt="Logo" style={styleLogo} />
                         </a>
@@ -19,13 +19,13 @@ function Header(props) {
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal p-0">
-                        <li><Link to="">Home</Link></li>
+                        <li><Link to="home">Home</Link></li>
                         <li><Link to="">Ver Reservas</Link></li>
                         <li><Link to="">Reportes</Link></li>
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to=""><a className="btn">Mi cuenta</a></Link>
+                    <Link to="home"><a className="btn">Mi cuenta</a></Link>
                 </div>
             </div>
 
