@@ -31,6 +31,12 @@ const styleInfo = {
     height: '150px', // Ajusta la altura de la imagen
 };
 
+const styleImg = {
+    width: '150px', // Ajusta el ancho de la imagen
+    height: '150px', // Ajusta la altura de la imagen
+};
+
+
 
 function Home(props) {
     return (
@@ -43,7 +49,7 @@ function Home(props) {
                     <a className="btn">
                         <Link to="/client/horario">
                             <p>Ver Horarios</p>
-                            <img src={Calendar} alt="ver Horarios" />
+                            <img src={Calendar} alt="ver Horarios" style={styleImg}/>
                         </Link>
                         
                     </a>
@@ -52,7 +58,7 @@ function Home(props) {
                     <a className="btn">
                         <Link to="/client/reservar">
                             <p>Reservar Horarios</p>
-                            <img src={OverTime} alt="Reservar Horarios" />
+                            <img src={OverTime} alt="Reservar Horarios" style={styleImg}/>
                         </Link>
                         
                     </a>
@@ -61,7 +67,7 @@ function Home(props) {
                     <a className="btn">
                         <Link>
                             <p>Ver equipos</p>
-                            <img src={MultipleSmarphones} alt="Ver equipos" />
+                            <img src={MultipleSmarphones} alt="Ver equipos" style={styleImg}/>
                         </Link>
                         
                     </a>
