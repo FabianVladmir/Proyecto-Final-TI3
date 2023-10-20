@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Link } from 'react-router-dom';
+
 import moment from 'moment';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -75,7 +77,10 @@ function Horario(props) {
                     />
                 </div>
                 <div className="buttons" style={infoContainerStyles}>
-                    <a className='btn'>Reservar Horario</a>
+                    <Link to="/client/reservar">
+                        <a className='btn'>Reservar Horario</a>
+                    </Link>
+                    
                     <a className='btn'>Ver Equipos</a>
                 </div>
             </div>
