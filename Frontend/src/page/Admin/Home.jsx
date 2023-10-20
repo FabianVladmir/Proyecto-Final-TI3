@@ -1,11 +1,9 @@
 import React from 'react';
 import Logo from '../../assets/ESCUELA-TELECOMUNICACIONES-UNSA-878x426.jpg'
 import { Link } from 'react-router-dom';
-
-
-import Calendar from 'flat-color-icons/svg/calendar.svg'
-import OverTime from 'flat-color-icons/svg/overtime.svg'
-import MultipleSmarphones from 'flat-color-icons/svg/multiple_smartphones.svg'
+import Calendar from '@vscode/codicons/src/icons/Calendar.svg';
+import OverTime from '@tabler/icons/calendar-repeat.svg';
+import MultipleSmarphones from '@tabler/icons/file-report.svg'
 
 const imageStyles = {
     width: '1200px', // Ajusta el ancho de la imagen
@@ -36,9 +34,7 @@ const styleImg = {
     height: '150px', // Ajusta la altura de la imagen
 };
 
-
-
-function Home(props) {
+function HomeAdmin(props) {
     return (
         <div style={containerStyles}>
             <div>
@@ -47,18 +43,18 @@ function Home(props) {
             <div style={infoContainerStyles}>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <Link to="/client/horario">
-                            <p>Ver Horarios</p>
-                            <img src={Calendar} alt="ver Horarios" style={styleImg}/>
+                        <Link to="">
+                            <p>Ver Equipos Solicitados</p>
+                            <img src={Calendar} alt="Ver Equipos Solicitados" style={styleImg}/>
                         </Link>
                         
                     </a>
                 </div>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <Link to="/client/reservar">
-                            <p>Reservar Horarios</p>
-                            <img src={OverTime} alt="Reservar Horarios" style={styleImg}/>
+                        <Link to="">
+                            <p>Devolucion Equipo</p>
+                            <img src={OverTime} alt="Devolucion Equipo" style={styleImg} />
                         </Link>
                         
                     </a>
@@ -66,8 +62,8 @@ function Home(props) {
                 <div style={styleInfo}>
                     <a className="btn">
                         <Link>
-                            <p>Ver equipos</p>
-                            <img src={MultipleSmarphones} alt="Ver equipos" style={styleImg}/>
+                            <p>Reportes</p>
+                            <img src={MultipleSmarphones} alt="Reportes" style={styleImg} />
                         </Link>
                         
                     </a>
@@ -78,4 +74,4 @@ function Home(props) {
     );
 }
 
-export default Home;
+export default HomeAdmin;

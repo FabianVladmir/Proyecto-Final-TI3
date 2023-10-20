@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mui/icons-material": "^5.14.14",
+    "@tabler/icons": "^2.39.0",
+    "@vscode/codicons": "^0.0.33",
     "daisyui": "^3.9.2",
     "flat-color-icons": "^1.1.0",
     "react": "^18.2.0",
