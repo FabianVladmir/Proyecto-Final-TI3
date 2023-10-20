@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import generateID from "../helpers/generateID.js";
 
 const studentSchema = mongoose.Schema({
     firstname:{
@@ -22,25 +23,25 @@ const studentSchema = mongoose.Schema({
         trim: true,
     },
     telefono:{
-        type: String,
+        type: Number,
         default: null,
         trim: true,
+    },
+    CUI:{
+        type: Number,
+        require: true,
+        default: null,
+        unique: true,
+        trim: true,
+    },
+    token:{
+        type: String,
+        default: generateID()
+    },
+    confirmado:{
+        type: Boolean,
+        default: false,
     }
-    // CUI:{
-    //     type: Number,
-    //     require: true,
-    //     default: null,
-    //     unique: true,
-    //     trim: true,
-    // }
-    // token:{
-    //     type: String,
-    //     default: generarID()
-    // },
-    // confirmado:{
-    //     type: Boolean,
-    //     default: false,
-    // }
 });
 
 //register the schema in DB
