@@ -19,11 +19,11 @@ function Header(props) {
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal p-0">
-                        <li><Link to="/horario">Ver Horario</Link></li>
+                        <li><Link to="horario">Ver Horario</Link></li>
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to="/iniciarsesion"><a className="btn">Iniciar Sesion</a></Link>
+                    <Link to="login"><a className="btn">Iniciar Sesion</a></Link>
                 </div>
             </div>
 
