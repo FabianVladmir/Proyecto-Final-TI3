@@ -11,11 +11,11 @@ function ClientRoutes() {
     <div>
       <HeaderClient />
       <Routes>
-        <Route path="client" element={<HomeClient />} />
-        <Route path="client/horario" element={<HorarioClient />} />
-        <Route path="client/reservar" element={<ReservarClient />} />
+        <Route path="/home" element={<HomeClient />} />
+        <Route path="/horario" element={<HorarioClient />} />
+        <Route path="/reservar" element={<ReservarClient />} />
         <Route
-          path="client/*"
+          path="/*"
           element={<div><h1 className="text-center text-5xl font-bold">404 Not Found</h1></div>}
         />
       </Routes>
