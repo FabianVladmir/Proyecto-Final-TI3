@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bycrpt from "bcrypt";
 import generateID from "../helpers/generateID.js";
 
 const studentSchema = mongoose.Schema({
@@ -44,8 +45,24 @@ const studentSchema = mongoose.Schema({
     }
 });
 
-//register the schema in DB
+//encrypt the password
+//before storing in the DB
+studentSchema.pre('save', async function (next){
+    //continue with the next middleware
+    if(!this.isModified('password')){
+        next();
+    }
+    const salt = await bycrpt.genSalt(10);
+    this.password = await bycrpt.hash(this.password, salt);
+});
 
+//add function for check password (form - DB)
+studentSchema.methods.checkPasswordStudent = async function(passwordForm){
+
+    return await bycrpt.compare(passwordForm, this.password);
+}
+
+//register the schema in DB
 const Student = mongoose.model("Student",studentSchema);
 
 
