@@ -104,6 +104,9 @@ const TableEquiposSolicitados = () => {
 
     return (
         <div className="max-w-screen-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+            <div className='text-center lg:text-center'>
+                <p className='text-3xl font-bold mb-4'>Equipos Solicitados del día</p>
+            </div>
             <div className="overflow-x-auto">
                 <table className="w-full table-auto">
                     {/* Encabezado de la tabla */}
