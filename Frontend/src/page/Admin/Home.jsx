@@ -43,7 +43,7 @@ function HomeAdmin(props) {
             <div style={infoContainerStyles}>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <Link to="">
+                        <Link to="/admin/equipos-solicitados">
                             <p>Ver Equipos Solicitados</p>
                             <img src={Calendar} alt="Ver Equipos Solicitados" style={styleImg}/>
                         </Link>
