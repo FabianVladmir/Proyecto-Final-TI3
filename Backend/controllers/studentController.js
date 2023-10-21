@@ -29,13 +29,33 @@ const signIn = async (req,res) => {
     }
     
 }
-
-
 const profile = (req, res) => {
     res.json({msg: "Profiles"})
 }
 
+const confirmAccount = async (req, res) => {
+    //read url values
+    const {token} = req.params;
+    const studentConfirm = await Student.findOne({token});
+
+    if(!studentConfirm){
+        const error = new Error('token no valido'); 
+        return res.status(404).json({msg: error.message});
+    }
+
+    try {
+        studentConfirm.token = null;
+        studentConfirm.confirmado = true;
+        await studentConfirm.save();
+
+        res.json({msg:"Usuario confirmado correctamente"});
+    } catch (error) {
+        console.log(error)
+    }    
+}
+
 export {
     signIn,
-    profile
+    profile,
+    confirmAccount
 };
