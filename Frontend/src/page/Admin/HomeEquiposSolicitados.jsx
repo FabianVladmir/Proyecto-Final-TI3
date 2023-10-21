@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
-const Table = () => {
+const TableEquiposSolicitados = () => {
     // Datos de ejemplo (puedes reemplazarlos con tus propios datos)
     const data = [
         {
@@ -172,4 +172,4 @@ const Table = () => {
     );
 };
 
-export default Table;
+export default TableEquiposSolicitados;
