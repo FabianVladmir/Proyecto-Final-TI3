@@ -61,21 +61,26 @@ const TableEquiposSolicitados = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">{item.estado}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{item.codigo}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="flex items-center">
-                                        <CheckmarkSharp
-                                            color={'green'}
-                                            beat
-                                            title="Subir icono 1"
-                                            height="50px"
-                                            width="50px"
-                                        />
-                                        <CloseSharp
-                                            color={'red'}
-                                            beat
-                                            title="Subir icono 2"
-                                            height="50px"
-                                            width="50px"
-                                        />
+                                    <div className="flex items-center">
+                                        <button type="button">
+                                            <CheckmarkSharp
+                                                color={'green'}
+                                                beat
+                                                title="Subir icono 1"
+                                                height="50px"
+                                                width="50px"
+                                            />
+                                        </button>
+
+                                        <button type="button">
+                                            <CloseSharp
+                                                color={'red'}
+                                                beat
+                                                title="Subir icono 2"
+                                                height="50px"
+                                                width="50px"
+                                            />
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
