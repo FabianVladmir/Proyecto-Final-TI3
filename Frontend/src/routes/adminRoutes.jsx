@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import HeaderAdmin from '../component/Admin/Header'
 import Home from '../page/Admin/Home';
 import EquiposSolicitados from '../page/Admin/HomeEquiposSolicitados';
+import DevolucionEquipos from '../page/Admin/HomeDevolucionDeEquipos';
 function adminRoutes() {
   return (
     <div>
@@ -11,6 +12,8 @@ function adminRoutes() {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/equipos-solicitados" element={<EquiposSolicitados />} />
+        <Route path="/devolucion-equipos" element={<DevolucionEquipos />} />
+
         <Route
           path="/*"
           element={<div><h1 className="text-center text-5xl font-bold">404 Not Found</h1></div>}

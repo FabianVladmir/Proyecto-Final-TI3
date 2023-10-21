@@ -52,7 +52,7 @@ function HomeAdmin(props) {
                 </div>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <Link to="">
+                        <Link to="/admin/devolucion-equipos">
                             <p>Devolucion Equipo</p>
                             <img src={OverTime} alt="Devolucion Equipo" style={styleImg} />
                         </Link>
