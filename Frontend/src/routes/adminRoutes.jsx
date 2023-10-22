@@ -5,6 +5,8 @@ import HeaderAdmin from '../component/Admin/Header'
 import Home from '../page/Admin/Home';
 import EquiposSolicitados from '../page/Admin/HomeEquiposSolicitados';
 import DevolucionEquipos from '../page/Admin/HomeDevolucionDeEquipos';
+import Reportes from '../page/Admin/HomeReportes';
+
 function adminRoutes() {
   return (
     <div>
@@ -13,6 +15,7 @@ function adminRoutes() {
         <Route path="/home" element={<Home />} />
         <Route path="/equipos-solicitados" element={<EquiposSolicitados />} />
         <Route path="/devolucion-equipos" element={<DevolucionEquipos />} />
+        <Route path="/reportes" element={<Reportes />} />
 
         <Route
           path="/*"
