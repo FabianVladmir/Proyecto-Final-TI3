@@ -65,7 +65,7 @@ function Home(props) {
                 </div>
                 <div style={styleInfo}>
                     <a className="btn">
-                        <Link>
+                        <Link to="/client/ver-equipos">
                             <p>Ver equipos</p>
                             <img src={MultipleSmarphones} alt="Ver equipos" style={styleImg}/>
                         </Link>

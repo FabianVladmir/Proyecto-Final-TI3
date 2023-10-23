@@ -124,7 +124,9 @@ function Horario(props) {
                 <Link to="/client/reservar">
                     <a className='btn' style={customBoton}>Reservar Horario</a>
                 </Link>
-                <a className='btn' style={customBoton}>Ver Equipos</a>
+                <Link to="/client/ver-equipos">
+                    <a className='btn' style={customBoton}>Ver Equipos</a>
+                </Link>
             </div>
         </div>
 
