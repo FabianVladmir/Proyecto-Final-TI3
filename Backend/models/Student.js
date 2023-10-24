@@ -62,6 +62,10 @@ studentSchema.methods.checkPasswordStudent = async function(passwordForm){
     return await bycrpt.compare(passwordForm, this.password);
 }
 
+studentSchema.methods.viewEquipment = async function(collectionName = ''){
+    return await mongoose.connection.db.collection(collectionName);
+}
+
 //register the schema in DB
 const Student = mongoose.model("Student",studentSchema);
 

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import generateID from "../helpers/generateID.js";
 import genereateJWT from "../helpers/generateJWT.js";
 import Student from "../models/Student.js";
@@ -163,6 +164,40 @@ const newPassword = async (req, res) => {
     }
 }
 
+const viewSchedules = async (req, res) => {
+
+}
+
+const viewEquipment = async (req, res) => {
+
+    const booksData = student.viewEquipment('books')
+    // let coll = mongoose.connection.db.collection('books');
+
+    let data = await booksData.find({'year':2018}).toArray();
+    
+    console.log(data)
+
+    const newData = JSON.parse(JSON.stringify(data));
+
+    res.json(newData)
+
+    // const viewEquipment = async (req, res) => {
+    //     try {
+    //         let coll = mongoose.connection.db.collection('books');
+    
+    //         let data = await coll.find({'year':2018}).toArray();
+            
+    //         console.log(data)
+    
+    //         res.json(newdata)
+    //     } catch (error) {
+    //         console.error(error);
+    //         res.status(500).json({ error: 'An error occurred while retrieving equipment data.' });
+    //     }
+    // }
+    
+        
+}
 
 
 export {
@@ -172,5 +207,7 @@ export {
     authenticateStudent,
     forgetPassword,
     checkToken,
-    newPassword
+    newPassword,
+    viewSchedules,
+    viewEquipment
 };
