@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import HeaderClient from '../component/Cliente/Header';
 import HomeClient from '../page/Cliente/Home';
 import HorarioClient from '../page/Cliente/HomeHorario';
-import ReservarClient from '../page/Cliente/Reservar';
+import ReservarClient from '../page/Cliente/HomeReservar';
 import VerEquipos from '../page/Cliente/HomeVerEquipo';
 
 function ClientRoutes() {

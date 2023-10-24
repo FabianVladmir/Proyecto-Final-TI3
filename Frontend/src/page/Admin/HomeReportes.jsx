@@ -71,7 +71,7 @@ const TableEquiposSolicitados = () => {
         setCurrentPage(0);
         setSearchTerm('');
     };
-
+    
     return (
         <div className="max-w-screen-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
             <div className='text-center lg:text-center'>
