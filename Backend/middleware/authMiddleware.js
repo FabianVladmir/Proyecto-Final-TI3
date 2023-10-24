@@ -5,6 +5,7 @@ import Student from "../models/Student.js";
 const checkAuth = async (req, res, next) =>{
     let token;
     //console.log(req.headers);
+
     if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
         try {
             token = req.headers.authorization.split(" ")[1];
@@ -22,7 +23,6 @@ const checkAuth = async (req, res, next) =>{
         const error = new Error('Token no valido');
         res.status(403).json({msg: error.message});    
     }
-
     
     next();
 };

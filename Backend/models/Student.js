@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bycrpt from "bcrypt";
+import bycrpt from "bcryptjs";
 import generateID from "../helpers/generateID.js";
 
 const studentSchema = mongoose.Schema({
