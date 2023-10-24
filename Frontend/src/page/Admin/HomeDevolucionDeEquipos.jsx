@@ -5,7 +5,7 @@ import { CloseSharp } from 'react-ionicons'
 
 
 
-const TableEquiposSolicitados = () => {
+const TableDevolucionDeEquipos = () => {
     // Datos de ejemplo (puedes reemplazarlos con tus propios datos)
     const data = [
         {
@@ -130,4 +130,4 @@ const TableEquiposSolicitados = () => {
     );
 };
 
-export default TableEquiposSolicitados;
+export default TableDevolucionDeEquipos;
