@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
-const TableEquiposSolicitados = () => {
+const TableReporte = () => {
     // Datos generales
     const dataGeneral = [
         {
@@ -214,4 +214,4 @@ const TableEquiposSolicitados = () => {
     );
 };
 
-export default TableEquiposSolicitados;
+export default TableReporte;
