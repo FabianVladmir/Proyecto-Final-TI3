@@ -165,36 +165,30 @@ const newPassword = async (req, res) => {
 }
 
 const viewSchedules = async (req, res) => {
-
+    
 }
 
 const viewEquipment = async (req, res) => {
+    const {type} = req.params;
+    const VALID_TYPES = ["books", "equipments"];
 
-    const booksData = student.viewEquipment('books')
-    // let coll = mongoose.connection.db.collection('books');
+    if(!VALID_TYPES.includes(type)){
+        const error = new Error("No existe tal categoria, debe elegir entre libros o equipos");
+        return res.status(404).json({ msg: error.message });
+    }
 
-    let data = await booksData.find({'year':2018}).toArray();
-    
-    console.log(data)
+    try {
+        let collection = mongoose.connection.db.collection(type);
 
-    const newData = JSON.parse(JSON.stringify(data));
+        let data = await collection.find({}).toArray();
 
-    res.json(newData)
+        res.json(data)
+    } catch (error) {
+        
+        console.error(error);
+        res.status(500).json({ error: 'Se ha producido un error al acceder a los datos' });
+    }
 
-    // const viewEquipment = async (req, res) => {
-    //     try {
-    //         let coll = mongoose.connection.db.collection('books');
-    
-    //         let data = await coll.find({'year':2018}).toArray();
-            
-    //         console.log(data)
-    
-    //         res.json(newdata)
-    //     } catch (error) {
-    //         console.error(error);
-    //         res.status(500).json({ error: 'An error occurred while retrieving equipment data.' });
-    //     }
-    // }
     
         
 }
