@@ -1,6 +1,6 @@
 import express from 'express';
 import { signIn, profile, confirmAccount, authenticateStudent, forgetPassword, checkToken,
-    newPassword, viewSchedules, viewEquipment
+    newPassword, viewSchedules, viewEquipment, reserverEquipment
 
 } 
     from '../controllers/studentController.js';
@@ -22,6 +22,7 @@ router.get("/view-equipments/:type", viewEquipment);
 
 // private routes
 router.get("/profile", checkAuth, profile);
+router.post("/reserver-equipments/:type", checkAuth, reserverEquipment);
 
 
 

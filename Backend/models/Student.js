@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bycrpt from "bcryptjs";
 import generateID from "../helpers/generateID.js";
+import generateRandomAlphaNumeric from "../helpers/generateCodVal.js";
 
 const studentSchema = mongoose.Schema({
     firstname:{
@@ -40,8 +41,8 @@ const studentSchema = mongoose.Schema({
         default: generateID()
     },
     confirmado:{
-        type: Boolean,
-        default: false,
+        type: String,
+        default: generateRandomAlphaNumeric()
     }
 });
 

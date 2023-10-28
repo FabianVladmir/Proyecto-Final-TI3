@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import generateID from "../helpers/generateID.js";
 import genereateJWT from "../helpers/generateJWT.js";
 import Student from "../models/Student.js";
-
+import ReservationBook from "../models/ReservationBooks.js";
+import ReservationEquipment from "../models/ReservationEquipment.js";
 
 const signIn = async (req,res) => {
     const {email} = req.body;
@@ -187,11 +188,46 @@ const viewEquipment = async (req, res) => {
         
         console.error(error);
         res.status(500).json({ error: 'Se ha producido un error al acceder a los datos' });
+    }        
+}
+
+const reserverEquipment = async (req, res) => {
+    const {type} = req.params;
+    const VALID_TYPES = ["books", "equipments"];
+
+    if(type === VALID_TYPES[0]){
+        const{titleBook, studentName, codVerification, date, startTime, endTime} = req.body;
+        const reservationBook = new ReservationBook(req.body);
+
+        try {
+            // save the reservation in ReservationBook
+            const  reservationBookStored =   await reservationBook.save();
+            res.json(reservationBookStored);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
+
+    else if (type === VALID_TYPES[1]) {
+        const ReservationEquipment = new ReservationEquipment(req.body);
+
+        try {
+            // save the reservation in ReservationEquipment
+            const  ReservationEquipmentStored =   await ReservationEquipment.save();
+            res.json(ReservationEquipmentStored)
+        } catch (error) {
+            console.log(error);
+        }
+    }   
+
+    else{
+        const error = new Error("No existe tal categoria, debe elegir entre libros o equipos");
+        return res.status(404).json({ msg: error.message });
+    }
     
-        
 }
+
 
 
 export {
@@ -203,5 +239,6 @@ export {
     checkToken,
     newPassword,
     viewSchedules,
-    viewEquipment
+    viewEquipment,
+    reserverEquipment
 };
