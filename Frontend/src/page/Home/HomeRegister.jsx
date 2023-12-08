@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
+
+import Alerta from '../../component/Alerta';
+
 
 const styleLogo = {
     width: '90px', // Ajusta el ancho de la imagen
@@ -40,6 +43,8 @@ function RegistroForm() {
         aceptaTerminos: false,
     });
 
+    const [alerta, setAlerta] = useState({});
+
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         setFormData({
@@ -48,12 +53,37 @@ function RegistroForm() {
         });
     }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const {nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña} = formData;
+        console.log("vacio");
+
+        if([nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña].includes('')){
+            console.log("vacio");
+            setAlerta({ msg: 'Hay campos vacios', error: true })
+            return;              
+        }
+        
+        if(contraseña !== confirmarContraseña) {
+            setAlerta({ msg: 'Los Password no son iguales', error: true })
+            return
+        }
+
+        if(contraseña.length < 6) {
+            setAlerta({ msg: 'El Password es muy corto, agrega minimo 6 caracteres', error: true })
+            return
+        }
+
+        setAlerta({});
+
+
+
+
         // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
     }
 
-
+    const {msg} = alerta
     
     return (
         <div>
@@ -67,6 +97,11 @@ function RegistroForm() {
                                 </a>
                                 <h1 className="text-3xl font-bold">CREAR CUENTA</h1>
                             </div>
+                            
+                            {msg && <Alerta 
+                                alerta={alerta}
+                            />}
+
                             <form onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>

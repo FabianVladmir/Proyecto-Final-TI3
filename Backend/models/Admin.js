@@ -25,14 +25,6 @@ const adminSchema = mongoose.Schema({
         type: Number,
         default: null,
         trim: true,    
-    },
-    token:{
-        type: String,
-        default: generateID()
-    },
-    confirmed:{
-        type: Boolean,
-        default: false,
     }
 });
 
