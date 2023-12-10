@@ -1,12 +1,12 @@
 import React from 'react';
 import Logo from '../../assets/ESCUELA-TELECOMUNICACIONES-UNSA-878x426.jpg'
-import styles from './styles/Home.csx';
+import styles from './styles/Home.module.css';
 
 function Home(props) {
     return (
-        <div style={styles.container}>
+        <div className={styles.container}>
             <div>
-                <img src={Logo} alt="logo" style={styles.image} />
+                <img src={Logo} alt="logo" className={styles.image} />
             </div>
 
         </div>
