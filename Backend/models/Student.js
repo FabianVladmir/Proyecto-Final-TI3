@@ -24,7 +24,7 @@ const studentSchema = mongoose.Schema({
         unique: true,
         trim: true,
     },
-    telefono:{
+    telephone:{
         type: Number,
         default: null,
         trim: true,
@@ -42,7 +42,11 @@ const studentSchema = mongoose.Schema({
     },
     confirmado:{
         type: String,
-        default: generateRandomAlphaNumeric()
+        default: generateRandomAlphaNumeric(10)
+    },
+    role:{
+        type: String,
+        default: null
     }
 });
 

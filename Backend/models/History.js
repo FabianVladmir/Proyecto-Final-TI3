@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const reservationBookSchema = mongoose.Schema(
+const userHistorySchema = mongoose.Schema(
   { 
     userId:{
       type: mongoose.Schema.Types.ObjectId,
@@ -10,30 +10,31 @@ const reservationBookSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
     },
-    codVerification: {
+    equipmentId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Equipment",
+    },
+    itemType: {
       type: String,
       default: null
     },
     reservationDate: {
-      type: Date,      
+      type: Date,
+      required: true,
       default: Date.now(),
     },
     returnDate: {
-      type: Date,      
-      default: Date.now(),
-    },    
-    duration: {
       type: Date,
-      default: Date.now()
-    },
+      required: true,
+      default: Date.now(),
+    },  
     state:{
       type: String,
       required: true 
     }
-  },
-  { timestamps: true }
+  }  
 );
 
-const ReservationBook= mongoose.model("ReservationBook", reservationBookSchema);
+const userHistory= mongoose.model("userHistory", userHistorySchema);
 
-export default ReservationBook;
+export default userHistory;
