@@ -14,7 +14,7 @@ function HomeLogin(props) {
                             <a className="mx-auto flex items-center justify-center">
                                 <img src={Logo} alt="Logo" className={`${styles.logo} logo`} />
                             </a>
-                            <h1 className="text-3xl font-bold">INICIA SESION</h1>
+                            <h1 className="text-3xl font-bold">INICIAR SESION</h1>
                         </div>
                         <div className="card-body">
                             <div className={`${styles.formControl} form-control`}>
@@ -38,7 +38,7 @@ function HomeLogin(props) {
                             <Link to="/">
                                 <div className="col-span-2 text-center">
                                     <button type="submit" className={`${styles.button} bg-blue-600 text-white rounded p-2`}>
-                                        Crear Cuenta
+                                        Iniciar Sesion
                                     </button>
                                 </div>
                             </Link>

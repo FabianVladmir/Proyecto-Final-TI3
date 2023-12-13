@@ -3,33 +3,7 @@ import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 
 import Alerta from '../../component/Alerta';
-
-
-const styleLogo = {
-    width: '90px', // Ajusta el ancho de la imagen
-    height: '90px', // Ajusta la altura de la imagen
-};
-
-const cardStyles = {
-    width: '600px', // Ancho personalizado
-    height: '570px'
-};
-
-const blueText = {
-    color: 'blue', // Cambiar el color del texto a azul
-    fontSize: '1.0rem', // Tamaño de fuente más grande
-};
-
-const centerText = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-};
-
-const heroStyles = {
-    marginTop: '-72px', // Margen superior negativo para mover el hero hacia arriba
-};
+import styles from './styles/HomeRegister.module.css';
 
 function RegistroForm() {
     const [formData, setFormData] = useState({
@@ -56,21 +30,21 @@ function RegistroForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const {nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña} = formData;
+        const { nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña } = formData;
         console.log("vacio");
 
-        if([nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña].includes('')){
+        if ([nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña].includes('')) {
             console.log("vacio");
             setAlerta({ msg: 'Hay campos vacios', error: true })
-            return;              
+            return;
         }
-        
-        if(contraseña !== confirmarContraseña) {
+
+        if (contraseña !== confirmarContraseña) {
             setAlerta({ msg: 'Los Password no son iguales', error: true })
             return
         }
 
-        if(contraseña.length < 6) {
+        if (contraseña.length < 6) {
             setAlerta({ msg: 'El Password es muy corto, agrega minimo 6 caracteres', error: true })
             return
         }
@@ -83,22 +57,22 @@ function RegistroForm() {
         // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
     }
 
-    const {msg} = alerta
-    
+    const { msg } = alerta
+
     return (
         <div>
-            <div className="hero min-h-screen bg-base-200" style={heroStyles}>
+            <div className={`${styles.hero} ${styles.heroContent} hero`}>
                 <div className="hero-content flex-col lg:flex-row-reverse">
-                    <div className="card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100" style={cardStyles}>
+                    <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>
                         <div className="max-w-screen-xl mx-auto">
                             <div className="text-center lg:text-center">
                                 <a className="mx-auto flex items-center justify-center">
-                                    <img src={Logo} alt="Logo" style={styleLogo} />
+                                    <img src={Logo} alt="Logo" className={`${styles.logo} logo`} />
                                 </a>
                                 <h1 className="text-3xl font-bold">CREAR CUENTA</h1>
                             </div>
-                            
-                            {msg && <Alerta 
+
+                            {msg && <Alerta
                                 alerta={alerta}
                             />}
 
@@ -201,9 +175,9 @@ function RegistroForm() {
                                         Crear Cuenta
                                     </button>
                                 </div>
-                                <div className="text-center" style={centerText}>
+                                <div className={`${styles.centerText} text-center`}>
                                     <label className="label">Ya tienes una cuenta? </label>
-                                    <Link to="/login" className="label-text-alt link link-hover" style={blueText}>
+                                    <Link to="/login" className={`${styles.blueText} label-text-alt link link-hover`}>
                                         Iniciar Sesion
                                     </Link>
                                 </div>
