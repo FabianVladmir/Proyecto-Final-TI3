@@ -19,8 +19,8 @@ const containerStyles = {
 
 const infoContainerStyles = {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr', // Divide en tres columnas de igual ancho
-    gap: '50vh', // Espacio entre las columnas
+    gridTemplateColumns: '1fr 1fr 1fr 1fr', // Divide en tres columnas de igual ancho
+    gap: '30vh', // Espacio entre las columnas
     textAlign: 'center', // Centra el contenido en las columnas
 };
 
@@ -53,8 +53,17 @@ function HomeAdmin(props) {
                 <div style={styleInfo}>
                     <a className="btn">
                         <Link to="/admin/devolucion-equipos">
-                            <p>Devolucion Equipo</p>
-                            <img src={OverTime} alt="Devolucion Equipo" style={styleImg} />
+                            <p>Devolucion Equipos</p>
+                            <img src={OverTime} alt="Devolucion Equipos" style={styleImg} />
+                        </Link>
+                        
+                    </a>
+                </div>
+                <div style={styleInfo}>
+                    <a className="btn">
+                        <Link to="/admin/agregar-equipos">
+                            <p>Agregar Equipos</p>
+                            <img src={OverTime} alt="Agregar Equipos" style={styleImg} />
                         </Link>
                         
                     </a>

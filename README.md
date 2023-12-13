@@ -1,3 +1,154 @@
-# Proyecto-Final-TI3
+<h1 align="center">👻 Sistema de Gestion de Inventario</h1>
 
-Gestion de equipos
+<div align="center">
+  <img src="./public/readme/tech-logos/react.svg" width="55" alt="React" />
+  <img src="./public/readme/tech-logos/redux.svg" width="55" alt="Redux" />
+  <img
+    src="./public/readme/tech-logos/typescript.svg"
+    width="55"
+    alt="TypeScript"
+  />a
+  <img
+    src="./public/readme/tech-logos/javascript.svg"
+    width="55"
+    alt="JavaScript"
+  />
+  <img src="./public/readme/tech-logos/sass.svg" width="55" alt="Sass" />
+  <img src="./public/readme/tech-logos/webpack.svg" width="55" alt="Webpack" />
+  <img src="./public/readme/tech-logos/gulp.svg" width="35" alt="gulp" />
+  <img src="./public/readme/tech-logos/cypress.svg" width="55" alt="Cypress" />
+  <img src="./public/readme/tech-logos/jest.svg" width="55" alt="Jest" />
+  <img src="./public/readme/tech-logos/eslint.svg" width="55" alt="Eslint" />
+  <img
+    src="./public/readme/tech-logos/prettier.svg"
+    width="55"
+    alt="Prettier"
+  />
+  <img
+    src="./public/readme/tech-logos/storybook.svg"
+    width="50"
+    alt="Storybook"
+  />
+</div>
+
+## Table of Contents
+
+- [🚀 Descripción del Proyecto](#descripción-del-proyecto)
+- [🔑 Características Clave](#características-clave)
+- [📊 Diagrama de Software](#diagrama-de-software) 
+- [🔍 Modelo de Base de Datos](#modelo-de-base-de-datos)
+- [💻 Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [📦 Características de la Aplicación](#características-de-la-aplicación)
+- [🛠️ Funcionalidades](#funcionalidades)
+- [📋 Instalación y Uso](#instalación-y-uso)
+- [👥 Contribuidores](#contribuidores)
+
+
+## 🚀 Descripción del Proyecto <a name="descripción-del-proyecto"></a>
+
+El "Sistema de Gestión de Inventario" es una iniciativa destinada a abordar los desafíos que enfrenta la Escuela Profesional de Ciencia de la Computación en la gestión eficiente de su inventario de recursos tecnológicos. La gestión de inventario tecnológico es un aspecto crucial para mejorar la calidad de la educación y garantizar que los recursos estén disponibles en el momento adecuado. Para resolver este problema, proponemos desarrollar un sistema que permita un control detallado de los recursos y facilite a los estudiantes reservar productos en línea.
+
+## 🔑 Características Clave <a name="características-clave"></a>
+
+- Creación de cuentas de usuario y autenticación.
+- Visualización de horarios disponibles de equipos y libros.
+- Reserva de equipos y libros disponibles.
+- Administración de reservas y generación de reportes.
+- Panel de administración para la gestión de recursos tecnológicos.
+
+## 📊 Diagrama de Software <a name="diagrama-de-software"></a>
+![Diagrama de Software](enlace-a-la-imagen-o-ruta-del-archivo)
+
+Este diagrama proporciona una visión general de la estructura del sistema.
+
+## 🔍 Modelo de Base de Datos <a name="modelo-de-base-de-datos"></a>
+
+A continuación se presenta el modelo de base de datos que respalda el "Sistema de Gestión de Inventario." El modelo incluye tablas y campos clave para almacenar y gestionar la información de inventario.
+
+![Modelo de Base de Datos](enlace-a-la-imagen-del-modelo-o-ruta-del-archivo)
+
+Este modelo proporciona una representación visual de la estructura de la base de datos del sistema.
+
+
+## 💻 Tecnologías Utilizadas <a name="tecnologías-utilizadas"></a>
+
+Este proyecto utiliza una variedad de tecnologías y herramientas para su desarrollo:
+
+### Backend
+
+- MongoDB
+
+
+### Frontend
+
+- React.js
+- Tailwind
+
+## 📦 Características de la Aplicación <a name="características-de-la-aplicación"></a>
+
+### Backend
+
+- El backend está construido con node.js, express.js Framework y MongoDb Database.
+- API genérica de Crud (Crear / Leer / Actualizar / Eliminar).
+- API de administración de administración (usuario).
+- Autenticación por token web JSON de JWT.
+
+### Interfaz
+
+- El Frontend está construido con React.js, Ant Design (Antd) y Redux, Redux-thunk.
+- Componente Crud Genérico (Módulo) (Crear / Leer / Actualizar / Eliminar).
+- Módulo de gestión de administración (usuario).
+- Inicio de sesión / cierre de sesión del componente de autenticación.
+- Ruta Privada y Ruta Pública.
+- Página no encontrada.
+- Hermoso panel de interfaz de usuario.
+
+
+## 🛠️ Funcionalidades <a name="funcionalidades"></a>
+### Página Principal
+- Crear cuenta
+- Iniciar sesión
+- Ver horarios disponibles de los equipos y los libros 
+
+### Cliente
+- Ver horarios disponibles de los equipos y libros
+- Reservar equipos y libros disponibles
+- Ver equipos y libros que existen en la escuela
+
+### Administrador
+- Ver reservas existentes de los equipos y libros
+- Ver los reportes de los equipos y libros
+- Ver equipos y libros solicitados (reservados)
+- Ver la devolución de los equipos y libros
+
+## 📋 Instalación y Uso <a name="instalación-y-uso"></a>
+
+Para instalar y ejecutar la aplicación en tu entorno local, sigue estos pasos:
+
+1. Clona este repositorio:
+   ```
+   git clone https://github.com/FabianVladmir/Proyecto-Final-TI3.git
+   ```
+2. Navega al directorio del proyecto:
+   ```
+   cd Proyecto-Final-TI3
+   ```s
+3. Instala las dependencias:
+   ```
+   npm i
+   # o
+   npm install
+   ```
+4. Inicia la aplicación:
+   ```
+
+   ```
+La aplicación estará disponible en tu navegador en http://localhost:3000.
+
+
+## 👥 Contribuidores <a name="contribuidores"></a>
+
+Este proyecto ha sido posible gracias al esfuerzo y dedicación de un equipo de trabajo comprometido. A continuación, se enumeran los contribuidores que han desempeñado un papel significativo en el desarrollo de este sistema:
+
+- [Edwar Jhoel vargas Herhuay](https://github.com/evargashe)
+- [Fabian Vladimir Florez Aguilar](https://github.com/FabianVladmir/)

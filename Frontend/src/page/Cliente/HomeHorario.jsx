@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
+import styles from './styles/HomeHorario.module.css';
 
 
 const localizer = momentLocalizer(moment)
@@ -95,11 +95,11 @@ function Horario(props) {
 
     return (
         <div>
-            <div className='max-w-screen-md mx-auto mt-8 p-2 bg-white rounded-lg shadow-lg'>
+            <div className={`max-w-screen-md mx-auto mt-8 p-2 bg-white rounded-lg shadow-lg ${styles.containerStyles}`}>
                 <div className='text-center mb-4'>
                     <p className='text-3xl font-bold'>Del {weekRange}</p>
                 </div>
-                <div className="search-bar" style={containerSearch}>
+                <div className={`search-bar ${styles.containerSearch}`}>
                     <input
                         type="text"
                         placeholder="Buscar modelo"
@@ -108,24 +108,23 @@ function Horario(props) {
                         className='text-center lg:text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-1'
                     />
                 </div>
-                <div className="hero" style={containerStyles}>
-                    <div className="calendar">
+                <div className={`hero ${styles.hero}`}>
+                    <div className={`calendar ${styles.calendarContainer}`}>
                         <Calendar
                             localizer={localizer}
                             events={filteredEvents}
                             startAccessor="start"
                             endAccessor="end"
-                            style={{ height: 400 }}
                         />
                     </div>
                 </div>
             </div>
-            <div className="buttons" style={infoContainerStyles}>
+            <div className={`buttons ${styles.infoContainerStyles}`}>
                 <Link to="/client/reservar">
-                    <a className='btn' style={customBoton}>Reservar Horario</a>
+                    <button className={`btn ${styles.customButton}`}>Reservar Horario</button>
                 </Link>
                 <Link to="/client/ver-equipos">
-                    <a className='btn' style={customBoton}>Ver Equipos</a>
+                    <button className={`btn ${styles.customButton}`}>Ver Equipos</button>
                 </Link>
             </div>
         </div>
