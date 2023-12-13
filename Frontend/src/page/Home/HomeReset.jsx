@@ -1,31 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
-
-const styleLogo = {
-    width: '90px', // Ajusta el ancho de la imagen
-    height: '90px', // Ajusta la altura de la imagen
-};
-
-const cardStyles = {
-    width: '600px', // Ancho personalizado
-    height: '300px'
-};
-
-const blueText = {
-    color: 'blue', // Cambiar el color del texto a azul
-    fontSize: '1.0rem', // Tamaño de fuente más grande
-};
-const centerText = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-};
-
-const heroStyles = {
-    marginTop: '-80px', // Margen superior negativo para mover el hero hacia arriba
-};
+import styles from './styles/HomeReset.module.css';
 
 function ResetPassword() {
     const [formData, setFormData] = useState({
@@ -35,17 +11,16 @@ function ResetPassword() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
     }
 
     return (
-        <div className="hero min-h-screen bg-base-200" style={heroStyles}>
+        <div className={`${styles.hero} hero min-h-screen bg-base-200`}>
             <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100" style={cardStyles}>
+                <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>
                     <div className="max-w-screen-xl mx-auto">
                         <div className="text-center lg:text-center">
                             <a className="mx-auto flex items-center justify-center">
-                                <img src={Logo} alt="Logo" style={styleLogo} />
+                                <img src={Logo} alt="Logo" className={`${styles.logo} logo`} />
                             </a>
                             <h1 className="text-3xl font-bold">REINICIAR CONTRASEÑA</h1>
                         </div>
@@ -64,14 +39,14 @@ function ResetPassword() {
                                     />
                                 </div>
                             </div>
-                            <div  className="text-center mt-4">
+                            <div className="text-center mt-4">
                                 <button type="submit" className="bg-blue-600 text-white rounded p-1">
                                     REINICIAR CONTRASEÑA
                                 </button>
                             </div>
-                            <div className="text-center" style={centerText}>
+                            <div className={`${styles.centerText} text-center`}>
                                 <label className="label">Volver a iniciar sesion</label>
-                                <Link to="/login" className="label-text-alt link link-hover" style={blueText}>
+                                <Link to="/login" className={`${styles.blueText} label-text-alt link link-hover`}>
                                     Iniciar Sesion
                                 </Link>
                             </div>
