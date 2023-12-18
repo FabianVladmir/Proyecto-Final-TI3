@@ -19,7 +19,7 @@
     "react": "^18.2.0",
     "react-big-calendar": "^1.8.4",
     "react-dom": "^18.2.0",
-    "react-ionicons": "^1.4.6",
+    "react-ionicons": "^4.2.1",
     "react-notifications": "^1.7.4",
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.16.0",

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { CheckmarkSharp } from 'react-ionicons'
-import { CloseSharp } from 'react-ionicons'
-
+import { CheckmarkSharp } from 'react-ionicons';
+import { CloseSharp } from 'react-ionicons';
 
 
 const TableDevolucionDeEquipos = () => {
