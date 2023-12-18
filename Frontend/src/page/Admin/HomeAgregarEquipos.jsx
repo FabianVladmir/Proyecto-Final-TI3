@@ -3,27 +3,7 @@ import Logo from '../../assets/ce-epcc.png';
 import Equipo from 'flat-color-icons/svg/multiple_smartphones.svg';
 import Libro from 'flat-color-icons/svg/reading.svg';
 import ReactPaginate from 'react-paginate';
-
-const styleLogo = {
-    width: '70px', // Ajusta el ancho de la imagen
-    height: '7  0px', // Ajusta la altura de la imagen
-};
-
-const infoContainerStyles = {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '10vh',
-    textAlign: 'center',
-};
-
-const cardStyles = {
-    width: '600px', // Ancho personalizado
-    height: '610px'
-};
-
-const heroStyles = {
-    marginTop: '-72px', // Margen superior negativo para mover el hero hacia arriba
-};
+import styles from './styles/HomeAgregarEquipos.module.css';
 
 const AgregarForm = () => {
     const [weekRange, setWeekRange] = useState('');
@@ -100,9 +80,9 @@ const AgregarForm = () => {
     const renderForm = () => {
         if (showSelectionButtons) {
             return (
-                <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+                <div className={`max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg`}>
                     <h2 className="text-center text-3xl font-bold text-gray-800 mb-4">Seleccione una categoria</h2>
-                    <div className="flex mb-4" style={infoContainerStyles}>
+                    <div className={`flex mb-4 ${styles.infoContainer}`}>
                         <div>
                             <img src={Libro} alt="Ver equipos" />
 
@@ -129,11 +109,11 @@ const AgregarForm = () => {
             if (tipo === 'Libros' && mostrarFormulario) {
                 return (
                     <div>
-                        <div className="hero min-h-screen bg-white rounded-lg shadow-lg" style={heroStyles}>
-                            <div style={cardStyles}>
+                        <div className={`hero min-h-screen bg-white rounded-lg shadow-lg ${styles.hero}`}>
+                        <div className={`${styles.card}`}>
                                 <div className="text-center lg:text-center">
                                     <a className="mx-auto flex items-center justify-center">
-                                        <img src={Logo} alt="Logo" style={styleLogo} />
+                                        <img src={Logo} alt="Logo" className={`${styles.logo}`} />
                                     </a>
                                 </div>
                                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Agregar Libro</h2>
@@ -283,11 +263,11 @@ const AgregarForm = () => {
             } else if (tipo === 'Equipos' && mostrarFormulario) {
                 return (
                     <div>
-                        <div className="hero min-h-screen bg-white rounded-lg shadow-lg" style={heroStyles}>
-                            <div style={cardStyles}>
+                        <div className={`hero min-h-screen bg-white rounded-lg shadow-lg ${styles.hero}`}>
+                        <div className={`${styles.card}`}>
                                 <div className="text-center lg:text-center">
                                     <a className="mx-auto flex items-center justify-center">
-                                        <img src={Logo} alt="Logo" style={styleLogo} />
+                                        <img src={Logo} alt="Logo" className={`${styles.logo}`} />
                                     </a>
                                 </div>
                                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Agregar Equipo</h2>
