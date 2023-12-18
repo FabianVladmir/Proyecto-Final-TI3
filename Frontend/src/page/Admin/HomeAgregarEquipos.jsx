@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Logo from '../../assets/ce-epcc.png';
 import Equipo from 'flat-color-icons/svg/multiple_smartphones.svg';
 import Libro from 'flat-color-icons/svg/reading.svg';
-import ReactPaginate from 'react-paginate';
+import { toast, ToastContainer } from 'react-toastify';
 import styles from './styles/HomeAgregarEquipos.module.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const AgregarForm = () => {
     const [weekRange, setWeekRange] = useState('');
@@ -17,6 +18,20 @@ const AgregarForm = () => {
         categoria: '',
         lenguaje: '',
     });
+    const limpiarFormularioLibros = () => {
+        setFormulario({
+          titulo: '',
+          editorial: '',
+          autor: '',
+          anio: '',
+          edicion: '',
+          cantidad: '',
+          categoria: '',
+          lenguaje: '',
+        });
+      };
+
+
     const [tipo, setTipo] = useState(null);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const [showSelectionButtons, setShowSelectionButtons] = useState(true); // Variable de estado para mostrar/ocultar los botones
@@ -50,18 +65,81 @@ const AgregarForm = () => {
         setShowSelectionButtons(false); // Ocultar los botones cuando se selecciona un tipo
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmitLibros = (e) => {
         e.preventDefault();
-        // Aquí puedes realizar acciones con los datos del formulario
+        if(formulario.titulo === ''){
+            toast.error("Por favor, ingrese el título", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000, 
+            });
+            return;
+        }
+        if(formulario.anio === ''){
+            toast.error("Por favor, ingrese el año", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000, 
+            });
+            return;
+        }
+        if(formulario.autor === ''){
+            toast.error("Por favor, ingrese el autor", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });
+            return;
+        }
+        if(formulario.cantidad === ''){
+            toast.error("Por favor, ingrese la cantidad", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });
+            return;
+        }
+        if(formulario.edicion === ''){
+            toast.error("Por favor, ingrese la edicion", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });
+            return;
+        }
+        if(formulario.lenguaje === ''){
+            toast.error("Por favor, ingrese el lenguaje", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            }); 
+            return;  
+        }
+        if(formulario.categoria === ''){
+            toast.error("Por favor, ingrese la categoria", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });   
+            return;
+        }
+
+        toast.success("¡Formulario enviado con éxito!", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 3000,
+          });
+
         console.log(formulario);
+        setTimeout(limpiarFormularioLibros, 3000);
     };
 
 
     const [nuevoFormulario, setNuevoFormulario] = useState({
-        nombres: '',
+        nombre: '',
         componentes: '',
         cantidad: '',
     });
+
+    const limpiarFormularioEquipos = () => {
+        setNuevoFormulario({
+          nombre: '',
+          componentes: '',
+          cantidad: '',
+        });
+      };
 
     const handleNuevoChange = (e) => {
         const { name, value } = e.target;
@@ -71,10 +149,37 @@ const AgregarForm = () => {
         }));
     };
 
-    const handleNuevoSubmit = (e) => {
+    const handleSubmitEquipos = (e) => {
         e.preventDefault();
-        // Aquí puedes realizar acciones con los datos del nuevo formulario
+
+        if(nuevoFormulario.nombre === ''){
+            toast.error("Por favor, ingrese el nombre", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });   
+            return;
+        }
+        if(nuevoFormulario.componentes === ''){
+            toast.error("Por favor, ingrese los componentes", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });   
+            return;
+        }
+        if(nuevoFormulario.cantidad === ''){
+            toast.error("Por favor, ingrese la cantidad", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });   
+            return;
+        }
+        toast.success("¡Formulario enviado con éxito!", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 3000,
+          });
+
         console.log(nuevoFormulario);
+        setTimeout(limpiarFormularioEquipos, 3000);
     };
 
     const renderForm = () => {
@@ -118,7 +223,7 @@ const AgregarForm = () => {
                                 </div>
                                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Agregar Libro</h2>
 
-                                <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-8 border rounded shadow">
+                                <form onSubmit={handleSubmitLibros} className="max-w-lg mx-auto bg-white p-8 border rounded shadow">
                                     <div className="grid grid-cols-2 gap-4">
 
                                         <div className="mb-4">
@@ -179,8 +284,8 @@ const AgregarForm = () => {
                                                 className="w-full p-2 border rounded"
                                             >
                                                 <option value="">Selecciona un lenguaje</option>
-                                                <option value="espanol">Español</option>
-                                                <option value="ingles">Inglés</option>
+                                                <option value="espanol">ES</option>
+                                                <option value="ingles">EN</option>
                                                 {/* Agrega más opciones según tus necesidades */}
                                             </select>
                                         </div>
@@ -202,7 +307,7 @@ const AgregarForm = () => {
                                                 Año
                                             </label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 id="anio"
                                                 name="anio"
                                                 value={formulario.anio}
@@ -228,7 +333,7 @@ const AgregarForm = () => {
                                                 Cantidad
                                             </label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 id="cantidad"
                                                 name="cantidad"
                                                 value={formulario.cantidad}
@@ -271,7 +376,7 @@ const AgregarForm = () => {
                                     </a>
                                 </div>
                                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Agregar Equipo</h2>
-                                <form onSubmit={handleNuevoSubmit} className="max-w-lg mx-auto bg-white p-8 border rounded shadow">
+                                <form onSubmit={handleSubmitEquipos} className="max-w-lg mx-auto bg-white p-8 border rounded shadow">
                                     <div className="mb-4">
                                         <label htmlFor="titulo" className="block text-gray-700 font-bold mb-2">
                                             Nombre
@@ -302,7 +407,7 @@ const AgregarForm = () => {
                                             Cantidad
                                         </label>
                                         <input
-                                            type="text"
+                                            type="number"
                                             id="cantidad"
                                             name="cantidad"
                                             value={nuevoFormulario.cantidad}
@@ -339,6 +444,7 @@ const AgregarForm = () => {
 
     return (
         <div>
+            <ToastContainer />
             <div>
                 {renderForm()}
             </div>
