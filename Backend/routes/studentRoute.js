@@ -1,9 +1,7 @@
 import express from 'express';
 import { signIn, profile, confirmAccount, authenticateStudent, forgetPassword, checkToken,
     newPassword, viewSchedules, viewEquipment, reserverEquipment
-
-} 
-    from '../controllers/studentController.js';
+} from '../controllers/studentController.js';
 import checkAuth from '../middleware/authMiddleware.js';
 
 
