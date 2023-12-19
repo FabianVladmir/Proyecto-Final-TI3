@@ -2,19 +2,70 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 import styles from './styles/HomeReset.module.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ResetPassword() {
     const [formData, setFormData] = useState({
-        correo: '',
+        email: '',
     });
 
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const limpiarFormulario = () => {
+        setFormData({
+            email: '',
+        });
+    };
+    const validarCorreoElectronico = (correo) => {
+        const regexCorreo = /^[^\s@]+@unsa\.edu\.pe$/;
+        return regexCorreo.test(correo);
+    };
+
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (formData.email === '') {
+            toast.error('Por favor, ingrese el correo electrónico.', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });
+            return;
+        }
+
+        if (!validarCorreoElectronico(formData.email)) {
+            toast.error('El correo electrónico no es válido.', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });
+            return;
+        }
+
+
+        toast.success('¡Se reinició la contraseña correctamente!', {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 1000,
+        });
+
+        setTimeout(limpiarFormulario, 1000);
+
+        console.log('Estado del formulario después del éxito:', formData);
     }
+
+
 
     return (
         <div className={`${styles.hero} hero min-h-screen bg-base-200`}>
+            <ToastContainer />
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>
                     <div className="max-w-screen-xl mx-auto">
@@ -32,9 +83,9 @@ function ResetPassword() {
                                 <div>
                                     <input
                                         type="email"
-                                        name="correo"
-                                        value={formData.correo}
-                                        required
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
                                         className="w-full p-3 border border-gray-300 rounded-lg"
                                     />
                                 </div>
