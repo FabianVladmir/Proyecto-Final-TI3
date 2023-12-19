@@ -20,16 +20,16 @@ const AgregarForm = () => {
     });
     const limpiarFormularioLibros = () => {
         setFormulario({
-          titulo: '',
-          editorial: '',
-          autor: '',
-          anio: '',
-          edicion: '',
-          cantidad: '',
-          categoria: '',
-          lenguaje: '',
+            titulo: '',
+            editorial: '',
+            autor: '',
+            anio: '',
+            edicion: '',
+            cantidad: '',
+            categoria: '',
+            lenguaje: '',
         });
-      };
+    };
 
 
     const [tipo, setTipo] = useState(null);
@@ -67,64 +67,28 @@ const AgregarForm = () => {
 
     const handleSubmitLibros = (e) => {
         e.preventDefault();
-        if(formulario.titulo === ''){
-            toast.error("Por favor, ingrese el título", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000, 
-            });
-            return;
-        }
-        if(formulario.anio === ''){
-            toast.error("Por favor, ingrese el año", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000, 
-            });
-            return;
-        }
-        if(formulario.autor === ''){
-            toast.error("Por favor, ingrese el autor", {
+
+        const camposVacios = Object.entries(formulario).some(([key, value]) => value.trim() === '');
+
+        if (camposVacios) {
+            toast.error("Por favor, ingrese llene los campos", {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000,
             });
-            return;
-        }
-        if(formulario.cantidad === ''){
-            toast.error("Por favor, ingrese la cantidad", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });
-            return;
-        }
-        if(formulario.edicion === ''){
-            toast.error("Por favor, ingrese la edicion", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });
-            return;
-        }
-        if(formulario.lenguaje === ''){
-            toast.error("Por favor, ingrese el lenguaje", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            }); 
-            return;  
-        }
-        if(formulario.categoria === ''){
-            toast.error("Por favor, ingrese la categoria", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });   
             return;
         }
 
+        // Si no hay campos vacíos o faltan más de dos, mostrar éxito
         toast.success("¡Formulario enviado con éxito!", {
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
-          });
+        });
 
         console.log(formulario);
         setTimeout(limpiarFormularioLibros, 3000);
     };
+
+
 
 
     const [nuevoFormulario, setNuevoFormulario] = useState({
@@ -135,11 +99,11 @@ const AgregarForm = () => {
 
     const limpiarFormularioEquipos = () => {
         setNuevoFormulario({
-          nombre: '',
-          componentes: '',
-          cantidad: '',
+            nombre: '',
+            componentes: '',
+            cantidad: '',
         });
-      };
+    };
 
     const handleNuevoChange = (e) => {
         const { name, value } = e.target;
@@ -152,31 +116,19 @@ const AgregarForm = () => {
     const handleSubmitEquipos = (e) => {
         e.preventDefault();
 
-        if(nuevoFormulario.nombre === ''){
-            toast.error("Por favor, ingrese el nombre", {
+        const camposVacios = Object.entries(nuevoFormulario).some(([key, value]) => value.trim() === '');
+
+        if (camposVacios) {
+            toast.error("Por favor, ingrese llene los campos", {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000,
-            });   
-            return;
-        }
-        if(nuevoFormulario.componentes === ''){
-            toast.error("Por favor, ingrese los componentes", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });   
-            return;
-        }
-        if(nuevoFormulario.cantidad === ''){
-            toast.error("Por favor, ingrese la cantidad", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });   
+            });
             return;
         }
         toast.success("¡Formulario enviado con éxito!", {
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
-          });
+        });
 
         console.log(nuevoFormulario);
         setTimeout(limpiarFormularioEquipos, 3000);
@@ -215,7 +167,7 @@ const AgregarForm = () => {
                 return (
                     <div>
                         <div className={`hero min-h-screen bg-white rounded-lg shadow-lg ${styles.hero}`}>
-                        <div className={`${styles.card}`}>
+                            <div className={`${styles.card}`}>
                                 <div className="text-center lg:text-center">
                                     <a className="mx-auto flex items-center justify-center">
                                         <img src={Logo} alt="Logo" className={`${styles.logo}`} />
@@ -369,7 +321,7 @@ const AgregarForm = () => {
                 return (
                     <div>
                         <div className={`hero min-h-screen bg-white rounded-lg shadow-lg ${styles.hero}`}>
-                        <div className={`${styles.card}`}>
+                            <div className={`${styles.card}`}>
                                 <div className="text-center lg:text-center">
                                     <a className="mx-auto flex items-center justify-center">
                                         <img src={Logo} alt="Logo" className={`${styles.logo}`} />
