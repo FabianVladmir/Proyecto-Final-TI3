@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Equipo from 'flat-color-icons/svg/multiple_smartphones.svg';
 import Libro from 'flat-color-icons/svg/reading.svg';
 import ReactPaginate from 'react-paginate';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 
 const infoContainerStyles = {
@@ -18,11 +20,17 @@ const cardStyles = {
 
 const ReservarForm = () => {
   const [weekRange, setWeekRange] = useState('');
-  const [formData, setFormData] = useState({
-    fecha: '',
-    horaInicio: '',
-    horaFin: '',
+  const [formDataLibros, setFormDataLibros] = useState({
+    fechaInicio: '',
+    fechaFin: '',
   });
+  const limpiarFormularioLibros = () => {
+    setFormDataLibros({
+      fechaInicio: '',
+      fechaFin: '',
+    });
+  };
+
   const [tipo, setTipo] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [showSelectionButtons, setShowSelectionButtons] = useState(true); // Variable de estado para mostrar/ocultar los botones
@@ -44,8 +52,8 @@ const ReservarForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormDataLibros({
+      ...formDataLibros,
       [name]: value,
     });
   };
@@ -56,10 +64,70 @@ const ReservarForm = () => {
     setShowSelectionButtons(false); // Ocultar los botones cuando se selecciona un tipo
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmitLibros = (e) => {
     e.preventDefault();
-    // Aquí puedes manejar el envío del formulario, por ejemplo, enviando los datos a tu servidor.
-    console.log(`Tipo: ${tipo}`, formData);
+
+    const camposVacios = Object.entries(formDataLibros).some(([key, value]) => value.trim() === '');
+
+    if (camposVacios) {
+      toast.error("Por favor, ingrese llene los campos", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 1000,
+      });
+      return;
+    }
+    toast.success("¡Libro reservado con éxito!", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 3000,
+    });
+
+    setTimeout(limpiarFormularioLibros, 3000);
+
+    console.log(`Tipo: ${tipo}`, formDataLibros);
+  };
+
+
+  const [formDataEquipos, setFormDataEquipos] = useState({
+    fecha: '',
+    horaInicio: '',
+    horaFin: '',
+  });
+  const limpiarFormularioEquipos = () => {
+    setFormDataEquipos({
+      fecha: '',
+      horaInicio: '',
+      horaFin: '',
+    });
+  };
+
+  const handleChangeEquipos = (e) => {
+    const { name, value } = e.target;
+    setFormDataEquipos({
+      ...formDataEquipos,
+      [name]: value,
+    });
+  };
+
+  const handleSubmitEquipos = (e) => {
+    e.preventDefault();
+
+    const camposVacios = Object.entries(formDataEquipos).some(([key, value]) => value.trim() === '');
+
+    if (camposVacios) {
+      toast.error("Por favor, ingrese llene los campos", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 1000,
+      });
+      return;
+    }
+    toast.success("¡Libro reservado con éxito!", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 3000,
+    });
+
+    setTimeout(limpiarFormularioEquipos, 3000);
+
+    console.log(`Tipo: ${tipo}`, formDataEquipos);
   };
 
   const equipoData = [
@@ -172,7 +240,7 @@ const ReservarForm = () => {
                 Regresar a la selección
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-1">
+            <form onSubmit={handleSubmitLibros} className="grid grid-cols-2 gap-1">
               <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={{ maxWidth: '900px' }}>
                 <div>
                   <input
@@ -258,40 +326,27 @@ const ReservarForm = () => {
               <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={cardStyles}>
                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Reservar Libro</h2>
                 <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha">
-                    Fecha:
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fechaInicio">
+                    Fecha de Inicio:
                   </label>
                   <input
                     type="date"
-                    id="fecha"
-                    name="fecha"
-                    value={formData.fecha}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="horaInicio">
-                    Hora de Inicio:
-                  </label>
-                  <input
-                    type="time"
-                    id="horaInicio"
-                    name="horaInicio"
-                    value={formData.horaInicio}
+                    id="fechaInicio"
+                    name="fechaInicio"
+                    value={formDataLibros.fechaInicio}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
                 <div className="mb-6">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="horaFin">
-                    Hora de Fin:
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fechaFin">
+                    Fecha de Fin:
                   </label>
                   <input
-                    type="time"
-                    id="horaFin"
-                    name="horaFin"
-                    value={formData.horaFin}
+                    type="date"
+                    id="fechaFin"
+                    name="fechaFin"
+                    value={formDataLibros.fechaFin}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
@@ -306,7 +361,7 @@ const ReservarForm = () => {
                 </div>
               </div>
 
-            </div>
+            </form>
           </div>
         );
       } else if (tipo === 'Equipos' && mostrarFormulario) {
@@ -321,7 +376,7 @@ const ReservarForm = () => {
                 Regresar a la selección
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-1">
+            <form onSubmit={handleSubmitEquipos} className="grid grid-cols-2 gap-1">
               <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={{ maxWidth: '700px' }}>
                 <div>
                   <input
@@ -400,8 +455,8 @@ const ReservarForm = () => {
                   />
                 </div>
               </div>
-
-              <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={cardStyles}>
+                      
+              <div  className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={cardStyles}>
                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Reservar Equipo</h2>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha">
@@ -411,8 +466,8 @@ const ReservarForm = () => {
                     type="date"
                     id="fecha"
                     name="fecha"
-                    value={formData.fecha}
-                    onChange={handleChange}
+                    value={formDataEquipos.fecha}
+                    onChange={handleChangeEquipos}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
@@ -424,8 +479,8 @@ const ReservarForm = () => {
                     type="time"
                     id="horaInicio"
                     name="horaInicio"
-                    value={formData.horaInicio}
-                    onChange={handleChange}
+                    value={formDataEquipos.horaInicio}
+                    onChange={handleChangeEquipos}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
@@ -437,8 +492,8 @@ const ReservarForm = () => {
                     type="time"
                     id="horaFin"
                     name="horaFin"
-                    value={formData.horaFin}
-                    onChange={handleChange}
+                    value={formDataEquipos.horaFin}
+                    onChange={handleChangeEquipos}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
@@ -452,7 +507,7 @@ const ReservarForm = () => {
                 </div>
               </div>
 
-            </div>
+            </form>
           </div>
         );
       }
@@ -469,7 +524,7 @@ const ReservarForm = () => {
       <div>
         {renderForm()}
       </div>
-
+      <ToastContainer />
     </div>
   );
 };
