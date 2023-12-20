@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { CheckmarkSharp } from 'react-ionicons';
 import { CloseSharp } from 'react-ionicons';
-import './styles/HomeDevolucionDeEquipos.css'
+import './styles/HomePaginationStyles.css';
 
 const TableDevolucionDeEquipos = () => {
     // Datos de ejemplo (puedes reemplazarlos con tus propios datos)

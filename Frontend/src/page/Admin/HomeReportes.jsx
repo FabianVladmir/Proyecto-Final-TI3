@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import './styles/HomePaginationStyles.css';
+
 
 const TableReporte = () => {
     // Datos generales
@@ -163,28 +165,6 @@ const TableReporte = () => {
                 </table>
             </div>
             <div className="mt-4 flex justify-center">
-                <style>
-                    {`
-                    .pagination a.active,
-                    .pagination a.active:hover {
-                        background-color: #007BFF;
-                        color: #fff;
-                        border-color: #007BFF;
-                    }
-
-                    .pagination li {
-                        display: inline-block;
-                        padding: 0.5rem 0.75rem;
-                        margin: 0.125rem;
-                        cursor: pointer;
-                    }
-
-                    .pagination li.active {
-                        background-color: #ccc;
-                        color: #fff;
-                    }
-                    `}
-                </style>
                 <ReactPaginate
                     previousLabel={
                         <span className="px-2 py-1 rounded border border-gray-300 bg-white">
