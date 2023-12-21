@@ -111,7 +111,7 @@ const forgetPassword = async (req, res) => {
 
         existStudent.token = generateID();
         await existStudent.save();
-
+        //NODEMAILER
         // Send Email with instructions
         // emailOlvidePassword({
         //     email,

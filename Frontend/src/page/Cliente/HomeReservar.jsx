@@ -5,9 +5,6 @@ import ReactPaginate from 'react-paginate';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import styles from './styles/HomeReservar.module.css';
-
-
-
 const ReservarForm = () => {
   const [weekRange, setWeekRange] = useState('');
   const [formDataLibros, setFormDataLibros] = useState({

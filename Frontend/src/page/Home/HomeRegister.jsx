@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
+
 import Alerta from '../../component/Alerta';
 import styles from './styles/HomeRegister.module.css';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function RegistroForm() {
     const [formData, setFormData] = useState({
@@ -15,19 +14,10 @@ function RegistroForm() {
         telefono: '',
         contraseña: '',
         confirmarContraseña: '',
+        aceptaTerminos: false,
     });
 
-    const limpiarFormulario = () => {
-        setFormData({
-            nombres: '',
-            apellidos: '',
-            cui: '',
-            correo: '',
-            telefono: '',
-            contraseña: '',
-            confirmarContraseña: '',
-        });
-    };
+    const [alerta, setAlerta] = useState({});
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -35,70 +25,42 @@ function RegistroForm() {
             ...formData,
             [name]: type === 'checkbox' ? checked : value,
         });
-    };
-
-    const validarCorreoElectronico = (correo) => {
-        const regexCorreo = /^[^\s@]+@unsa\.edu\.pe$/;
-        return regexCorreo.test(correo);
-    };
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const { nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña } = formData;
+        // console.log("vacio");
 
         if ([nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña].includes('')) {
-            toast.error('Por favor, complete todos los campos', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });
+            console.log("vacio");
+            setAlerta({ msg: 'Hay campos vacios', error: true })
             return;
         }
 
         if (contraseña !== confirmarContraseña) {
-            toast.error('Los passwords no son iguales', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });
-            return;
+            setAlerta({ msg: 'Los Password no son iguales', error: true })
+            return
         }
 
         if (contraseña.length < 6) {
-            toast.error('El password es muy corto, debe tener al menos 6 caracteres', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });
-            return;
-        }
-        if (cui.length !== 8) {
-            toast.error('El CUI debe tener exactamente 8 caracteres', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });
-            return;
+            setAlerta({ msg: 'El Password es muy corto, agrega minimo 6 caracteres', error: true })
+            return
         }
 
-        if (!validarCorreoElectronico(correo)) {
-            toast.error('El correo electrónico no es válido', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
-            });
-            return;
-        }
-        toast.success('Se ha registrado correctamente!', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 1000,
-        });
+        setAlerta({});
 
-        setTimeout(limpiarFormulario, 1000);
 
-        console.log(formData);
-    };
 
+
+        // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
+    }
+
+    const { msg } = alerta
 
     return (
         <div>
-            <ToastContainer />
             <div className={`${styles.hero} ${styles.heroContent} hero`}>
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>
@@ -110,6 +72,10 @@ function RegistroForm() {
                                 <h1 className="text-3xl font-bold">CREAR CUENTA</h1>
                             </div>
 
+                            {msg && <Alerta
+                                alerta={alerta}
+                            />}
+
                             <form onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
@@ -119,6 +85,7 @@ function RegistroForm() {
                                             name="nombres"
                                             value={formData.nombres}
                                             onChange={handleChange}
+                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
@@ -129,7 +96,7 @@ function RegistroForm() {
                                             name="apellidos"
                                             value={formData.apellidos}
                                             onChange={handleChange}
-
+                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
@@ -141,7 +108,7 @@ function RegistroForm() {
                                         name="cui"
                                         value={formData.cui}
                                         onChange={handleChange}
-
+                                        required
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />
                                 </div>
@@ -152,7 +119,7 @@ function RegistroForm() {
                                         name="correo"
                                         value={formData.correo}
                                         onChange={handleChange}
-
+                                        required
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />
                                 </div>
@@ -163,11 +130,11 @@ function RegistroForm() {
                                         name="telefono"
                                         value={formData.telefono}
                                         onChange={handleChange}
-
+                                        required
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />
                                 </div>
-                                <div className="mb-4 grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block">Contraseña</label>
                                         <input
@@ -175,7 +142,7 @@ function RegistroForm() {
                                             name="contraseña"
                                             value={formData.contraseña}
                                             onChange={handleChange}
-
+                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
@@ -186,12 +153,12 @@ function RegistroForm() {
                                             name="confirmarContraseña"
                                             value={formData.confirmarContraseña}
                                             onChange={handleChange}
-
+                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
                                 </div>
-                                {/*                                 <div className="text-center col-span-2">
+                                <div className="text-center col-span-2">
                                     <label className="block">
                                         <input
                                             type="checkbox"
@@ -202,8 +169,8 @@ function RegistroForm() {
                                         />
                                         Acepto los términos y condiciones
                                     </label>
-                                </div> */}
-                                <div className="mb-2 text-center">
+                                </div>
+                                <div className="col-span-2 text-center">
                                     <button type="submit" className="bg-blue-600 text-white rounded p-2">
                                         Crear Cuenta
                                     </button>
