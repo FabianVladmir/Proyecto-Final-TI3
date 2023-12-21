@@ -4,18 +4,8 @@ import Libro from 'flat-color-icons/svg/reading.svg';
 import ReactPaginate from 'react-paginate';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import styles from './styles/HomeReservar.module.css';
 
-
-const infoContainerStyles = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: '10vh',
-  textAlign: 'center',
-};
-
-const cardStyles = {
-  width: '400px',
-};
 
 
 const ReservarForm = () => {
@@ -204,7 +194,7 @@ const ReservarForm = () => {
       return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
           <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">Seleccione lo que desea reservar</h2>
-          <div className="flex mb-4" style={infoContainerStyles}>
+          <div className={`${styles.infoContainer} flex mb-4`}>
             <div>
               <img src={Libro} alt="Ver equipos" />
 
@@ -323,7 +313,7 @@ const ReservarForm = () => {
                 </div>
               </div>
 
-              <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={cardStyles}>
+              <div className={`${styles.card} max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg`}>
                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Reservar Libro</h2>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fechaInicio">
@@ -456,7 +446,7 @@ const ReservarForm = () => {
                 </div>
               </div>
                       
-              <div  className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={cardStyles}>
+              <div className={`${styles.card} max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg`}>
                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Reservar Equipo</h2>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha">

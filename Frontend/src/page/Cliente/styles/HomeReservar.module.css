@@ -1,0 +1,12 @@
+.infoContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10vh;
+    text-align: center;
+}
+
+.card {
+width: 400px;
+}
+  
+  
