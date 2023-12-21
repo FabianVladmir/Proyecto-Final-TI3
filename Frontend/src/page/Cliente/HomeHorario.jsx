@@ -23,42 +23,6 @@ const myEventsList = [
     // Agrega más eventos según sea necesario
 ];
 
-
-const containerStyles = {
-    display: 'flex',
-    flexDirection: 'column', // Establece la dirección del contenido en columnas
-    justifyContent: 'center', // Centrar horizontalmente
-    alignItems: 'center', // Centrar horizontalmente
-    height: '60vh',
-};
-
-const containerSearch = {
-    display: 'flex',
-};
-
-const infoContainerStyles = {
-    gridTemplateColumns: '1fr 1fr', // Divide en dos columnas de igual ancho
-    gap: '20px', // Reduje el espacio entre las columnas
-    textAlign: 'center', // Centra el contenido en las columnas
-};
-
-const customBoton = {
-    display: 'inline-block',
-    padding: '10px 20px', /* Puedes ajustar estos valores según el tamaño deseado */
-    textAlign: 'center',
-    textDecoration: 'none',
-    fontSize: '16px',
-    backgroundColor: 'rgb(59 130 246 / var(--tw-bg-opacity))',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    margin: '0.5rem', /* Espacio entre los botones */
-    marginLeft: '280px', // Añade margen izquierdo al segundo botón
-    marginRight: '280px', // Añade margen izquierdo al segundo botón
-
-
-}
 function Horario(props) {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredEvents, setFilteredEvents] = useState(myEventsList);
