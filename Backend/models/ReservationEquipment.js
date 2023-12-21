@@ -10,9 +10,14 @@ const reservationEquipmentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Equipment",
     },
-    codVerification: {
+    verificationCode:{
       type: String,
-      default: null
+      default: generateRandomAlphaNumeric(8)
+    },
+    type: {
+      type: String,
+      enum: ["equipment"],
+      default: "equipment",
     },
     reservationDate: {
       type: Date,      

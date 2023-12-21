@@ -192,24 +192,25 @@ const viewEquipment = async (req, res) => {
 }
 
 const reserverEquipment = async (req, res) => {
-    const {type} = req.params;
+    const {type, idEquip} = req.params;
     const VALID_TYPES = ["books", "equipments"];
 
     if(type === VALID_TYPES[0]){
-        const{titleBook, studentName, codVerification, date, startTime, endTime} = req.body;
+            
         const reservationBook = new ReservationBook(req.body);
-
-        try {
-            // save the reservation in ReservationBook
-            const  reservationBookStored =   await reservationBook.save();
-            res.json(reservationBookStored);
-        } catch (error) {
-            console.log(error);
-        }
+        console.log(reservationBook);
+        // try {
+        //     // save the reservation in ReservationBook
+        //     const  reservationBookStored =   await reservationBook.save();
+        //     res.json(reservationBookStored);
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
 
 
     else if (type === VALID_TYPES[1]) {
+        
         const ReservationEquipment = new ReservationEquipment(req.body);
 
         try {

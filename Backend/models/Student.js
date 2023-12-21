@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import bycrpt from "bcryptjs";
 import generateID from "../helpers/generateID.js";
-import generateRandomAlphaNumeric from "../helpers/generateCodVal.js";
 
 const studentSchema = mongoose.Schema({
     firstname:{
@@ -39,11 +38,7 @@ const studentSchema = mongoose.Schema({
     token:{
         type: String,
         default: generateID()
-    },
-    confirmado:{
-        type: String,
-        default: generateRandomAlphaNumeric(10)
-    },
+    },   
     role:{
         type: String,
         default: null

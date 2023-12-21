@@ -16,7 +16,7 @@ const userHistorySchema = mongoose.Schema(
     },
     itemType: {
       type: String,
-      default: null
+      enum: ['Book', 'Equipment']
     },
     reservationDate: {
       type: Date,

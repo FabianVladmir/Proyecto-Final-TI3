@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import generateRandomAlphaNumeric from "../helpers/generateCodVal";
 
 const reservationBookSchema = mongoose.Schema(
   { 
@@ -10,9 +11,14 @@ const reservationBookSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
     },
-    codVerification: {
+    type: {
       type: String,
-      default: null
+      enum: ["book"],
+      default: "book",
+    },
+    verificationCode:{
+      type: String,
+      default: generateRandomAlphaNumeric(8)
     },
     reservationDate: {
       type: Date,      
