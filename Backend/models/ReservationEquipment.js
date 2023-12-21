@@ -9,7 +9,7 @@ const reservationEquipmentSchema = mongoose.Schema(
     equipmentId:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Equipment",
-    },
+    }, 
     verificationCode:{
       type: String,
       default: generateRandomAlphaNumeric(8)

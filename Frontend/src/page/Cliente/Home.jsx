@@ -26,8 +26,8 @@ function Home(props) {
                 <div className={styles.styleInfo}>
                     <a className="btn">
                         <Link to="/client/reservar">
-                            <p>Reservar Horarios</p>
-                            <img src={OverTime} alt="Reservar Horarios" className={styles.styleImg}/>
+                            <p>Reservar Equipos</p>
+                            <img src={OverTime} alt="Reservar Equipos" className={styles.styleImg}/>
                         </Link>
                     </a>
                 </div>
