@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import styles from './styles/HomeHorario.module.css';
 import WeekRangeComponent from '../../component/Cliente/HomeReservar/GetDay.jsx'
 import SeleccionEquipos from '../../component/SeleccionEquipos.jsx';
 import VerLibros from '../../component/Cliente/Horario/VerLibro.jsx';
 import VerEquipos from '../../component/Cliente/Horario/VerEquipo.jsx';
+import MostraBotones from '../../component/Cliente/Horario/MostrarBotones.jsx';
+
 
 const Horario = (props) => {
     //SeleccionEquipos.jsx
@@ -23,16 +21,7 @@ const Horario = (props) => {
     };
 
     const renderHorario = () => {
-        let commonButtons = (
-            <div className={`buttons ${styles.infoContainerStyles}`}>
-                <Link to="/client/reservar">
-                    <button className={`btn ${styles.customButton}`}>Reservar Horario</button>
-                </Link>
-                <Link to="/client/ver-equipos">
-                    <button className={`btn ${styles.customButton}`}>Ver Equipos</button>
-                </Link>
-            </div>
-        );
+
         if (showSelectionButtons) {
             return (
                 <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
@@ -57,11 +46,10 @@ const Horario = (props) => {
                             </button>
                         </div>
                         <VerLibros />
-                        {commonButtons}
                     </div>
                 );
-            } else if (tipo === 'Equipos' && mostrarFormulario){
-                return(
+            } else if (tipo === 'Equipos' && mostrarFormulario) {
+                return (
                     <div>
                         <div className="flex justify-end mr-20">
                             <button
@@ -72,7 +60,6 @@ const Horario = (props) => {
                             </button>
                         </div>
                         <VerEquipos />
-                        {commonButtons}
                     </div>
                 );
             }
@@ -86,6 +73,11 @@ const Horario = (props) => {
             <div>
                 {renderHorario()}
             </div>
+            {location.pathname === '/client/horario' && (
+                <div>
+                    <MostraBotones />
+                </div>
+            )}
         </div>
     );
 };
