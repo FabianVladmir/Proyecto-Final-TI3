@@ -1,88 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { Link } from 'react-router-dom';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import styles from './styles/HomeHorario.module.css';
+import WeekRangeComponent from '../../component/Cliente/HomeReservar/GetDay.jsx'
+import SeleccionEquipos from '../../component/SeleccionEquipos.jsx';
+import VerLibros from '../../component/Cliente/Horario/VerLibro.jsx';
+import VerEquipos from '../../component/Cliente/Horario/VerEquipo.jsx';
 
+const Horario = (props) => {
+    //SeleccionEquipos.jsx
+    const [showSelectionButtons, setShowSelectionButtons] = useState(true);
+    const [tipo, setTipo] = useState('');
+    const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
-const localizer = momentLocalizer(moment)
-
-const myEventsList = [
-    {
-        title: 'Evento 1',
-        start: new Date(2023, 10, 1, 10, 0),
-        end: new Date(2023, 10, 1, 12, 0),
-    },
-    {
-        title: 'Evento 2',
-        start: new Date(2023, 10, 2, 14, 0),
-        end: new Date(2023, 10, 2, 16, 0),
-    },
-    // Agrega más eventos según sea necesario
-];
-
-function Horario(props) {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filteredEvents, setFilteredEvents] = useState(myEventsList);
-
-
-    const [weekRange, setWeekRange] = useState('');
-
-    useEffect(() => {
-        const today = new Date();
-        const firstDayOfWeek = new Date(today);
-        const lastDayOfWeek = new Date(today);
-
-        // Obtener el día de la semana (0 = domingo, 1 = lunes, ..., 6 = sábado)
-        const currentDayOfWeek = today.getDay();
-
-        // Calcular el primer día de la semana actual (lunes)
-        firstDayOfWeek.setDate(today.getDate() - currentDayOfWeek + 1);
-
-        // Calcular el último día de la semana actual (domingo)
-        lastDayOfWeek.setDate(today.getDate() + (7 - currentDayOfWeek));
-
-        // Formatear las fechas en el formato deseado (25/12/23 al 31/12/23)
-        const startDate = `${firstDayOfWeek.getDate()}/${firstDayOfWeek.getMonth() + 1}/${today.getFullYear()}`;
-        const endDate = `${lastDayOfWeek.getDate()}/${lastDayOfWeek.getMonth() + 1}/${today.getFullYear()}`;
-
-        setWeekRange(`${startDate} al ${endDate}`);
-    }, []);
-    // Función para filtrar eventos basados en la cadena de búsqueda
-    const filterEvents = (term) => {
-        const filtered = myEventsList.filter(event => event.title.toLowerCase().includes(term.toLowerCase()));
-        setFilteredEvents(filtered);
-        setSearchTerm(term);
+    const handleTipoChange = (tipoSeleccionado) => {
+        setTipo(tipoSeleccionado);
+        setMostrarFormulario(true);
+        setShowSelectionButtons(false);
     };
 
-    return (
-        <div>
-            <div className={`max-w-screen-md mx-auto mt-8 p-2 bg-white rounded-lg shadow-lg ${styles.containerStyles}`}>
-                <div className='text-center mb-4'>
-                    <p className='text-3xl font-bold'>Del {weekRange}</p>
-                </div>
-                <div className={`search-bar ${styles.containerSearch}`}>
-                    <input
-                        type="text"
-                        placeholder="Buscar modelo"
-                        value={searchTerm}
-                        onChange={e => filterEvents(e.target.value)}
-                        className='text-center lg:text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-1'
-                    />
-                </div>
-                <div className={`hero ${styles.hero}`}>
-                    <div className={`calendar ${styles.calendarContainer}`}>
-                        <Calendar
-                            localizer={localizer}
-                            events={filteredEvents}
-                            startAccessor="start"
-                            endAccessor="end"
-                        />
-                    </div>
-                </div>
-            </div>
+    const renderHorario = () => {
+        let commonButtons = (
             <div className={`buttons ${styles.infoContainerStyles}`}>
                 <Link to="/client/reservar">
                     <button className={`btn ${styles.customButton}`}>Reservar Horario</button>
@@ -91,10 +32,62 @@ function Horario(props) {
                     <button className={`btn ${styles.customButton}`}>Ver Equipos</button>
                 </Link>
             </div>
+        );
+        if (showSelectionButtons) {
+            return (
+                <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+                    <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">Seleccione la categoria que desear ver</h2>
+                    <SeleccionEquipos
+                        handleTipoChange={handleTipoChange}
+                        tipo={tipo}
+                        setMostrarFormulario={setMostrarFormulario}
+                    />
+                </div>
+            );
+        } else {
+            if (tipo === 'Libros' && mostrarFormulario) {
+                return (
+                    <div>
+                        <div className="flex justify-end mr-20">
+                            <button
+                                onClick={() => setShowSelectionButtons(true)}
+                                className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-blue-600"
+                            >
+                                Regresar a la selección
+                            </button>
+                        </div>
+                        <VerLibros />
+                        {commonButtons}
+                    </div>
+                );
+            } else if (tipo === 'Equipos' && mostrarFormulario){
+                return(
+                    <div>
+                        <div className="flex justify-end mr-20">
+                            <button
+                                onClick={() => setShowSelectionButtons(true)}
+                                className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-blue-600"
+                            >
+                                Regresar a la selección
+                            </button>
+                        </div>
+                        <VerEquipos />
+                        {commonButtons}
+                    </div>
+                );
+            }
+        }
+    }
+    return (
+        <div>
+            <div className='text-center'>
+                <WeekRangeComponent />
+            </div>
+            <div>
+                {renderHorario()}
+            </div>
         </div>
-
-
     );
-}
+};
 
 export default Horario;

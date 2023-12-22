@@ -3,7 +3,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 72vh;
 }
 
 .containerSearch {
@@ -30,8 +29,8 @@
     border-radius: 5px;
     cursor: pointer;
     margin: 0.5rem;
-    margin-left: 280px;
-    margin-right: 280px;
+    margin-left: 200px;
+    margin-right: 200px;
 }
 
 .hero {
