@@ -1,39 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import styles from '../../../page/Cliente/styles//HomeHorario.module.css';
 
-const VerEquipos = () => {
-    const localizer = momentLocalizer(moment)
+import dataEquipos from './verEquipo.json';
 
-    const DataEquipos = [
-        {
-            title: 'Evento 1',
-            start: new Date(2023, 12, 1, 10, 0),
-            end: new Date(2023, 12, 1, 12, 0),
-        },
-        {
-            title: 'Evento 2',
-            start: new Date(2023, 12, 2, 14, 0),
-            end: new Date(2023, 12, 2, 16, 0),
-        },
-    ];
+const VerEquipos = () => {
+    const localizer = momentLocalizer(moment);
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredEvents, setFilteredEvents] = useState(DataEquipos);
+    const [filteredEvents, setFilteredEvents] = useState([]);
+
+    useEffect(() => {
+        const formattedData = dataEquipos.map(event => ({
+            ...event,
+            fechaStart: new Date(event.fechaStart),
+            fechaEnd: new Date(event.fechaEnd),
+        }));
+
+        setFilteredEvents(formattedData);
+    }, []);
 
     // Función para filtrar eventos basados en la cadena de búsqueda
     const filterEvents = (term) => {
-        const filtered = DataEquipos.filter(event => event.title.toLowerCase().includes(term.toLowerCase()));
+        const filtered = dataEquipos.filter(event => event.nameEquipment.toLowerCase().includes(term.toLowerCase()));
         setFilteredEvents(filtered);
         setSearchTerm(term);
     };
 
     return (
-        <>
+        <div>
             <div className={`max-w-screen-md mx-auto p-2 bg-white rounded-lg shadow-lg ${styles.containerStyles}`}>
+                <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">Equipos</h2>
+
                 <div className={`search-bar ${styles.containerSearch}`}>
                     <input
                         type="text"
@@ -48,13 +48,13 @@ const VerEquipos = () => {
                         <Calendar
                             localizer={localizer}
                             events={filteredEvents}
-                            startAccessor="start"
-                            endAccessor="end"
+                            startAccessor="fechaStart"
+                            endAccessor="fechaEnd"
                         />
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

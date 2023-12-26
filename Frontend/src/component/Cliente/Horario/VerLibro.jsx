@@ -1,39 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import styles from '../../../page/Cliente/styles//HomeHorario.module.css';
 
-const VerLibros = () => {
-    const localizer = momentLocalizer(moment)
+import dataLibros from './verLibro.json';
 
-    const DataLibros = [
-        {
-            title: 'Evento 1',
-            start: new Date(2023, 10, 1, 10, 0),
-            end: new Date(2023, 10, 1, 12, 0),
-        },
-        {
-            title: 'Evento 2',
-            start: new Date(2023, 10, 2, 14, 0),
-            end: new Date(2023, 10, 2, 16, 0),
-        },
-    ];
+const VerLibros = () => {
+    const localizer = momentLocalizer(moment);
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredEvents, setFilteredEvents] = useState(DataLibros);
+    const [filteredEvents, setFilteredEvents] = useState([]);
+
+    useEffect(() => {
+        const formattedData = dataLibros.map(event => ({
+            title: event.nameBook,
+            start: new Date(event.fechaStart),
+            end: new Date(event.fechaEnd),
+        }));
+
+        setFilteredEvents(formattedData);
+    }, []);
 
     // Función para filtrar eventos basados en la cadena de búsqueda
     const filterEvents = (term) => {
-        const filtered = DataLibros.filter(event => event.title.toLowerCase().includes(term.toLowerCase()));
-        setFilteredEvents(filtered);
+        const filtered = dataLibros.filter(event => event.nameBook.toLowerCase().includes(term.toLowerCase()));
+        setFilteredEvents(filtered.map(event => ({
+            title: event.nameBook,
+            start: new Date(event.fechaStart),
+            end: new Date(event.fechaEnd),
+        })));
         setSearchTerm(term);
     };
 
     return (
         <>
             <div className={`max-w-screen-md mx-auto p-2 bg-white rounded-lg shadow-lg ${styles.containerStyles}`}>
+                <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">Libros</h2>
+
                 <div className={`search-bar ${styles.containerSearch}`}>
                     <input
                         type="text"
