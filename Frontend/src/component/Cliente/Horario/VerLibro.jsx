@@ -41,7 +41,7 @@ const VerLibros = () => {
                 <div className={`search-bar ${styles.containerSearch}`}>
                     <input
                         type="text"
-                        placeholder="Buscar modelo"
+                        placeholder="Buscar libro"
                         value={searchTerm}
                         onChange={e => filterEvents(e.target.value)}
                         className='text-center lg:text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-1'

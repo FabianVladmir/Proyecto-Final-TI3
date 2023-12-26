@@ -7,16 +7,16 @@ import styles from '../../../page/Cliente/styles//HomeHorario.module.css';
 
 import dataEquipos from './verEquipo.json';
 
-const VerEquipos = () => {
+const VerLibros = () => {
     const localizer = momentLocalizer(moment);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredEvents, setFilteredEvents] = useState([]);
 
     useEffect(() => {
         const formattedData = dataEquipos.map(event => ({
-            ...event,
-            fechaStart: new Date(event.fechaStart),
-            fechaEnd: new Date(event.fechaEnd),
+            title: event.nameEquipment,
+            start: new Date(event.fechaStart),
+            end: new Date(event.fechaEnd),
         }));
 
         setFilteredEvents(formattedData);
@@ -25,12 +25,16 @@ const VerEquipos = () => {
     // Función para filtrar eventos basados en la cadena de búsqueda
     const filterEvents = (term) => {
         const filtered = dataEquipos.filter(event => event.nameEquipment.toLowerCase().includes(term.toLowerCase()));
-        setFilteredEvents(filtered);
+        setFilteredEvents(filtered.map(event => ({
+            title: event.nameEquipment,
+            start: new Date(event.fechaStart),
+            end: new Date(event.fechaEnd),
+        })));
         setSearchTerm(term);
     };
 
     return (
-        <div>
+        <>
             <div className={`max-w-screen-md mx-auto p-2 bg-white rounded-lg shadow-lg ${styles.containerStyles}`}>
                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">Equipos</h2>
 
@@ -48,14 +52,14 @@ const VerEquipos = () => {
                         <Calendar
                             localizer={localizer}
                             events={filteredEvents}
-                            startAccessor="fechaStart"
-                            endAccessor="fechaEnd"
+                            startAccessor="start"
+                            endAccessor="end"
                         />
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
-export default VerEquipos;
+export default VerLibros;
