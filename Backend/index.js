@@ -1,5 +1,7 @@
 import express  from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+
 
 import studentRoute from "./routes/studentRoute.js";
 import adminRoute from "./routes/adminRoute.js";
@@ -10,7 +12,10 @@ const PORT = process.env.PORT || 4000
 
 // read environment variables
 dotenv.config();
+
 const app = express();
+app.use(cors()); // Habilitar CORS
+
 // indicate we pass JSON files
 app.use(express.json());
 // connection with the DB
