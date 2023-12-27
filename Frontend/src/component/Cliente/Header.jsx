@@ -22,6 +22,7 @@ function Header(props) {
                         <li><Link to="home">Home</Link></li>
                         <li><Link to="horario">Ver Horario</Link></li>
                         <li><Link to="reservar">Reservar</Link></li>
+                        <li><Link to="ver-equipos">Ver Equipos</Link></li>
                     </ul>
                 </div>
                 <div className="navbar-end">
