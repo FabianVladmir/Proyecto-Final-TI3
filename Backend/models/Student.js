@@ -3,53 +3,57 @@ import bycrpt from "bcryptjs";
 import generateID from "../helpers/generateID.js";
 
 const studentSchema = mongoose.Schema({
-    firstname:{
+    firstname: {
         type: String,
         require: true,
         trim: true,
     },
-    lastname:{
+    lastname: {
         type: String,
         require: true,
         trim: true,
     },
-    password:{
+    password: {
         type: String,
         require: true,
     },
-    email:{
+    email: {
         type: String,
         require: true,
         unique: true,
         trim: true,
     },
-    telephone:{
+    telephone: {
         type: Number,
         default: null,
         trim: true,
     },
-    CUI:{
+    CUI: {
         type: Number,
         require: true,
         default: null,
         unique: true,
         trim: true,
     },
-    token:{
+    token: {
         type: String,
         default: generateID()
-    },   
-    role:{
+    },
+    role: {
         type: String,
         default: null
+    },
+    confirmado: {
+        type: Boolean,
+        default: false
     }
 });
 
 //encrypt the password
 //before storing in the DB
-studentSchema.pre('save', async function (next){
+studentSchema.pre('save', async function (next) {
     //continue with the next middleware
-    if(!this.isModified('password')){
+    if (!this.isModified('password')) {
         next();
     }
     const salt = await bycrpt.genSalt(10);
@@ -63,7 +67,7 @@ studentSchema.methods.checkPasswordStudent = async function(passwordForm){
 }
 
 //register the schema in DB
-const Student = mongoose.model("Student",studentSchema);
+const Student = mongoose.model("Student", studentSchema);
 
 
 

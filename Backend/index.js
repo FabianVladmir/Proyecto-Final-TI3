@@ -1,6 +1,7 @@
 import express  from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 
 import studentRoute from "./routes/studentRoute.js";
@@ -15,6 +16,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors()); // Habilitar CORS
+app.use(cookieParser()); 
 
 // indicate we pass JSON files
 app.use(express.json());
