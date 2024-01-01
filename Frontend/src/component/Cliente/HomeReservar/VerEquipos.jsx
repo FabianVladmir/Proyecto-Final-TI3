@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from '../../../page/Cliente/styles/HomeReservar.module.css';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const VerEquipos = () => {
     const [formDataEquipos, setFormDataEquipos] = useState({
         fecha: '',
-        horaInicio: '',
-        horaFin: '',
+        horaInicio: '', 
+        horaFin: '',    
     });
+
+    const [selectedRow, setSelectedRow] = useState(null);
+
     const limpiarFormularioEquipos = () => {
         setFormDataEquipos({
             fecha: '',
             horaInicio: '',
             horaFin: '',
         });
+        setSelectedRow(null);
     };
 
     const handleChangeEquipos = (e) => {
@@ -23,28 +27,49 @@ const VerEquipos = () => {
             ...formDataEquipos,
             [name]: value,
         });
+    };;
+
+    const handleRowSelection = (equipo) => {
+        setSelectedRow((prevSelectedRow) =>
+            prevSelectedRow && prevSelectedRow.equipo === equipo.equipo ? null : equipo
+        );
     };
+
 
     const handleSubmitEquipos = (e) => {
         e.preventDefault();
 
         const camposVacios = Object.entries(formDataEquipos).some(([key, value]) => value.trim() === '');
 
-        if (camposVacios) {
-            toast.error("Por favor, ingrese llene los campos", {
+        if (camposVacios || !selectedRow) {
+            toast.error("Por favor, ingrese y seleccione todos los campos", {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000,
             });
             return;
         }
+
+        const reservaData = {
+            equipo: selectedRow.equipo,
+            componentes: selectedRow.componentes,
+            estado: selectedRow.estado,
+            modelo: selectedRow.modelo,
+            fecha: formDataEquipos.fecha,
+            horaInicio: formDataEquipos.horaInicio,
+            horaFin: formDataEquipos.horaFin,
+        };
+
         toast.success("¡Libro reservado con éxito!", {
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
         });
 
-        setTimeout(limpiarFormularioEquipos, 3000);
+        setTimeout(() => {
+            limpiarFormularioEquipos();
+            setSelectedRow(null);
+        }, 3000);
 
-        console.log(`Tipo: ${tipo}`, formDataEquipos);
+        console.log(reservaData);
     };
 
     const equipoData = [
@@ -63,14 +88,13 @@ const VerEquipos = () => {
         // Agrega más datos de equipos según sea necesario
     ];
 
-    const [currentPage, setCurrentPage] = useState(0); // Puede inicializarse en 0 o en otro número según tus necesidades
-    const itemsPerPage = 2; // Esto define cuántos elementos se mostrarán por página
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 2;
 
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
 
-    //Funcion Busqueda Equipos
     const [searchTermEquipos, setSearchTermEquipos] = useState('');
     const [searchResultsEquipos, setSearchResultsEquipos] = useState([]);
 
@@ -96,18 +120,17 @@ const VerEquipos = () => {
                             value={searchTermEquipos}
                             onChange={(e) => {
                                 const value = e.target.value;
-                                setSearchTermEquipos(value); // Actualiza el estado searchTermEquipos con el valor del input
-                                handleSearch(value); // Llama a la función handleSearch para filtrar los resultados
+                                setSearchTermEquipos(value);
+                                handleSearch(value);
                             }}
                         />
                     </div>
-
-
                     <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Equipos Disponibles</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full table-auto" style={{ width: '100%', border: '1px solid #000' }}>
                             <thead>
-                                <tr >
+                                <tr>
+                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Seleccionar</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Equipo</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Componentes</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Estado</th>
@@ -118,6 +141,15 @@ const VerEquipos = () => {
                                 {searchResultsEquipos.length > 0 ? (
                                     searchResultsEquipos.map((equipo, index) => (
                                         <tr key={index}>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={() => handleRowSelection(equipo)}
+                                                    checked={selectedRow === equipo}
+                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
+                                                />
+
+                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{equipo.equipo}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{equipo.componentes}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{equipo.estado}</td>
@@ -127,15 +159,24 @@ const VerEquipos = () => {
                                 ) : (
                                     equipoData.map((equipo, index) => (
                                         <tr key={index}>
-                                            <td className="px-6 py-4 whitespace-nowrap" >{equipo.equipo}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap" >{equipo.componentes}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap" >{equipo.estado}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap" >{equipo.modelo}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={() => handleRowSelection(equipo)}
+                                                    checked={selectedRow && selectedRow.equipo === equipo.equipo}
+                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
+                                                />
+
+
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.equipo}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.componentes}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.estado}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.modelo}</td>
                                         </tr>
                                     ))
                                 )}
                             </tbody>
-
                         </table>
                     </div>
                     <div className="mt-4 flex justify-center">
@@ -165,7 +206,6 @@ const VerEquipos = () => {
                         />
                     </div>
                 </div>
-
                 <div className={`${styles.card} max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg`}>
                     <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Reservar Equipo</h2>
                     <div className="mb-4">
@@ -216,10 +256,9 @@ const VerEquipos = () => {
                         </button>
                     </div>
                 </div>
-
             </form>
         </>
     );
-}
+};
 
 export default VerEquipos;

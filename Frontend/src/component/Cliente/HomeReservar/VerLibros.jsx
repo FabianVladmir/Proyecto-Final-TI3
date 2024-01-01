@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from '../../../page/Cliente/styles/HomeReservar.module.css';
-import { toast, ToastContainer } from 'react-toastify';
-
+import { toast } from 'react-toastify';
 
 const VerLibros = () => {
     const [formDataLibros, setFormDataLibros] = useState({
         fechaInicio: '',
         fechaFin: '',
     });
+
+    const [selectedRow, setSelectedRow] = useState(null);
+
     const limpiarFormularioLibros = () => {
         setFormDataLibros({
             fechaInicio: '',
             fechaFin: '',
         });
+        setSelectedRow(null);
     };
 
-    const handleChange = (e) => {
+    const handleChangeLibros = (e) => {
         const { name, value } = e.target;
         setFormDataLibros({
             ...formDataLibros,
@@ -24,26 +27,46 @@ const VerLibros = () => {
         });
     };
 
+    const handleRowSelection = (libro) => {
+        setSelectedRow((prevSelectedRow) =>
+            prevSelectedRow && prevSelectedRow.titulo === libro.titulo ? null : libro
+        );
+    };
+
     const handleSubmitLibros = (e) => {
         e.preventDefault();
 
         const camposVacios = Object.entries(formDataLibros).some(([key, value]) => value.trim() === '');
 
-        if (camposVacios) {
-            toast.error("Por favor, ingrese llene los campos", {
+        if (camposVacios || !selectedRow) {
+            toast.error("Por favor, ingrese y seleccione todos los campos", {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000,
             });
             return;
         }
+
+        const reservaData = {
+            titulo: selectedRow.titulo,
+            año: selectedRow.año,
+            categoria: selectedRow.categoria,
+            autores: selectedRow.autores,
+            lenguaje: selectedRow.lenguaje,
+            fechaInicio: formDataLibros.fechaInicio,
+            fechaFin: formDataLibros.fechaFin,
+        };
+
         toast.success("¡Libro reservado con éxito!", {
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
         });
 
-        setTimeout(limpiarFormularioLibros, 3000);
+        setTimeout(() => {
+            limpiarFormularioLibros();
+            setSelectedRow(null);
+        }, 3000);
 
-        console.log(`Tipo: ${tipo}`, formDataLibros);
+        console.log(reservaData);
     };
 
     const libroData = [
@@ -61,27 +84,29 @@ const VerLibros = () => {
             autores: 'Arturo y Maria',
             lenguaje: 'EN'
         },
-        // Agrega más datos de equipos según sea necesario
+        // Agrega más datos de libros según sea necesario
     ];
-    //Funcion busqueda Libros
-    const [searchTermLibros, setSearchTermLibros] = useState('');
-    const [searchResultsLibros, setSearchResultsLibros] = useState([]);
 
-    const handleSearchLibros = (searchTermLibros) => {
-        const filteredResults = libroData.filter((e) => {
-            return (
-                e.titulo.toLowerCase().includes(searchTermLibros.toLowerCase()) ||
-                e.categoria.toLowerCase().includes(searchTermLibros.toLowerCase())
-            );
-        });
-        setSearchResultsLibros(filteredResults);
-    };
-    const [currentPage, setCurrentPage] = useState(0); // Puede inicializarse en 0 o en otro número según tus necesidades
-    const itemsPerPage = 2; // Esto define cuántos elementos se mostrarán por página
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 2;
 
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
+
+    const [searchTermLibros, setSearchTermLibros] = useState('');
+    const [searchResultsLibros, setSearchResultsLibros] = useState([]);
+
+    const handleSearchLibros = (searchTermLibros) => {
+        const filteredResults = libroData.filter((libro) => {
+            return (
+                libro.titulo.toLowerCase().includes(searchTermLibros.toLowerCase()) ||
+                libro.categoria.toLowerCase().includes(searchTermLibros.toLowerCase())
+            );
+        });
+        setSearchResultsLibros(filteredResults);
+    };
+
     return (
         <>
             <form onSubmit={handleSubmitLibros} className="grid grid-cols-2 gap-1">
@@ -94,18 +119,18 @@ const VerLibros = () => {
                             value={searchTermLibros}
                             onChange={(e) => {
                                 const value = e.target.value;
-                                setSearchTermLibros(value); // Actualiza el estado searchTermEquipos con el valor del input
-                                handleSearchLibros(value); // Llama a la función handleSearch para filtrar los resultados
+                                setSearchTermLibros(value);
+                                handleSearchLibros(value);
                             }}
                         />
                     </div>
 
-
                     <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Libros Disponibles</h2>
                     <div className="overflow-x-auto">
-                        <table className="w-full table-auto" style={{ width: '100px', border: '1px solid #000' }}>
+                        <table className="w-full table-auto" style={{ width: '100%', border: '1px solid #000' }}>
                             <thead>
-                                <tr >
+                                <tr>
+                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Seleccionar</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Titulo</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Año</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Categoria</th>
@@ -117,6 +142,14 @@ const VerLibros = () => {
                                 {searchResultsLibros.length > 0 ? (
                                     searchResultsLibros.map((libro, index) => (
                                         <tr key={index}>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={() => handleRowSelection(libro)}
+                                                    checked={selectedRow === libro}
+                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
+                                                />
+                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{libro.titulo}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{libro.año}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{libro.categoria}</td>
@@ -127,6 +160,14 @@ const VerLibros = () => {
                                 ) : (
                                     libroData.map((libro, index) => (
                                         <tr key={index}>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={() => handleRowSelection(libro)}
+                                                    checked={selectedRow && selectedRow.titulo === libro.titulo}
+                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
+                                                />
+                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{libro.titulo}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{libro.año}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{libro.categoria}</td>
@@ -136,7 +177,6 @@ const VerLibros = () => {
                                     ))
                                 )}
                             </tbody>
-
                         </table>
                     </div>
                     <div className="mt-4 flex justify-center">
@@ -155,7 +195,7 @@ const VerLibros = () => {
                                 <span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>
                             }
                             pageCount={Math.ceil(libroData.length / itemsPerPage)}
-                            marginPagesDisplayed={2}    
+                            marginPagesDisplayed={2}
                             pageRangeDisplayed={5}
                             onPageChange={handlePageClick}
                             containerClassName={'pagination flex justify-center'}
@@ -177,8 +217,8 @@ const VerLibros = () => {
                             type="date"
                             id="fechaInicio"
                             name="fechaInicio"
-                            value={formDataLibros.fechaInicio}
-                            onChange={handleChange}
+                            value={formDataLibros.fechaInicio ?? ''}
+                            onChange={handleChangeLibros}
                             className="w-full p-2 border border-gray-300 rounded"
                         />
                     </div>
@@ -190,8 +230,8 @@ const VerLibros = () => {
                             type="date"
                             id="fechaFin"
                             name="fechaFin"
-                            value={formDataLibros.fechaFin}
-                            onChange={handleChange}
+                            value={formDataLibros.fechaFin ?? ''}
+                            onChange={handleChangeLibros}
                             className="w-full p-2 border border-gray-300 rounded"
                         />
                     </div>
@@ -204,7 +244,6 @@ const VerLibros = () => {
                         </button>
                     </div>
                 </div>
-
             </form>
         </>
     );
