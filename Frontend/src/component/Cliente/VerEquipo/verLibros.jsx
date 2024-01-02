@@ -22,12 +22,13 @@ const LibrosTable = () => {
     }, []);
 
     // Filtrar libros basados en el término de búsqueda
+    const searchTermKeywords = searchTerm.toLowerCase().split(' ');
     const filteredLibros = libros.filter(
-        (item) =>
-          (item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (item['author(s)'] && item['author(s)'].toLowerCase().includes(searchTerm.toLowerCase()))
+        (item) => {
+            const combinedFields = `${item.title} ${item.editorial} ${item.category}`.toLowerCase();
+            return searchTermKeywords.some(keyword => combinedFields.includes(keyword));
+        }
     );
-    
 
     const pageCount = Math.ceil(filteredLibros.length / itemsPerPage);
 
@@ -44,11 +45,11 @@ const LibrosTable = () => {
             <div className="mb-4">
                 <input
                     type="text"
-                    placeholder="Buscar por título o autor(s)"
+                    placeholder="Buscar por título, editorial o categoria"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="text text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
-                    />
+                />
             </div>
 
             <div className="overflow-x-auto">
