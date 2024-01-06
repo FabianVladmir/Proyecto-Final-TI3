@@ -33,6 +33,10 @@ const bookSchema = new mongoose.Schema({
     language:{
         type: String,
         require: true
+    },
+    state:{
+        type: String,
+        require: true
     }
 
 });
