@@ -36,7 +36,6 @@ const ReservarForm = (props) => {
       );
     } else {
       if (tipo === 'Libros' && mostrarFormulario) {
-        console.log("entro a libros");
         return (
           <div>
             <div className="flex justify-end mr-14 mt-4">

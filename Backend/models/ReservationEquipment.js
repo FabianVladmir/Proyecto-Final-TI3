@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import generateRandomAlphaNumeric from "../helpers/generateCodVal.js";
+
 
 const reservationEquipmentSchema = mongoose.Schema(
   { 

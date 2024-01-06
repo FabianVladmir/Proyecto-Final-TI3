@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 import styles from './styles/HomeLogin.module.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 
 function HomeLogin(props) {
     const [formData, setFormData] = useState({
@@ -11,6 +13,7 @@ function HomeLogin(props) {
         password: '',
     });
 
+    const navigate = useNavigate();
 
     const limpiarFormulario = () => {
         setFormData({
@@ -27,12 +30,7 @@ function HomeLogin(props) {
         }));
     };
 
-    const validarCorreoElectronico = (correo) => {
-        const regexCorreo = /^[^\s@]+@unsa\.edu\.pe$/;
-        return regexCorreo.test(correo);
-    };
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!formData.email) {
@@ -50,24 +48,51 @@ function HomeLogin(props) {
             });
             return;
         }
-
-        if (!validarCorreoElectronico(formData.email)) {
-            toast.error('El correo electrónico no es válido.', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
+        try {
+            const response = await fetch("http://localhost:4000/api/students/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
             });
-            return;
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Guarda el token en las cookies del cliente
+                Cookies.set('token', data.token, { expires: 7 });
+
+                // Aquí puedes continuar con el resto del código después del inicio de sesión exitoso
+                // Por ejemplo, puedes realizar más acciones, cargar datos adicionales, etc.
+
+                toast.success('¡Inicio de sesión exitoso!', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000,
+                });
+
+                setTimeout(() => {
+                    limpiarFormulario();
+                    // Redirige a la página deseada después del inicio de sesión
+                    navigate('/client/home'); // Ajusta la ruta según tus necesidades
+                }, 1000);
+            } else {
+                const errorData = await response.json();
+                toast.error(errorData.msg || "Error durante el inicio de sesión", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000,
+                });
+            }
+        } catch (error) {
+            console.error("Error durante el inicio de sesión:", error);
+            toast.error(
+                "Error durante el inicio de sesión. Por favor, inténtelo de nuevo.",
+                {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000,
+                }
+            );
         }
-
-
-        toast.success('¡Inicio de sesión exitoso!', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 1000,
-        });
-
-        setTimeout(limpiarFormulario, 1000);
-
-        console.log(formData);
     };
 
     return (

@@ -5,48 +5,48 @@ import Student from "../models/Student.js";
 import ReservationBook from "../models/ReservationBooks.js";
 import ReservationEquipment from "../models/ReservationEquipment.js";
 
-const signIn = async (req,res) => {
-    const {email} = req.body;
+const signIn = async (req, res) => {
+    const { email } = req.body;
 
     // check if a student already exists
-    const existsStudent = await Student.findOne({email});
+    const existsStudent = await Student.findOne({ email });
 
-    if(existsStudent){
+    if (existsStudent) {
         const error = new Error("Estudiante existente");
-        return res.status(400).json({msg: error.message});
+        return res.status(400).json({ msg: error.message });
     }
 
     try {
         //Save mew student
         const student = new Student(req.body);
         const studentSave = await student.save();
-        
+
         //Envia el email
         // emailRegistro({
         //     email,
         //     nombre,
         //     token: studentSave.token
         // })
-        
+
         res.json(studentSave)
     } catch (error) {
         console.log(error);
     }
-    
+
 }
 const profile = (req, res) => {
-    const {student} = req;
-    res.json({student});
+    const { student } = req;
+    res.json({ student });
 }
 
 const confirmAccount = async (req, res) => {
     //read url values
-    const {token} = req.params;
-    const studentConfirm = await Student.findOne({token});
+    const { token } = req.params;
+    const studentConfirm = await Student.findOne({ token });
 
-    if(!studentConfirm){
-        const error = new Error('token no valido'); 
-        return res.status(404).json({msg: error.message});
+    if (!studentConfirm) {
+        const error = new Error('token no valido');
+        return res.status(404).json({ msg: error.message });
     }
 
     try {
@@ -54,52 +54,69 @@ const confirmAccount = async (req, res) => {
         studentConfirm.confirmado = true;
         await studentConfirm.save();
 
-        res.json({msg:"Usuario confirmado correctamente"});
+        res.json({ msg: "Usuario confirmado correctamente" });
     } catch (error) {
         console.log(error)
-    }    
+    }
 }
 
 const authenticateStudent = async (req, res) => {
 
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     //Search a student by email
-    const student = await Student.findOne({email});
+    const student = await Student.findOne({ email });
     console.log(student);
-    if(!student){
+    if (!student) {
         const error = new Error('El estudiante no existe');
-        return res.status(404).json({msg: error.message});
+        return res.status(404).json({ msg: error.message });
     }
 
     //check if the student is not authenticated
-    if(!student.confirmado){
+    if (!student.confirmado) {
         const error = new Error('Tu cuenta no ha sido confirnada');
-        return res.status(403).json({msg: error.message})
+        return res.status(403).json({ msg: error.message })
     }
 
     //check the password
-    if(await student.checkPasswordStudent(password)){
+    if (await student.checkPasswordStudent(password)) {
         //authenticated student   
-        
-        res.json({token: genereateJWT(student.id)})     
+
+        //res.json({token: genereateJWT(student.id)})     
         // res.json({
         //     _id: student._id,
         //     nombre: student.nombre,
         //     email: student.email,
         //     token: genereateJWT(student.id)
-            
+
         // })
-        console.log("password correcto")
-    }else{
+        const token = genereateJWT(student.id);
+
+        // Establece la cookie con el token
+        res.cookie("token", token, {
+            httpOnly: true,
+            // Otras opciones de configuración...
+        });
+
+        // Envía el token al cliente
+        res.json({
+            token,
+            student: {
+                _id: student._id,
+                firstname: student.firstname,
+                lastname: student.lastname,
+                email: student.email,
+            },
+        });
+    } else {
         const error = new Error('El password es incorrecto');
-        return res.status(403).json({msg: error.message})
+        return res.status(403).json({ msg: error.message })
     }
 }
 
 const forgetPassword = async (req, res) => {
-    const {email} = req.body;
-    
+    const { email } = req.body;
+
     // check if a student already exists
     const existStudent = await Student.findOne({ email });
     if (!existStudent) {
@@ -166,14 +183,14 @@ const newPassword = async (req, res) => {
 }
 
 const viewSchedules = async (req, res) => {
-    
+
 }
 
 const viewEquipment = async (req, res) => {
-    const {type} = req.params;
+    const { type } = req.params;
     const VALID_TYPES = ["books", "equipments"];
 
-    if(!VALID_TYPES.includes(type)){
+    if (!VALID_TYPES.includes(type)) {
         const error = new Error("No existe tal categoria, debe elegir entre libros o equipos");
         return res.status(404).json({ msg: error.message });
     }
@@ -185,18 +202,18 @@ const viewEquipment = async (req, res) => {
 
         res.json(data)
     } catch (error) {
-        
+
         console.error(error);
         res.status(500).json({ error: 'Se ha producido un error al acceder a los datos' });
-    }        
+    }
 }
 
 const reserverEquipment = async (req, res) => {
-    const {type, idEquip} = req.params;
+    const { type, idEquip } = req.params;
     const VALID_TYPES = ["books", "equipments"];
 
-    if(type === VALID_TYPES[0]){
-            
+    if (type === VALID_TYPES[0]) {
+
         const reservationBook = new ReservationBook(req.body);
         console.log(reservationBook);
         // try {
@@ -210,23 +227,23 @@ const reserverEquipment = async (req, res) => {
 
 
     else if (type === VALID_TYPES[1]) {
-        
+
         const ReservationEquipment = new ReservationEquipment(req.body);
 
         try {
             // save the reservation in ReservationEquipment
-            const  ReservationEquipmentStored =   await ReservationEquipment.save();
+            const ReservationEquipmentStored = await ReservationEquipment.save();
             res.json(ReservationEquipmentStored)
         } catch (error) {
             console.log(error);
         }
-    }   
+    }
 
-    else{
+    else {
         const error = new Error("No existe tal categoria, debe elegir entre libros o equipos");
         return res.status(404).json({ msg: error.message });
     }
-    
+
 }
 
 
