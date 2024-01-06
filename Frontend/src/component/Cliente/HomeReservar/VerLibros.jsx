@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from '../../../page/Cliente/styles/HomeReservar.module.css';
 import { toast } from 'react-toastify';
@@ -10,6 +10,18 @@ const VerLibros = () => {
     });
 
     const [selectedRow, setSelectedRow] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
+
+    const [libros, setLibros] = useState([]);
+    const [searchTermLibros, setSearchTermLibros] = useState('');
+    const [searchResultsLibros, setSearchResultsLibros] = useState([]);
+
+    const handlePageClick = ({ selected }) => {
+        setCurrentPage(selected);
+    };
 
     const limpiarFormularioLibros = () => {
         setFormDataLibros({
@@ -29,9 +41,10 @@ const VerLibros = () => {
 
     const handleRowSelection = (libro) => {
         setSelectedRow((prevSelectedRow) =>
-            prevSelectedRow && prevSelectedRow.titulo === libro.titulo ? null : libro
+            prevSelectedRow && prevSelectedRow.title === libro.title ? null : libro
         );
     };
+
 
     const handleSubmitLibros = (e) => {
         e.preventDefault();
@@ -47,11 +60,11 @@ const VerLibros = () => {
         }
 
         const reservaData = {
-            titulo: selectedRow.titulo,
-            año: selectedRow.año,
-            categoria: selectedRow.categoria,
-            autores: selectedRow.autores,
-            lenguaje: selectedRow.lenguaje,
+            title: selectedRow.title,
+            year: selectedRow.year,
+            category: selectedRow.category,
+            'author(s)': selectedRow['author(s)'],
+            language: selectedRow.language,
             fechaInicio: formDataLibros.fechaInicio,
             fechaFin: formDataLibros.fechaFin,
         };
@@ -69,43 +82,64 @@ const VerLibros = () => {
         console.log(reservaData);
     };
 
-    const libroData = [
-        {
-            titulo: 'Libro 1',
-            año: 'Componente 1, Componente 2',
-            categoria: 'Programacion',
-            autores: 'Luis y Fabian',
-            lenguaje: 'ES'
-        },
-        {
-            titulo: 'Libro 2',
-            año: 'Componente 1, Componente 2',
-            categoria: 'Robotica',
-            autores: 'Arturo y Maria',
-            lenguaje: 'EN'
-        },
-        // Agrega más datos de libros según sea necesario
-    ];
+    // Efecto para cargar libros desde el backend
+    useEffect(() => {
+        const fetchLibros = async () => {
+            try {
+                const response = await fetch("http://localhost:4000/api/students/view-equipments/books");
+                const data = await response.json();
+                setLibros(data);
+            } catch (error) {
+                console.error("Error fetching libros:", error);
+            }
+        };
+        fetchLibros();
+    }, []);
 
-    const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 2;
-
-    const handlePageClick = ({ selected }) => {
-        setCurrentPage(selected);
+    const normalizeString = (str) => {
+        return str
+            ? str
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
     };
 
-    const [searchTermLibros, setSearchTermLibros] = useState('');
-    const [searchResultsLibros, setSearchResultsLibros] = useState([]);
 
-    const handleSearchLibros = (searchTermLibros) => {
-        const filteredResults = libroData.filter((libro) => {
+
+    const handleSearchLibros = (value) => {
+        const normalizedSearchTerm = normalizeString(value);
+        const filteredResults = libros.filter((libro) => {
+            const normalizedTitle = normalizeString(libro.title);
+            const normalizedCategory = normalizeString(libro.category);
+
             return (
-                libro.titulo.toLowerCase().includes(searchTermLibros.toLowerCase()) ||
-                libro.categoria.toLowerCase().includes(searchTermLibros.toLowerCase())
+                (libro.title && normalizedTitle.includes(normalizedSearchTerm)) ||
+                (libro.category && normalizedCategory.includes(normalizedSearchTerm))
             );
         });
+
+        setSearchTermLibros(value);
         setSearchResultsLibros(filteredResults);
+
+        const newItemsPerPage = filteredResults.length > 0 ? Math.max(filteredResults.length, 10) : 10;
+
+        // Ajustar itemsPerPage dependiendo de la cantidad de resultados
+        setItemsPerPage(Math.min(newItemsPerPage, 10)); //coincidencias devidido en paginas
+
+        // Resetear la página actual al realizar una búsqueda
+        setCurrentPage(0);
     };
+
+    const librosToDisplay = searchResultsLibros.length > 0 ? searchResultsLibros : libros;
+    const start = currentPage * itemsPerPage;
+    const end = Math.min(start + itemsPerPage, librosToDisplay.length);
+    const librosToDisplayPaginated = librosToDisplay.slice(start, end);
+
+
+
+    console.log('Libros To Display:', librosToDisplayPaginated);
+
 
     return (
         <>
@@ -114,17 +148,12 @@ const VerLibros = () => {
                     <div>
                         <input
                             type="text"
-                            placeholder="Buscar por nombre titulo del Libro o categoria"
+                            placeholder="Buscar por nombre del Libro o categoría"
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
                             value={searchTermLibros}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                setSearchTermLibros(value);
-                                handleSearchLibros(value);
-                            }}
+                            onChange={(e) => handleSearchLibros(e.target.value)}
                         />
                     </div>
-
                     <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Libros Disponibles</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full table-auto" style={{ width: '100%', border: '1px solid #000' }}>
@@ -139,62 +168,32 @@ const VerLibros = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {searchResultsLibros.length > 0 ? (
-                                    searchResultsLibros.map((libro, index) => (
-                                        <tr key={index}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <input
-                                                    type="checkbox"
-                                                    onChange={() => handleRowSelection(libro)}
-                                                    checked={selectedRow === libro}
-                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
-                                                />
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.titulo}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.año}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.categoria}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.autores}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.lenguaje}</td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    libroData.map((libro, index) => (
-                                        <tr key={index}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <input
-                                                    type="checkbox"
-                                                    onChange={() => handleRowSelection(libro)}
-                                                    checked={selectedRow && selectedRow.titulo === libro.titulo}
-                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
-                                                />
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.titulo}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.año}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.categoria}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.autores}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{libro.lenguaje}</td>
-                                        </tr>
-                                    ))
-                                )}
+                                {librosToDisplayPaginated.map((libro, index) => (
+                                    <tr key={index}>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <input
+                                                type="checkbox"
+                                                onChange={() => handleRowSelection(libro)}
+                                                checked={selectedRow === libro}
+                                                className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
+                                            />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{libro.title}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{libro.year}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{libro.category}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{libro['author(s)']}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{libro.language}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                     <div className="mt-4 flex justify-center">
                         <ReactPaginate
-                            previousLabel={
-                                <span className="px-2 py-1 rounded border border-gray-300 bg-white">
-                                    Anterior
-                                </span>
-                            }
-                            nextLabel={
-                                <span className="px-2 py-1 rounded border border-gray-300 bg-white">
-                                    Siguiente
-                                </span>
-                            }
-                            breakLabel={
-                                <span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>
-                            }
-                            pageCount={Math.ceil(libroData.length / itemsPerPage)}
+                            previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                            nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                            breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                            pageCount={Math.ceil(librosToDisplay.length / itemsPerPage)}
                             marginPagesDisplayed={2}
                             pageRangeDisplayed={5}
                             onPageChange={handlePageClick}
@@ -247,6 +246,6 @@ const VerLibros = () => {
             </form>
         </>
     );
-}
+};
 
 export default VerLibros;

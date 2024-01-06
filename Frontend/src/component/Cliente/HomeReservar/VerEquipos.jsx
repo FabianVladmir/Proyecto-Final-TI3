@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from '../../../page/Cliente/styles/HomeReservar.module.css';
 import { toast } from 'react-toastify';
@@ -6,11 +6,20 @@ import { toast } from 'react-toastify';
 const VerEquipos = () => {
     const [formDataEquipos, setFormDataEquipos] = useState({
         fecha: '',
-        horaInicio: '', 
-        horaFin: '',    
+        horaInicio: '',
+        horaFin: '',
     });
 
     const [selectedRow, setSelectedRow] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [equipos, setEquipos] = useState([]);
+    const [searchTermEquipos, setSearchTermEquipos] = useState('');
+    const [searchResultsEquipos, setSearchResultsEquipos] = useState([]);
+
+    const handlePageClick = ({ selected }) => {
+        setCurrentPage(selected);
+    };
 
     const limpiarFormularioEquipos = () => {
         setFormDataEquipos({
@@ -27,14 +36,13 @@ const VerEquipos = () => {
             ...formDataEquipos,
             [name]: value,
         });
-    };;
+    };
 
     const handleRowSelection = (equipo) => {
         setSelectedRow((prevSelectedRow) =>
-            prevSelectedRow && prevSelectedRow.equipo === equipo.equipo ? null : equipo
+            prevSelectedRow && prevSelectedRow.name === equipo.name ? null : equipo
         );
     };
-
 
     const handleSubmitEquipos = (e) => {
         e.preventDefault();
@@ -50,10 +58,9 @@ const VerEquipos = () => {
         }
 
         const reservaData = {
-            equipo: selectedRow.equipo,
-            componentes: selectedRow.componentes,
-            estado: selectedRow.estado,
-            modelo: selectedRow.modelo,
+            name: selectedRow.name,
+            components: selectedRow.components,
+            state: selectedRow.state,
             fecha: formDataEquipos.fecha,
             horaInicio: formDataEquipos.horaInicio,
             horaFin: formDataEquipos.horaFin,
@@ -72,41 +79,65 @@ const VerEquipos = () => {
         console.log(reservaData);
     };
 
-    const equipoData = [
-        {
-            equipo: 'Equipo 1',
-            componentes: 'Componente 1, Componente 2',
-            estado: 'Disponible',
-            modelo: 'Modelo 123',
-        },
-        {
-            equipo: 'Equipo 2',
-            componentes: 'Componente 3, Componente 4',
-            estado: 'En uso',
-            modelo: 'Modelo 456',
-        },
-        // Agrega más datos de equipos según sea necesario
-    ];
+    // Efecto para cargar equipos desde el backend
+    useEffect(() => {
+        const fetchEquipos = async () => {
+            try {
+                const response = await fetch("http://localhost:4000/api/students/view-equipments/equipments");
+                const data = await response.json();
+                // Filtrar solo equipos con amount > 0
+                const filteredEquipos = data.filter((equipo) => equipo.amount > 0);
+                setEquipos(filteredEquipos);
+                setSearchResultsEquipos(filteredEquipos);
+            } catch (error) {
+                console.error("Error fetching equipos:", error);
+            }
+        };
+        fetchEquipos();
+    }, []);
 
-    const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 2;
-
-    const handlePageClick = ({ selected }) => {
-        setCurrentPage(selected);
+    const normalizeString = (str) => {
+        return str
+            ? str
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
     };
 
-    const [searchTermEquipos, setSearchTermEquipos] = useState('');
-    const [searchResultsEquipos, setSearchResultsEquipos] = useState([]);
 
-    const handleSearch = (searchTermEquipos) => {
-        const filteredResults = equipoData.filter((e) => {
+    const handleSearch = (value) => {
+        const normalizedSearchTerm = normalizeString(value);
+        const filteredResults = equipos.filter((equipo) => {
+            const normalizedName = normalizeString(equipo.name);
+            const normalizedState = normalizeString(equipo.state);
+
             return (
-                e.equipo.toLowerCase().includes(searchTermEquipos.toLowerCase()) ||
-                e.modelo.toLowerCase().includes(searchTermEquipos.toLowerCase())
+                normalizedName.includes(normalizedSearchTerm) &&
+                normalizedState.includes("operativo") &&
+                equipo.amount > 0
             );
         });
+
+        setSearchTermEquipos(value);
         setSearchResultsEquipos(filteredResults);
+
+        const newItemsPerPage = filteredResults.length > 0 ? Math.max(filteredResults.length, 10) : 10;
+
+        // Ajustar itemsPerPage dependiendo de la cantidad de resultados
+        // Set itemsPerPage to the minimum of newItemsPerPage and a default value (e.g., 10)
+        setItemsPerPage(Math.min(newItemsPerPage, 10)); //coincidencias devidido en paginas
+
+        // Resetear la página actual al realizar una búsqueda
+        setCurrentPage(0);
     };
+
+    const equiposToDisplay = searchResultsEquipos.length > 0 ? searchResultsEquipos : equipos;
+    const start = currentPage * itemsPerPage;
+    const end = Math.min(start + itemsPerPage, equiposToDisplay.length);
+    const equiposToDisplayPaginated = equiposToDisplay.slice(start, end);
+
+    console.log('Equipos To Display:', equiposToDisplayPaginated);
 
     return (
         <>
@@ -118,12 +149,10 @@ const VerEquipos = () => {
                             placeholder="Buscar por nombre del Equipo o modelo"
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
                             value={searchTermEquipos}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                setSearchTermEquipos(value);
-                                handleSearch(value);
-                            }}
+                            onChange={(e) => handleSearch(e.target.value)}
                         />
+
+
                     </div>
                     <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Equipos Disponibles</h2>
                     <div className="overflow-x-auto">
@@ -131,70 +160,36 @@ const VerEquipos = () => {
                             <thead>
                                 <tr>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Seleccionar</th>
-                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Equipo</th>
-                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Componentes</th>
-                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Estado</th>
-                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Modelo</th>
+                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Name</th>
+                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">State</th>
+                                    <th className="px-6 py-3 bg-blue-500 text-white text-left">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {searchResultsEquipos.length > 0 ? (
-                                    searchResultsEquipos.map((equipo, index) => (
-                                        <tr key={index}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <input
-                                                    type="checkbox"
-                                                    onChange={() => handleRowSelection(equipo)}
-                                                    checked={selectedRow === equipo}
-                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
-                                                />
-
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.equipo}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.componentes}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.estado}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.modelo}</td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    equipoData.map((equipo, index) => (
-                                        <tr key={index}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <input
-                                                    type="checkbox"
-                                                    onChange={() => handleRowSelection(equipo)}
-                                                    checked={selectedRow && selectedRow.equipo === equipo.equipo}
-                                                    className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
-                                                />
-
-
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.equipo}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.componentes}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.estado}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{equipo.modelo}</td>
-                                        </tr>
-                                    ))
-                                )}
+                                {equiposToDisplayPaginated.map((equipo, index) => (
+                                    <tr key={index}>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <input
+                                                type="checkbox"
+                                                onChange={() => handleRowSelection(equipo)}
+                                                checked={selectedRow === equipo}
+                                                className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
+                                            />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{equipo.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{equipo.state}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{equipo.amount}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                     <div className="mt-4 flex justify-center">
                         <ReactPaginate
-                            previousLabel={
-                                <span className="px-2 py-1 rounded border border-gray-300 bg-white">
-                                    Anterior
-                                </span>
-                            }
-                            nextLabel={
-                                <span className="px-2 py-1 rounded border border-gray-300 bg-white">
-                                    Siguiente
-                                </span>
-                            }
-                            breakLabel={
-                                <span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>
-                            }
-                            pageCount={Math.ceil(equipoData.length / itemsPerPage)}
+                            previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                            nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                            breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                            pageCount={Math.ceil(equiposToDisplay.length / itemsPerPage)}
                             marginPagesDisplayed={2}
                             pageRangeDisplayed={5}
                             onPageChange={handlePageClick}
@@ -206,6 +201,7 @@ const VerEquipos = () => {
                         />
                     </div>
                 </div>
+
                 <div className={`${styles.card} max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg`}>
                     <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Reservar Equipo</h2>
                     <div className="mb-4">
