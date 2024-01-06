@@ -38,10 +38,6 @@ const studentSchema = mongoose.Schema({
     token:{
         type: String,
         default: generateID()
-    },   
-    role:{
-        type: String,
-        default: null
     }
 });
 
