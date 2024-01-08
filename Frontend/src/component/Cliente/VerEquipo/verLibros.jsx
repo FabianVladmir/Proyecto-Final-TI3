@@ -21,24 +21,40 @@ const LibrosTable = () => {
         fetchLibros();
     }, []);
 
-    // Filtrar libros basados en el término de búsqueda
-    const searchTermKeywords = searchTerm.toLowerCase().split(' ');
-    const filteredLibros = libros.filter((item) => {
-        const combinedFields = `${item.title} ${item.category} ${item.language}`.toLowerCase();
+    const normalizeString = (str) => {
+        return str
+            ? str
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
+    };
 
-        // Incluir lógica para manejar los casos de búsqueda por lenguaje
-        const includesLanguage = searchTermKeywords.some((keyword) => {
+    // Filtrar libros basados en el término de búsqueda
+    const searchTermKeywords = normalizeString(searchTerm.toLowerCase()).split(' ');
+    const filteredLibros = libros.filter((item) => {
+        // Verificar si las propiedades existen antes de acceder a ellas
+        const title = item.title ? normalizeString(item.title.toLowerCase()) : '';
+        const category = item.category ? normalizeString(item.category.toLowerCase()) : '';
+        const language = item.language ? normalizeString(item.language.toLowerCase()) : '';
+
+        // Convertir todos los campos a minúsculas y quitar acentos
+        const combinedFields = `${title} ${category} ${language}`;
+
+        // Incluir lógica para manejar los casos de búsqueda por lenguaje y categoría
+        const includesSearchTerm = searchTermKeywords.every((keyword) => {
             if (keyword === 'en') {
-                return item.language.toLowerCase().includes('english') || item.language.toLowerCase() === 'en';;
+                return language.includes('english') || language === 'en';
             } else if (keyword === 'es') {
-                return item.language.toLowerCase().includes('spanish') || item.language.toLowerCase() === 'es';
+                return language.includes('spanish') || language === 'es';
             } else {
                 return combinedFields.includes(keyword);
             }
         });
 
-        return includesLanguage;
+        return includesSearchTerm;
     });
+
 
 
 
@@ -68,15 +84,15 @@ const LibrosTable = () => {
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Title</th>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Year</th>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Edition</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Titulo</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Año</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Edicion</th>
                             <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Editorial</th>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Author(s)</th>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Category</th>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Amount</th>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Language</th>
-                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">State</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Autores</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Categoria</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Cantidad</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Lenguaje</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Estado</th>
 
                         </tr>
                     </thead>

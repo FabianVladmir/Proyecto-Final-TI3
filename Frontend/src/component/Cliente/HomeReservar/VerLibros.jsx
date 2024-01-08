@@ -105,18 +105,24 @@ const VerLibros = () => {
             : "";
     };
 
-
-
     const handleSearchLibros = (value) => {
         const normalizedSearchTerm = normalizeString(value);
         const filteredResults = libros.filter((libro) => {
             const normalizedTitle = normalizeString(libro.title);
             const normalizedCategory = normalizeString(libro.category);
+            const normalizedLanguage = normalizeString(libro.language);
 
-            return (
-                (libro.title && normalizedTitle.includes(normalizedSearchTerm)) ||
-                (libro.category && normalizedCategory.includes(normalizedSearchTerm))
-            );
+            const isLanguageSearch = ['es', 'en'].includes(normalizedSearchTerm);
+
+            if (isLanguageSearch) {
+                return normalizedLanguage.includes(normalizedSearchTerm);
+            } else {
+                return (
+                    (libro.title && normalizedTitle.includes(normalizedSearchTerm)) ||
+                    (libro.category && normalizedCategory.includes(normalizedSearchTerm)) ||
+                    (libro.language && normalizedLanguage.includes(normalizedSearchTerm))
+                );
+            }
         });
 
         setSearchTermLibros(value);
@@ -130,6 +136,7 @@ const VerLibros = () => {
         // Resetear la página actual al realizar una búsqueda
         setCurrentPage(0);
     };
+
 
     const librosToDisplay = searchResultsLibros.length > 0 ? searchResultsLibros : libros;
     const start = currentPage * itemsPerPage;
@@ -148,7 +155,7 @@ const VerLibros = () => {
                     <div>
                         <input
                             type="text"
-                            placeholder="Buscar por nombre del Libro o categoría"
+                            placeholder="Buscar por nombre del Libro, categoría o lenguaje español o ingles(ES o EN)"
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
                             value={searchTermLibros}
                             onChange={(e) => handleSearchLibros(e.target.value)}

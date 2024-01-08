@@ -5,7 +5,7 @@ const EquiposTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const itemsPerPage = 5;
+    const itemsPerPage = 10;
 
     //Backend
     const [equipos, setEquipos] = useState([]);
@@ -22,11 +22,23 @@ const EquiposTable = () => {
         fetchEquipos();
     }, []);
 
+
+
+    const normalizeString = (str) => {
+        return str
+            ? str
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
+    };
     // Filtrar libros basados en el término de búsqueda
     const filteredEquipos = equipos.filter(
         (item) =>
-          (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        (item.name &&
+            normalizeString(item.name.toLowerCase()).includes(normalizeString(searchTerm.toLowerCase())))
     );
+
 
     const pageCount = Math.ceil(filteredEquipos.length / itemsPerPage);
     const handlePageClick = ({ selected }) => {
@@ -52,10 +64,10 @@ const EquiposTable = () => {
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Name</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Amount</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Components</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">State</th>
+                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Nombre</th>
+                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Cantidad</th>
+                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Componentes</th>
+                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
