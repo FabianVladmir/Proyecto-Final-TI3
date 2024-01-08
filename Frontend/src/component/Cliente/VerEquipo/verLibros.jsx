@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate';
 const LibrosTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
-    const itemsPerPage = 5;
+    const itemsPerPage = 10;
 
     // Backend
     const [libros, setLibros] = useState([]);
@@ -23,12 +23,24 @@ const LibrosTable = () => {
 
     // Filtrar libros basados en el término de búsqueda
     const searchTermKeywords = searchTerm.toLowerCase().split(' ');
-    const filteredLibros = libros.filter(
-        (item) => {
-            const combinedFields = `${item.title} ${item.editorial} ${item.category}`.toLowerCase();
-            return searchTermKeywords.some(keyword => combinedFields.includes(keyword));
-        }
-    );
+    const filteredLibros = libros.filter((item) => {
+        const combinedFields = `${item.title} ${item.category} ${item.language}`.toLowerCase();
+
+        // Incluir lógica para manejar los casos de búsqueda por lenguaje
+        const includesLanguage = searchTermKeywords.some((keyword) => {
+            if (keyword === 'en') {
+                return item.language.toLowerCase().includes('english') || item.language.toLowerCase() === 'en';;
+            } else if (keyword === 'es') {
+                return item.language.toLowerCase().includes('spanish') || item.language.toLowerCase() === 'es';
+            } else {
+                return combinedFields.includes(keyword);
+            }
+        });
+
+        return includesLanguage;
+    });
+
+
 
     const pageCount = Math.ceil(filteredLibros.length / itemsPerPage);
 
@@ -45,7 +57,7 @@ const LibrosTable = () => {
             <div className="mb-4">
                 <input
                     type="text"
-                    placeholder="Buscar por título, editorial o categoria"
+                    placeholder="Buscar por título, categoria o lenguaje español o ingles(ES o EN)"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="text text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
@@ -64,6 +76,8 @@ const LibrosTable = () => {
                             <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Category</th>
                             <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Amount</th>
                             <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">Language</th>
+                            <th className="px-4 py-3 bg-blue-500 text-white text-left sm:w-1/4">State</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -93,6 +107,8 @@ const LibrosTable = () => {
                                 </td>
                                 <td className="px-4 py-4 whitespace-nowrap">{item.amount}</td>
                                 <td className="px-4 py-4 whitespace-nowrap">{item.language}</td>
+                                <td className="px-4 py-4 whitespace-nowrap">{item.state}</td>
+
                             </tr>
                         ))}
                     </tbody>
