@@ -6,6 +6,7 @@ import HomeClient from '../page/Cliente/Home';
 import HorarioClient from '../page/Cliente/HomeHorario';
 import ReservarClient from '../page/Cliente/HomeReservar';
 import VerEquipos from '../page/Cliente/HomeVerEquipo';
+import Perfil from '../page/Cliente/HomePerfil';
 
 function ClientRoutes() {
   return (
@@ -16,6 +17,8 @@ function ClientRoutes() {
         <Route path="/horario" element={<HorarioClient />} />
         <Route path="/reservar" element={<ReservarClient />} />
         <Route path="/ver-equipos" element={<VerEquipos />} />
+        <Route path="/perfil" element={<Perfil />} />
+
 
         <Route
           path="/*"

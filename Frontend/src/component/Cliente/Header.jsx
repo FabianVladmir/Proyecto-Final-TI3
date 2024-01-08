@@ -26,7 +26,7 @@ function Header(props) {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to="home"><a className="btn">Mi cuenta</a></Link>
+                    <Link to="perfil"><a className="btn">Mi cuenta</a></Link>
                 </div>
             </div>
 
