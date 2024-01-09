@@ -2,65 +2,110 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 import Alerta from '../../component/Alerta';
 import styles from './styles/HomeRegister.module.css';
 
 function RegistroForm() {
     const [formData, setFormData] = useState({
-        nombres: '',
-        apellidos: '',
+        firstname: '',
+        lastname: '',
         cui: '',
-        correo: '',
+        email: '',
         telefono: '',
-        contraseña: '',
-        confirmarContraseña: '',
-        aceptaTerminos: false,
+        password: '',
+        confimarPassword: '',
     });
 
-    const [alerta, setAlerta] = useState({});
 
-    const handleChange = (event) => {
-        const { name, value, type, checked } = event.target;
+    const limpiarRegistro = () => {
         setFormData({
-            ...formData,
-            [name]: type === 'checkbox' ? checked : value,
+            firstname: '',
+            lastname: '',
+            cui: '',
+            email: '',
+            telefono: '',
+            password: '',
+            confimarPassword: '',
         });
-    }
+    };
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const { nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña } = formData;
-        // console.log("vacio");
+        const { firstname, lastname, cui, email, telefono, password, confimarPassword } = formData;
 
-        if ([nombres, apellidos, cui, correo, telefono, contraseña, confirmarContraseña].includes('')) {
-            console.log("vacio");
-            setAlerta({ msg: 'Hay campos vacios', error: true })
+        const validationErrors = [];
+
+        if (!firstname) {
+            validationErrors.push('Nombres');
+        }
+
+        if (!lastname) {
+            validationErrors.push('Apellidos');
+        }
+
+        if (!cui || cui.toString().length !== 8) {
+            validationErrors.push('CUI (debe tener exactamente 8 dígitos)');
+        }
+
+        if (!email || !/^[^\s@]+@unsa\.edu\.pe$/.test(email)) {
+            validationErrors.push('Correo Electrónico (debe tener el formato correcto {ej. cualquiera@unsa.edu.pe})');
+        }
+
+        if (!telefono || telefono.toString().length !== 9) {
+            validationErrors.push('Teléfono (debe tener exactamente 9 dígitos)');
+        }
+
+        if (!password || password.length < 6) {
+            validationErrors.push('Contraseña (debe tener al menos 6 caracteres)');
+        }
+
+        if (password !== confimarPassword) {
+            validationErrors.push('Confirmar Contraseña (debe coincidir con la contraseña)');
+        }
+
+        if (validationErrors.length > 0) {
+            validationErrors.forEach((error) => {
+                toast.error(`Falta llenar el campo: ${error}`, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+            });
             return;
         }
 
-        if (contraseña !== confirmarContraseña) {
-            setAlerta({ msg: 'Los Password no son iguales', error: true })
-            return
-        }
+        // Si todo es exitoso, muestra un mensaje de éxito
+        toast.success('Cuenta creada exitosamente', {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 3000,
+        });
 
-        if (contraseña.length < 6) {
-            setAlerta({ msg: 'El Password es muy corto, agrega minimo 6 caracteres', error: true })
-            return
-        }
-
-        setAlerta({});
-
-
+        setTimeout(() => {
+            limpiarRegistro();
+            // Redirige a la página deseada después del inicio de sesión
+            //navigate('/client/home'); // Ajusta la ruta según tus necesidades
+        }, 1000);
+    };
 
 
-        // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
-    }
 
-    const { msg } = alerta
 
     return (
         <div>
+            <ToastContainer />
             <div className={`${styles.hero} ${styles.heroContent} hero`}>
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>
@@ -72,20 +117,15 @@ function RegistroForm() {
                                 <h1 className="text-3xl font-bold">CREAR CUENTA</h1>
                             </div>
 
-                            {msg && <Alerta
-                                alerta={alerta}
-                            />}
-
                             <form onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block">Nombres</label>
                                         <input
                                             type="text"
-                                            name="nombres"
-                                            value={formData.nombres}
+                                            name="firstname"
+                                            value={formData.firstname}
                                             onChange={handleChange}
-                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
@@ -93,10 +133,9 @@ function RegistroForm() {
                                         <label className="block">Apellidos</label>
                                         <input
                                             type="text"
-                                            name="apellidos"
-                                            value={formData.apellidos}
+                                            name="lastname"
+                                            value={formData.lastname}
                                             onChange={handleChange}
-                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
@@ -108,18 +147,16 @@ function RegistroForm() {
                                         name="cui"
                                         value={formData.cui}
                                         onChange={handleChange}
-                                        required
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block">Correo</label>
+                                    <label className="block">Correo Electronico</label>
                                     <input
                                         type="email"
-                                        name="correo"
-                                        value={formData.correo}
+                                        name="email"
+                                        value={formData.email}
                                         onChange={handleChange}
-                                        required
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />
                                 </div>
@@ -130,7 +167,6 @@ function RegistroForm() {
                                         name="telefono"
                                         value={formData.telefono}
                                         onChange={handleChange}
-                                        required
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />
                                 </div>
@@ -139,10 +175,9 @@ function RegistroForm() {
                                         <label className="block">Contraseña</label>
                                         <input
                                             type="password"
-                                            name="contraseña"
-                                            value={formData.contraseña}
+                                            name="password"
+                                            value={formData.password}
                                             onChange={handleChange}
-                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
@@ -150,25 +185,12 @@ function RegistroForm() {
                                         <label className="block">Confirmar Contraseña</label>
                                         <input
                                             type="password"
-                                            name="confirmarContraseña"
-                                            value={formData.confirmarContraseña}
+                                            name="confimarPassword"
+                                            value={formData.confimarPassword}
                                             onChange={handleChange}
-                                            required
                                             className="w-full p-2 border border-gray-300 rounded"
                                         />
                                     </div>
-                                </div>
-                                <div className="text-center col-span-2">
-                                    <label className="block">
-                                        <input
-                                            type="checkbox"
-                                            name="aceptaTerminos"
-                                            checked={formData.aceptaTerminos}
-                                            onChange={handleChange}
-                                            className="mr-4"
-                                        />
-                                        Acepto los términos y condiciones
-                                    </label>
                                 </div>
                                 <div className="col-span-2 text-center">
                                     <button type="submit" className="bg-blue-600 text-white rounded p-2">
