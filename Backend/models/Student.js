@@ -38,7 +38,11 @@ const studentSchema = mongoose.Schema({
     token:{
         type: String,
         default: generateID()
-    }
+    },
+    confirmado: {
+        type: Boolean,
+        default: false, // Por defecto, un estudiante no está confirmado
+    },
 });
 
 //encrypt the password

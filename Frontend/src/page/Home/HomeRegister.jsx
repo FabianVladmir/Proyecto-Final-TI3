@@ -5,17 +5,17 @@ import Logo from '../../assets/ce-epcc.png';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-import Alerta from '../../component/Alerta';
 import styles from './styles/HomeRegister.module.css';
+
+import axios from 'axios';  // Importa Axios
 
 function RegistroForm() {
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
-        cui: '',
+        CUI: '',
         email: '',
-        telefono: '',
+        telephone: '',
         password: '',
         confimarPassword: '',
     });
@@ -25,9 +25,9 @@ function RegistroForm() {
         setFormData({
             firstname: '',
             lastname: '',
-            cui: '',
+            CUI: '',
             email: '',
-            telefono: '',
+            telephone: '',
             password: '',
             confimarPassword: '',
         });
@@ -42,10 +42,10 @@ function RegistroForm() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { firstname, lastname, cui, email, telefono, password, confimarPassword } = formData;
+        const { firstname, lastname, CUI, email, telephone, password, confimarPassword } = formData;
 
         const validationErrors = [];
 
@@ -57,7 +57,7 @@ function RegistroForm() {
             validationErrors.push('Apellidos');
         }
 
-        if (!cui || cui.toString().length !== 8) {
+        if (!CUI || CUI.toString().length !== 8) {
             validationErrors.push('CUI (debe tener exactamente 8 dígitos)');
         }
 
@@ -65,7 +65,7 @@ function RegistroForm() {
             validationErrors.push('Correo Electrónico (debe tener el formato correcto {ej. cualquiera@unsa.edu.pe})');
         }
 
-        if (!telefono || telefono.toString().length !== 9) {
+        if (!telephone || telephone.toString().length !== 9) {
             validationErrors.push('Teléfono (debe tener exactamente 9 dígitos)');
         }
 
@@ -87,17 +87,30 @@ function RegistroForm() {
             return;
         }
 
-        // Si todo es exitoso, muestra un mensaje de éxito
-        toast.success('Cuenta creada exitosamente', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 3000,
-        });
+        try {
+            // Realizar la solicitud al servidor usando Axios
+            const response = await axios.post('http://localhost:4000/api/students/', formData);
 
-        setTimeout(() => {
-            limpiarRegistro();
-            // Redirige a la página deseada después del inicio de sesión
-            //navigate('/client/home'); // Ajusta la ruta según tus necesidades
-        }, 1000);
+            // Verificar la respuesta del servidor
+            if (response.status === 200) {
+                // Éxito: Limpiar el formulario y mostrar mensaje de éxito
+                toast.success('Cuenta creada exitosamente', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+
+                setTimeout(() => {
+                    limpiarRegistro();
+                    // Redirige a la página deseada después del registro
+                    //navigate('/client/home'); // Ajusta la ruta según tus necesidades
+                }, 1000);
+            } else {
+                // Manejar otros casos de respuesta del servidor según sea necesario
+                console.error('Error en la solicitud al servidor:', response);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud al servidor:', error);
+        }
     };
 
 
@@ -144,8 +157,8 @@ function RegistroForm() {
                                     <label className="block">CUI</label>
                                     <input
                                         type="number"
-                                        name="cui"
-                                        value={formData.cui}
+                                        name="CUI"
+                                        value={formData.CUI}
                                         onChange={handleChange}
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />
@@ -164,8 +177,8 @@ function RegistroForm() {
                                     <label className="block">Teléfono</label>
                                     <input
                                         type="tel"
-                                        name="telefono"
-                                        value={formData.telefono}
+                                        name="telephone"
+                                        value={formData.telephone}
                                         onChange={handleChange}
                                         className="w-full p-2 border border-gray-300 rounded"
                                     />

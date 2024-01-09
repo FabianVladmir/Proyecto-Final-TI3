@@ -6,9 +6,9 @@ import ReservationBook from "../models/ReservationBooks.js";
 import ReservationEquipment from "../models/ReservationEquipment.js";
 
 const signIn = async (req, res) => {
-    const { email } = req.body;
+    const { email, firstname, lastname, CUI, telephone, password } = req.body;
 
-    // check if a student already exists
+    // Verificar si ya existe un estudiante con el mismo correo
     const existsStudent = await Student.findOne({ email });
 
     if (existsStudent) {
@@ -17,23 +17,29 @@ const signIn = async (req, res) => {
     }
 
     try {
-        //Save mew student
-        const student = new Student(req.body);
+        // Crear una nueva instancia de Student con los valores proporcionados
+        const student = new Student({
+            firstname,
+            lastname,
+            CUI, // Puedes asignar el valor proporcionado o el valor por defecto según sea necesario
+            telephone, // Puedes asignar el valor proporcionado o el valor por defecto según sea necesario
+            password,
+            email,
+        });
+
+        // Guardar el nuevo estudiante
         const studentSave = await student.save();
 
-        //Envia el email
-        // emailRegistro({
-        //     email,
-        //     nombre,
-        //     token: studentSave.token
-        // })
-
-        res.json(studentSave)
+        // Enviar una respuesta exitosa
+        res.json(studentSave);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ msg: "Error interno del servidor" });
     }
+};
 
-}
+
+
 const profile = (req, res) => {
     const { student } = req;
     res.json({ student });
