@@ -5,6 +5,10 @@ import styles from './styles/HomeAgregarEquipos.module.css';
 import "react-toastify/dist/ReactToastify.css";
 import SeleccionEquipos from '../../component/SeleccionEquipos';
 
+
+import VerEquipos from '../../component/Admin/VerEquipos/VerEquipos.jsx';
+import VerLibros from '../../component/Admin/VerEquipos/VerLibros.jsx';
+
 const verEquipos = () => {
     //SeleccionEquipos.jsx
     const [showSelectionButtons, setShowSelectionButtons] = useState(true);
@@ -34,24 +38,18 @@ const verEquipos = () => {
             if (tipo === 'Libros' && mostrarFormulario) {
                 return (
                     <div>
-                        <div className={`hero min-h-screen bg-white rounded-lg shadow-lg ${styles.hero}`}>
-                            <div className={`${styles.card}`}>
+                        <div className="hero min-h-screen bg-white rounded-lg shadow-lg">
+                            <div className="justify-center h-screen">
                                 <div className="flex justify-end">
                                     <button
                                         onClick={() => setShowSelectionButtons(true)}
                                         className="bg-red-500 text-white py-2 px-4 rounded hover:bg-gray-600"
                                     >
-                                        Cancelar
+                                        Regresar a Selección
                                     </button>
                                 </div>
-                                <div className="text-center lg:text-center">
-                                    <a className="mx-auto flex items-center justify-center">
-                                        <img src={Logo} alt="Logo" className={`${styles.logo}`} />
-                                    </a>
-                                </div>
-                                <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Lista de Libros</h2>
-                                {/* <AgregarLibros /> */}
-
+                                <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Listado de Libros</h2>
+                                <VerLibros />
                             </div>
                         </div>
                     </div>
@@ -59,23 +57,18 @@ const verEquipos = () => {
             } else if (tipo === 'Equipos' && mostrarFormulario) {
                 return (
                     <div>
-                        <div className={`hero min-h-screen bg-white rounded-lg shadow-lg ${styles.hero}`}>
-                            <div className={`${styles.card}`}>
+                        <div className="hero min-h-screen bg-white rounded-lg shadow-lg">
+                            <div className="justify-center h-screen">
                                 <div className="flex justify-end">
                                     <button
                                         onClick={() => setShowSelectionButtons(true)}
                                         className="bg-red-500 text-white py-2 px-4 rounded hover:bg-gray-600"
                                     >
-                                        Cancelar
+                                        Regresar a Selección
                                     </button>
                                 </div>
-                                <div className="text-center lg:text-center">
-                                    <a className="mx-auto flex items-center justify-center">
-                                        <img src={Logo} alt="Logo" className={`${styles.logo}`} />
-                                    </a>
-                                </div>
-                                <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Lista de Equipos</h2>
-                                {/* <AgregarEquipos /> */}
+                                <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Listado de Equipos</h2>
+                                <VerEquipos />
                             </div>
                         </div>
                     </div>
