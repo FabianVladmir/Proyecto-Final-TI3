@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const equipmentSchema = new mongoose.Schema({
     name:{
@@ -21,8 +21,8 @@ const equipmentSchema = new mongoose.Schema({
 
 });
 
-const Book = mongoose.model('Book', equipmentSchema);
+const Equipment = mongoose.model('Equipment', equipmentSchema);
 
 
 
-export default Book;
+export default Equipment;
