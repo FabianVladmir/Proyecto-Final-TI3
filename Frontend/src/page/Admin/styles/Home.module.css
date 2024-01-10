@@ -1,6 +1,6 @@
 .imageStyles {
-    width: 1200px;
-    height: 400px;
+    width: 1500px;
+    height: 500px;
 }
 
 .containerStyles {
@@ -12,8 +12,8 @@
 
 .infoContainerStyles {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 30vh;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 15vh;
     text-align: center;
 }
 
