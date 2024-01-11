@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+import axios from 'axios';
 
 const VerEquipos = () => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -7,84 +8,18 @@ const VerEquipos = () => {
     const itemsPerPage = 5;
 
     // Datos de ejemplo para la tabla (puedes reemplazar esto con tu lógica de obtención de datos)
-    const [equipos, setEquipos] = useState([
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DRONE",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DRONE",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DRONE",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DJI Mavic Air Fly more combo(Drone)",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        {
-            name: "DRONE",
-            amount: 4,
-            components: "DVI Mavic Air (Negro Ónix) Mando a distancia 3 x Baterías de Vuelo I…",
-            state: "OPERATIVO",
-        },
-        // ... Otros equipos
-    ]);
-
+    const [equipos, setEquipos] = useState([]);
     useEffect(() => {
-        // Lógica para obtener datos de la API o cualquier fuente de datos
+        const fetchData = async () => {
+            try {
+                const response = await axios.get("http://localhost:4000/api/admin/get/equipments");
+                setEquipos(response.data);
+                console.log(equipos);
+            } catch (error) {
+                console.error('Error al obtener los equipos:', error);
+            }
+        };
+        fetchData();
     }, []);
 
     const normalizeString = (str) => {
@@ -136,14 +71,30 @@ const VerEquipos = () => {
             </div>
 
             <div className="overflow-x-auto">
+                <div className="mt-4 flex justify-center">
+                    <ReactPaginate
+                        previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                        nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                        breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'pagination flex justify-center'}
+                        subContainerClassName={'pages flex'}
+                        activeClassName={'active'}
+                        pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
+                        pageLinkClassName={'text-gray-800'}
+                    />
+                </div>
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Nombre</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Cantidad</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Componentes</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Estado</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Opción</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Nombre</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Cantidad</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Componentes</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Estado</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Opción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,7 +102,11 @@ const VerEquipos = () => {
                             <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                                 <td className="px-4 py-4">{item.name}</td>
                                 <td className="px-4 py-4">{item.amount}</td>
-                                <td className="px-4 py-4">{item.components}</td>
+                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                    <div style={{ maxWidth: "1000px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.components}>
+                                        {item.components}
+                                    </div>
+                                </td>                                
                                 <td className="px-4 py-4">{item.state}</td>
                                 <td className="px-4 py-4">
                                     <button onClick={() => handleEdit(item._id)} className="bg-blue-500 text-white px-2 py-1 rounded mr-2">Editar</button>
@@ -161,23 +116,6 @@ const VerEquipos = () => {
                         ))}
                     </tbody>
                 </table>
-            </div>
-
-            <div className="mt-4 flex justify-center">
-                <ReactPaginate
-                    previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
-                    nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
-                    breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageClick}
-                    containerClassName={'pagination flex justify-center'}
-                    subContainerClassName={'pages flex'}
-                    activeClassName={'active'}
-                    pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
-                    pageLinkClassName={'text-gray-800'}
-                />
             </div>
         </div>
     );

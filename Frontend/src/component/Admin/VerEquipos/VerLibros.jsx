@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+import axios from 'axios';
+
+
 
 const VerLibros = () => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -7,114 +10,19 @@ const VerLibros = () => {
     const itemsPerPage = 5;
 
     // Datos de ejemplo para la tabla (puedes reemplazar esto con tu lógica de obtención de datos)
-    const [libros, setLibros] = useState([
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-        {
-            title: "Diseño con la Mente en Mente",
-            year: 2014,
-            edition: 2,
-            editorial: "Pearson",
-            authors: "Jeff Johnson",
-            category: "HCI",
-            amount: 1,
-            language: "EN",
-            state: "DISPONIBLE",
-        },
-
-
-        // ... Otros libros
-    ]);
+    const [libros, setLibros] = useState([]);
 
     useEffect(() => {
-        // Lógica para obtener datos de la API o cualquier fuente de datos
+        const fetchData = async () => {
+            try {
+                const response = await axios.get("http://localhost:4000/api/admin/get/books");
+                setLibros(response.data);
+            } catch (error) {
+                console.error('Error al obtener los libros:', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const normalizeString = (str) => {
@@ -166,58 +74,74 @@ const VerLibros = () => {
             </div>
 
             <div className="overflow-x-auto">
+                <div className="mt-4 flex justify-center">
+                    <ReactPaginate
+                        previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                        nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                        breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'pagination flex justify-center'}
+                        subContainerClassName={'pages flex'}
+                        activeClassName={'active'}
+                        pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
+                        pageLinkClassName={'text-gray-800'}
+                    />
+                </div>
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Título</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Año</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Edición</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Editorial</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Autores</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Categoría</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Cantidad</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Lenguaje</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Estado</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white">Opción</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Título</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Año</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Edición</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Editorial</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Autores</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Categoría</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Cantidad</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Lenguaje</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Estado</th>
+                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Opción</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         {currentItems.map((item, index) => (
                             <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-4 py-4">{item.title}</td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-gray-300 overflow-hidden overflow-ellipsis">
+                                    <div style={{ maxWidth: "400px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.title}>
+                                        {item.title}
+                                    </div>
+                                </td>
                                 <td className="px-4 py-4">{item.year}</td>
                                 <td className="px-4 py-4">{item.edition}</td>
-                                <td className="px-4 py-4">{item.editorial}</td>
-                                <td className="px-4 py-4">{item.authors}</td>
-                                <td className="px-4 py-4">{item.category}</td>
+                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                    <div style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.editorial}>
+                                        {item.editorial}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                    <div style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item['author(s)']}>
+                                        {item['author(s)']}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                    <div style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
+                                        {item.category}
+                                    </div>
+                                </td>
                                 <td className="px-4 py-4">{item.amount}</td>
                                 <td className="px-4 py-4">{item.language}</td>
                                 <td className="px-4 py-4">{item.state}</td>
-                                <td className="px-4 py-4">
-                                    <button onClick={() => handleEdit(item._id)} className="bg-blue-500 text-white px-2 py-1 rounded mr-2">Editar</button>
-                                    <button onClick={() => handleDelete(item._id)} className="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
+                                <td className="px-8 py-4">
+                                    <button onClick={() => handleEdit(item._id)} className="bg-blue-500 text-white px-5 py-1 rounded mr-2">Editar</button>
+                                    <button onClick={() => handleDelete(item._id)} className="bg-red-500 text-white px- py-1 rounded">Eliminar</button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
-
-            <div className="mt-4 flex justify-center">
-                <ReactPaginate
-                    previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
-                    nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
-                    breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageClick}
-                    containerClassName={'pagination flex justify-center'}
-                    subContainerClassName={'pages flex'}
-                    activeClassName={'active'}
-                    pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
-                    pageLinkClassName={'text-gray-800'}
-                />
             </div>
         </div>
     );

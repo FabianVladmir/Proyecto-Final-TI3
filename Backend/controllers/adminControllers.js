@@ -1,6 +1,8 @@
 import Book from "../models/Book.js";
 import Equipment from "../models/Equipment.js";
 
+const VALID_TYPES = ['books', 'equipments'];
+
 const createItem = async (req, res) => {
     const { type } = req.params;
 
@@ -40,7 +42,6 @@ const getAllItems = async (req, res) => {
         } else if (type === "equipments") {
             collection = await Equipment.find();
         }
-
         res.json(collection);
     } catch (error) {
         console.error(error);
