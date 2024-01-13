@@ -9,13 +9,41 @@ const router = express.Router();
 
 // public routes
 router.post("/", signIn);
-router.get("/confirmAccount/:token", confirmAccount);
+router.get("/confirmar-cuenta/:token", confirmAccount);
 router.post("/login", authenticateStudent);
 router.post("/forget-password", forgetPassword);
 router.route("/forget-password/:token").get(checkToken).post(newPassword);
 
 router.get("/view-schedules/:type", viewSchedules);
 router.get("/view-equipments/:type", viewEquipment);
+// Agrega esta nueva ruta en tu archivo de rutas
+
+router.get('/confirmacion-exitosa', (req, res) => {
+    res.send(`
+        <html>
+        <head>
+            <style>
+                body {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+                .message-container {
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="message-container">
+                <h1>¡Tu cuenta ha sido confirmada exitosamente!</h1>
+            </div>
+        </body>
+        </html>
+    `);
+});
+
 
 // private routes
 router.get("/profile", checkAuth, profile);

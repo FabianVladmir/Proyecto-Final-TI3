@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+import nodemailer from 'nodemailer';
+
 import generateID from "../helpers/generateID.js";
-import genereateJWT from "../helpers/generateJWT.js";
+import generateJWT from "../helpers/generateJWT.js";
 import Student from "../models/Student.js";
 import ReservationBook from "../models/ReservationBooks.js";
 import ReservationEquipment from "../models/ReservationEquipment.js";
@@ -30,6 +32,11 @@ const signIn = async (req, res) => {
         // Guardar el nuevo estudiante
         const studentSave = await student.save();
 
+        // Enviar correo de confirmación
+        const confirmLink = `${process.env.APP_URL}/api/students/confirmar-cuenta/${student.token}`;
+        sendConfirmationEmail(student.email, confirmLink);
+
+
         // Enviar una respuesta exitosa
         res.json(studentSave);
     } catch (error) {
@@ -38,74 +45,125 @@ const signIn = async (req, res) => {
     }
 };
 
-
-
 const profile = (req, res) => {
     const { student } = req;
     res.json({ student });
 }
 
+
+const sendConfirmationEmail = (email, confirmLink) => {
+    console.log('Confirmation Link:', confirmLink); // Agrega esta línea para registrar el enlace de confirmación
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS,
+        },
+    });
+
+    const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: email,
+        subject: 'Confirmación de cuenta',
+        text: `Por favor, haz clic en el siguiente enlace para confirmar tu cuenta: ${confirmLink}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error al enviar el correo de confirmación:', error);
+        } else {
+            console.log('Correo de confirmación enviado:', info.response);
+        }
+    });
+};
+
 const confirmAccount = async (req, res) => {
-    //read url values
+    // Leer valores de la URL
     const { token } = req.params;
     const studentConfirm = await Student.findOne({ token });
 
     if (!studentConfirm) {
-        const error = new Error('token no valido');
+        const error = new Error('Token no válido');
         return res.status(404).json({ msg: error.message });
     }
 
     try {
+        // Actualizar los datos del estudiante
         studentConfirm.token = null;
         studentConfirm.confirmado = true;
         await studentConfirm.save();
 
-        res.json({ msg: "Usuario confirmado correctamente" });
+        // Redirigir al usuario a una página de confirmación
+        res.send(`
+        <html>
+        <head>
+            <style>
+                body {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+                .message-container {
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="message-container">
+                <h1>¡Tu cuenta ha sido confirmada exitosamente!</h1>
+            </div>
+        </body>
+        </html>
+    `);
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        res.status(500).json({ msg: 'Error interno del servidor' });
     }
-}
+};
+
 
 const authenticateStudent = async (req, res) => {
-
     const { email, password } = req.body;
 
-    //Search a student by email
+    // Buscar un estudiante por correo electrónico
     const student = await Student.findOne({ email });
-    console.log(student);
+
     if (!student) {
         const error = new Error('El estudiante no existe');
         return res.status(404).json({ msg: error.message });
     }
 
-    //check if the student is not authenticated
+    // Verificar si el estudiante no está autenticado
     if (!student.confirmado) {
-        const error = new Error('Tu cuenta no ha sido confirnada');
-        return res.status(403).json({ msg: error.message })
+        // Enviar un correo electrónico con el enlace de confirmación
+        const token = generateID(); // Generar un nuevo token
+        student.token = token;
+        await student.save();
+
+        const confirmLink = `${process.env.APP_URL}/api/students/confirmar-cuenta/${token}`;
+
+        // Enviar correo electrónico con el enlace de confirmación
+        sendConfirmationEmail(student.email, confirmLink);
+
+        return res.status(403).json({ msg: 'Tu cuenta no ha sido confirmada. Se ha enviado un correo electrónico para la confirmación. Por favor, revisa tu correo electrónico y sigue las instrucciones para confirmar tu cuenta.' });
     }
 
-    //check the password
+    // Verificar la contraseña
     if (await student.checkPasswordStudent(password)) {
-        //authenticated student   
+        // Autenticar al estudiante
 
-        //res.json({token: genereateJWT(student.id)})     
-        // res.json({
-        //     _id: student._id,
-        //     nombre: student.nombre,
-        //     email: student.email,
-        //     token: genereateJWT(student.id)
+        const token = generateJWT(student.id);
 
-        // })
-        const token = genereateJWT(student.id);
-
-        // Establece la cookie con el token
-        res.cookie("token", token, {
+        // Establecer la cookie con el token
+        res.cookie('token', token, {
             httpOnly: true,
             // Otras opciones de configuración...
         });
 
-        // Envía el token al cliente
-        res.json({
+        // Enviar el token al cliente
+        return res.json({
             token,
             student: {
                 _id: student._id,
@@ -115,10 +173,10 @@ const authenticateStudent = async (req, res) => {
             },
         });
     } else {
-        const error = new Error('El password es incorrecto');
-        return res.status(403).json({ msg: error.message })
+        const error = new Error('La contraseña es incorrecta');
+        return res.status(403).json({ msg: error.message });
     }
-}
+};
 
 const forgetPassword = async (req, res) => {
     const { email } = req.body;
