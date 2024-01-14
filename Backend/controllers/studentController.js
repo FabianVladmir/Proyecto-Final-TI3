@@ -178,35 +178,66 @@ const authenticateStudent = async (req, res) => {
     }
 };
 
+
+
+const sendResetPasswordEmail = (email, resetLink) => {
+    // Configurar el transporte del nodemailer, similar a como lo has hecho para la confirmación de cuenta
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS,
+        },
+    });
+
+    // Configurar las opciones del correo electrónico
+    const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: email,
+        subject: 'Instrucciones para restablecer la contraseña',
+        html: `
+            <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+            <a href="${resetLink}">${resetLink}</a>
+        `,
+    };
+
+    // Enviar el correo electrónico
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error al enviar el correo electrónico de restablecimiento de contraseña:', error);
+        } else {
+            console.log('Correo electrónico de restablecimiento de contraseña enviado:', info.response);
+        }
+    });
+};
+
 const forgetPassword = async (req, res) => {
     const { email } = req.body;
 
-    // check if a student already exists
+    // Comprobar si ya existe un estudiante con el mismo correo
     const existStudent = await Student.findOne({ email });
+
     if (!existStudent) {
-        const error = new Error("El Usuario no existe");
+        const error = new Error('El usuario no existe');
         return res.status(400).json({ msg: error.message });
     }
 
     try {
-
+        // Generar un nuevo token
         existStudent.token = generateID();
         await existStudent.save();
-        //NODEMAILER
-        // Send Email with instructions
-        // emailOlvidePassword({
-        //     email,
-        //     nombre: existStudent.nombre,
-        //     token: existStudent.token,
-        // });
 
-        res.json({ msg: "Hemos enviado un email con las instrucciones" });
+
+        // Enviar correo electrónico con instrucciones y token
+        const resetLink = `http://localhost:5173/reset-password/${existStudent.token}`;
+        sendResetPasswordEmail(existStudent.email, resetLink);
+
+        res.json({ msg: 'Hemos enviado un correo electrónico con las instrucciones para restablecer la contraseña.' });
     } catch (error) {
         console.log(error);
+        res.status(500).json({ msg: 'Error interno del servidor' });
     }
-
-
-}
+};
 
 const checkToken = async (req, res) => {
     const { token } = req.params;
@@ -230,8 +261,8 @@ const newPassword = async (req, res) => {
     const { password } = req.body;
 
     const existStudentToken = await Student.findOne({ token });
-    if (!existStudentToken) {
-        const error = new Error("Hubo un error");
+    if (!existStudentToken || !existStudentToken.resetTokenHash) {
+        const error = new Error("Token no válido o ya ha sido utilizado");
         return res.status(400).json({ msg: error.message });
     }
 
