@@ -91,7 +91,7 @@ function ResetPassword() {
                             <a className="mx-auto flex items-center justify-center">
                                 <img src={Logo} alt="Logo" className={`${styles.logo} logo`} />
                             </a>
-                            <h1 className="text-3xl font-bold">SOLICITAR CAMBIO DE CONTRASEÑA</h1>
+                            <h1 className="text-2xl font-bold">SOLICITAR CAMBIO DE CONTRASEÑA</h1>
                         </div>
                         <form onSubmit={handleSubmit}>
                             <div className="form-control">

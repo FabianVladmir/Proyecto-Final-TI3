@@ -1,12 +1,9 @@
-// ResetPasswordPage.jsx
-
 import React, { useState } from 'react';
 import Logo from '../../assets/ce-epcc.png';
 import { useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './styles//HomeReset.module.css';
-
 
 import axios from 'axios';
 
@@ -61,7 +58,7 @@ function ResetPasswordPage() {
                             <a className="mx-auto flex items-center justify-center">
                                 <img src={Logo} alt="Logo" className={`${styles.logo} logo`} />
                             </a>
-                            <h1 className="text-3xl font-bold">REINICIAR CONTRASEÑA</h1>
+                            <h1 className="text-2xl font-bold">REINICIAR CONTRASEÑA</h1>
                         </div>
                         <form onSubmit={handleSubmit}>
                             <div className="form-control">
