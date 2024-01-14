@@ -91,7 +91,7 @@ function ResetPassword() {
                                 </div>
                             </div>
                             <div className="text-center mt-4">
-                                <button type="submit" className="bg-blue-600 text-white rounded p-1">
+                                <button type="submit" className={`${styles.button} bg-blue-600 text-white rounded p-2`}>
                                     REINICIAR CONTRASEÑA
                                 </button>
                             </div>

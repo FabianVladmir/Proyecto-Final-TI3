@@ -23,3 +23,11 @@
 .hero {
     margin-top: -80px;
 }
+
+
+.button {
+    background-color: blue;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
