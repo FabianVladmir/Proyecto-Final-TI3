@@ -34,7 +34,6 @@ const getAllItems = async (req, res) => {
         const error = new Error("Tipo de categoría no válido");
         return res.status(400).json({ msg: error.message });
     }
-
     try {
         let collection;
         if (type === "books") {
@@ -94,4 +93,14 @@ const deleteItemById = async (req, res) => {
     }
 };
 
-export { createItem, getAllItems, updateItemById, deleteItemById };
+const getCategory = async (req, res) =>{
+    try {
+        const categories = await Book.distinct("category");
+        res.json(categories);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al obtener las categorías de libros" });
+    }
+};
+
+export { createItem, getAllItems, updateItemById, deleteItemById, getCategory};

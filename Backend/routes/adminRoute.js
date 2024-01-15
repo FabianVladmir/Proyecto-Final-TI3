@@ -1,5 +1,5 @@
 import express from 'express';
-import { createItem, getAllItems, updateItemById, deleteItemById } from '../controllers/adminControllers.js';
+import { createItem, getAllItems, updateItemById, deleteItemById, getCategory } from '../controllers/adminControllers.js';
 
 const router = express.Router();
 
@@ -15,4 +15,6 @@ router.put("/update/:type/:itemId", updateItemById);
 // Eliminar un elemento por ID
 router.delete("/delete/:type/:itemId", deleteItemById);
 
+
+router.get("/getCategory", getCategory )
 export default router;
