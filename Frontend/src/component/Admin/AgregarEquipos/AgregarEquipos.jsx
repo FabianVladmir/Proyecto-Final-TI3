@@ -4,16 +4,18 @@ import { toast, ToastContainer } from 'react-toastify';
 
 const AgregarEquipos = () => {
     const [nuevoFormulario, setNuevoFormulario] = useState({
-        nombre: '',
-        componentes: '',
-        cantidad: '',
+        name: '',
+        components: '',
+        amount: '',
+        state: ''
     });
 
     const limpiarFormularioEquipos = () => {
         setNuevoFormulario({
-            nombre: '',
-            componentes: '',
-            cantidad: '',
+            name: '',
+            components: '',
+            amount: '',
+            state: '',
         });
     };
 
@@ -55,38 +57,55 @@ const AgregarEquipos = () => {
                     </label>
                     <input
                         type="text"
-                        id="nombre"
-                        name="nombre"
-                        value={nuevoFormulario.nombre}
+                        id="name"
+                        name="name"
+                        value={nuevoFormulario.name}
                         onChange={handleNuevoChange}
                         className="w-full p-2 border rounded"
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="componentes" className="block text-gray-700 font-bold mb-2">
+                    <label htmlFor="components" className="block text-gray-700 font-bold mb-2">
                         Componentes
                     </label>
                     <textarea
-                        id="componentes"
-                        name="componentes"
-                        value={nuevoFormulario.componentes}
+                        id="components"
+                        name="components"
+                        value={nuevoFormulario.components}
                         onChange={handleNuevoChange}
                         className="w-full p-2 border rounded"
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="cantidad" className="block text-gray-700 font-bold mb-2">
+                    <label htmlFor="amount" className="block text-gray-700 font-bold mb-2">
                         Cantidad
                     </label>
                     <input
                         type="number"
-                        id="cantidad"
-                        name="cantidad"
-                        value={nuevoFormulario.cantidad}
+                        id="amount"
+                        name="amount"
+                        value={nuevoFormulario.amount}
                         onChange={handleNuevoChange}
                         className="w-full p-2 border rounded"
                     />
                 </div>
+                <div className="mb-2">
+                        <label htmlFor="state" className="block text-gray-700 font-bold mb-2">
+                            Estado
+                        </label>
+                        <select
+                            id="state"
+                            name="state"
+                            value={nuevoFormulario.state}
+                            onChange={handleNuevoChange}
+                            className="w-full p-2 border rounded"
+                        >
+                            <option value="">Seleccione un Estado</option>
+                            <option value="DISPONIBLE">DISPONIBLE</option>
+                            <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+                        </select>
+                    </div>
+
                 <div className="flex justify-center">
                     <div>
                         <button
