@@ -6,7 +6,7 @@ const AgregarLibros = () => {
     const [formulario, setFormulario] = useState({
         title: '',
         editorial: '',
-        author: '',
+        'author(s)': '',
         year: '',
         state: '',
         amount: '',
@@ -52,7 +52,7 @@ const AgregarLibros = () => {
         }
     };
 
-    const handleSubmitLibros = (e) => {
+    const handleSubmitLibros = async (e) => {
         e.preventDefault();
 
         const categoriaPersonalizadaLlena = formulario.mostrarCategoriaPersonalizada && formulario.category.trim() !== '';
@@ -70,16 +70,24 @@ const AgregarLibros = () => {
                 autoClose: 1000,
             });
         } else {
-            toast.success("¡Formulario enviado con éxito!", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 3000,
-            });
+            try {
+                const response = await axios.post("http://localhost:4000/api/admin/create/books", formulario);
 
-            setTimeout(() => {
-
-            }, 3000); limpiarFormularioLibros();
-
-            console.log(formulario);
+                toast.success("¡Libro agregado con éxito!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+    
+                setTimeout(limpiarFormularioLibros, 3000);
+                console.log(formulario);
+                console.log(response.data); // Aquí puedes manejar la respuesta del servidor si es necesario.
+            } catch (error) {
+                console.error(error);
+                toast.error("Error al agregar el libro", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+            }
         }
     };
 
@@ -87,7 +95,7 @@ const AgregarLibros = () => {
         setFormulario({
             title: '',
             editorial: '',
-            author: '',
+            'author(s)': '',
             year: '',
             state: '',
             amount: '',
@@ -164,9 +172,9 @@ const AgregarLibros = () => {
                         </label>
                         <input
                             type="text"
-                            id="author"
-                            name="author"
-                            value={formulario.author}
+                            id="author(s)"
+                            name="author(s)"
+                            value={formulario['author(s)']}
                             onChange={handleChange}
                             className="w-full p-2 border rounded"
                         />
