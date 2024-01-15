@@ -60,7 +60,7 @@ const VerEquipos = () => {
     return (
         <div>
             {/* Agregar campo de búsqueda */}
-            <div className="mb-4">
+            <div>
                 <input
                     type="text"
                     placeholder="Buscar por nombre"
@@ -70,7 +70,7 @@ const VerEquipos = () => {
                 />
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-96"> {/* Establecer una altura máxima */}
                 <div className="mt-4 flex justify-center">
                     <ReactPaginate
                         previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
@@ -90,11 +90,15 @@ const VerEquipos = () => {
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Nombre</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Cantidad</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Componentes</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Estado</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Opción</th>
+                        <th className="px-4 py-3 bg-gray-800 text-white text-center min-w-30">
+                                <div className="max-w-xs overflow-hidden overflow-ellipsis whitespace-nowrap" title="Título">
+                                    Nombre
+                                </div>
+                            </th>                            
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-25">Cantidad</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Componentes</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Estado</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-20">Opción</th>
                         </tr>
                     </thead>
                     <tbody>

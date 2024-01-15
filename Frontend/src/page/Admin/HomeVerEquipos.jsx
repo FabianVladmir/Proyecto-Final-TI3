@@ -25,7 +25,7 @@ const verEquipos = () => {
         if (showSelectionButtons) {
             return (
                 <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-                    <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">Seleccione lo que desea ver</h2>
+                    <h2 className="text-center text-2xl font-bold text-gray-800">Seleccione lo que desea ver</h2>
 
                     <SeleccionEquipos
                         handleTipoChange={handleTipoChange}
@@ -37,38 +37,39 @@ const verEquipos = () => {
         } else {
             if (tipo === 'Libros' && mostrarFormulario) {
                 return (
-                    <div>
-                        <div className="hero min-h-screen bg-white rounded-lg shadow-lg">
-                            <div className="justify-center h-screen">
-                                <div className="flex justify-end">
-                                    <button
-                                        onClick={() => setShowSelectionButtons(true)}
-                                        className="bg-red-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-                                    >
-                                        Regresar a Selección
-                                    </button>
+                    <div className="hero min-h-screen bg-white rounded-lg shadow-lg">
+                        <div className="justify-center h-screen">
+                            <div className="flex-grow flex flex-col items-end">
+                                <button
+                                    onClick={() => setShowSelectionButtons(true)}
+                                    className="bg-red-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                                >
+                                    Regresar a Selección
+                                </button>
+                                <div className="flex-grow flex flex-col items-center justify-center">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Listado de Libros</h2>
+                                    <VerLibros />
                                 </div>
-                                <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Listado de Libros</h2>
-                                <VerLibros />
                             </div>
                         </div>
                     </div>
+
                 );
             } else if (tipo === 'Equipos' && mostrarFormulario) {
                 return (
-                    <div>
-                        <div className="hero min-h-screen bg-white rounded-lg shadow-lg">
-                            <div className="justify-center h-screen">
-                                <div className="flex justify-end">
-                                    <button
-                                        onClick={() => setShowSelectionButtons(true)}
-                                        className="bg-red-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-                                    >
-                                        Regresar a Selección
-                                    </button>
+                    <div className="hero min-h-screen bg-white rounded-lg shadow-lg">
+                        <div className="justify-center h-screen">
+                            <div className="flex-grow flex flex-col items-end">
+                                <button
+                                    onClick={() => setShowSelectionButtons(true)}
+                                    className="bg-red-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                                >
+                                    Regresar a Selección
+                                </button>
+                                <div className="flex-grow flex flex-col items-center justify-center">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Listado de Equipos</h2>
+                                    <VerEquipos />
                                 </div>
-                                <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Listado de Equipos</h2>
-                                <VerEquipos />
                             </div>
                         </div>
                     </div>

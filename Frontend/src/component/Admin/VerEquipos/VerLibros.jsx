@@ -63,7 +63,7 @@ const VerLibros = () => {
     return (
         <div>
             {/* Agregar campo de búsqueda */}
-            <div className="mb-4">
+            <div>
                 <input
                     type="text"
                     placeholder="Buscar por título, categoria o lenguaje español o ingles(ES o EN)"
@@ -73,7 +73,7 @@ const VerLibros = () => {
                 />
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-96"> {/* Establecer una altura máxima */}
                 <div className="mt-4 flex justify-center">
                     <ReactPaginate
                         previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
@@ -93,17 +93,20 @@ const VerLibros = () => {
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Título</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Año</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Edición</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Editorial</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Autores</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-40">Categoría</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Cantidad</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Lenguaje</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Estado</th>
-                            <th className="px-4 py-3 bg-gray-500 text-white text-left min-w-20">Opción</th>
-
+                            <th className="px-4 py-3 bg-gray-800 text-white text-center min-w-30">
+                                <div className="max-w-xs overflow-hidden overflow-ellipsis whitespace-nowrap" title="Título">
+                                    Título
+                                </div>
+                            </th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Año</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Edición</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-40 md:min-w-40">Editorial</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-40 md:min-w-40">Autores</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-40 md:min-w-40">Categoría</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-25">Cantidad</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-20">Lenguaje</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-20">Estado</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-20">Opción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,17 +120,17 @@ const VerLibros = () => {
                                 <td className="px-4 py-4">{item.year}</td>
                                 <td className="px-4 py-4">{item.edition}</td>
                                 <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.editorial}>
+                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.editorial}>
                                         {item.editorial}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item['author(s)']}>
+                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item['author(s)']}>
                                         {item['author(s)']}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
+                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
                                         {item.category}
                                     </div>
                                 </td>
