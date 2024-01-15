@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
-
+import Edit from './assets/edit-3.svg';
+import Delete from './assets/trash-2.svg';
 
 const VerLibros = () => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -137,9 +138,14 @@ const VerLibros = () => {
                                 <td className="px-4 py-4">{item.amount}</td>
                                 <td className="px-4 py-4">{item.language}</td>
                                 <td className="px-4 py-4">{item.state}</td>
-                                <td className="px-8 py-4">
-                                    <button onClick={() => handleEdit(item._id)} className="bg-blue-500 text-white px-5 py-1 rounded mr-2">Editar</button>
-                                    <button onClick={() => handleDelete(item._id)} className="bg-red-500 text-white px- py-1 rounded">Eliminar</button>
+                                <td className="px-1 py-1">
+                                    <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
+                                        <img src={Edit} alt="Edit" />
+
+                                    </button>
+                                    <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
+                                        <img src={Delete} alt="Delete" />
+                                    </button>
                                 </td>
                             </tr>
                         ))}

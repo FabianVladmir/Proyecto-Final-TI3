@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
+
+import Edit from './assets/edit-3.svg';
+import Delete from './assets/trash-2.svg';
+
 const VerEquipos = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
@@ -90,11 +94,11 @@ const VerEquipos = () => {
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                        <th className="px-4 py-3 bg-gray-800 text-white text-center min-w-30">
+                            <th className="px-4 py-3 bg-gray-800 text-white text-center min-w-30">
                                 <div className="max-w-xs overflow-hidden overflow-ellipsis whitespace-nowrap" title="Título">
                                     Nombre
                                 </div>
-                            </th>                            
+                            </th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-25">Cantidad</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Componentes</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Estado</th>
@@ -104,17 +108,28 @@ const VerEquipos = () => {
                     <tbody>
                         {currentItems.map((item, index) => (
                             <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-4 py-4">{item.name}</td>
-                                <td className="px-4 py-4">{item.amount}</td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-gray-300 overflow-hidden overflow-ellipsis">
+                                    <div style={{ maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.title}>
+                                        {item.name}
+                                    </div>
+                                </td>                                <td className="px-4 py-4">{item.amount}</td>
                                 <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "1000px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.components}>
+                                    <div style={{ maxWidth: "800px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.components}>
                                         {item.components}
                                     </div>
-                                </td>                                
-                                <td className="px-4 py-4">{item.state}</td>
-                                <td className="px-4 py-4">
-                                    <button onClick={() => handleEdit(item._id)} className="bg-blue-500 text-white px-2 py-1 rounded mr-2">Editar</button>
-                                    <button onClick={() => handleDelete(item._id)} className="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
+                                        {item.state}
+                                    </div>
+                                </td>                                <td className="px-2 py-2">
+                                    <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
+                                        <img src={Edit} alt="Edit" />
+
+                                    </button>
+                                    <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
+                                        <img src={Delete} alt="Delete" />
+                                    </button>
                                 </td>
                             </tr>
                         ))}
