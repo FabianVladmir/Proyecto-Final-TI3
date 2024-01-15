@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from 'react-toastify';
-
+import axios from 'axios';
 
 const AgregarEquipos = () => {
     const [nuevoFormulario, setNuevoFormulario] = useState({
@@ -27,7 +27,7 @@ const AgregarEquipos = () => {
         }));
     };
 
-    const handleSubmitEquipos = (e) => {
+    const handleSubmitEquipos = async (e) => {
         e.preventDefault();
 
         const camposVacios = Object.entries(nuevoFormulario).some(([key, value]) => value.trim() === '');
@@ -39,15 +39,27 @@ const AgregarEquipos = () => {
             });
             return;
         }
-        toast.success("¡Formulario enviado con éxito!", {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 3000,
-        });
+        else {
+            try {
+                const response = await axios.post("http://localhost:4000/api/admin/create/equipments", nuevoFormulario);
 
-        console.log(nuevoFormulario);
-        setTimeout(limpiarFormularioEquipos, 3000);
+                toast.success("¡Equipo agregado con éxito!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+
+                console.log(nuevoFormulario);
+                console.log(response.data); // Aquí puedes manejar la respuesta del servidor si es necesario.
+                setTimeout(limpiarFormularioEquipos, 3000);
+            } catch (error) {
+                console.error(error);
+                toast.error("Error al agregar el equipo", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+            }
+        }
     };
-
     return (
         <>
             <form onSubmit={handleSubmitEquipos} className="max-w-lg mx-auto bg-white p-8 border rounded shadow">
@@ -90,21 +102,21 @@ const AgregarEquipos = () => {
                     />
                 </div>
                 <div className="mb-2">
-                        <label htmlFor="state" className="block text-gray-700 font-bold mb-2">
-                            Estado
-                        </label>
-                        <select
-                            id="state"
-                            name="state"
-                            value={nuevoFormulario.state}
-                            onChange={handleNuevoChange}
-                            className="w-full p-2 border rounded"
-                        >
-                            <option value="">Seleccione un Estado</option>
-                            <option value="DISPONIBLE">DISPONIBLE</option>
-                            <option value="MANTENIMIENTO">MANTENIMIENTO</option>
-                        </select>
-                    </div>
+                    <label htmlFor="state" className="block text-gray-700 font-bold mb-2">
+                        Estado
+                    </label>
+                    <select
+                        id="state"
+                        name="state"
+                        value={nuevoFormulario.state}
+                        onChange={handleNuevoChange}
+                        className="w-full p-2 border rounded"
+                    >
+                        <option value="">Seleccione un Estado</option>
+                        <option value="DISPONIBLE">DISPONIBLE</option>
+                        <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+                    </select>
+                </div>
 
                 <div className="flex justify-center">
                     <div>
