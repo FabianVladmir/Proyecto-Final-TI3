@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 import Edit from './assets/edit-3.svg';
 import Delete from './assets/trash-2.svg';
@@ -93,10 +95,24 @@ const VerLibros = () => {
     const handleDelete = (itemId) => {
         // Lógica para manejar la eliminación del libro con el ID itemId
         console.log("Eliminar libro con ID:", itemId);
+        axios.delete(`http://localhost:4000/api/admin/delete/books/${itemId}`)
+            .then((response) => {
+                const updatedLibros = libros.filter(book => book._id !== itemId);
+                toast.success("¡Libro eliminado con éxito!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+                setLibros(updatedLibros);
+            })
+            .catch((error) => {
+                console.error('Error al eliminar el libro:', error);
+            });
+
     };
 
     return (
         <div>
+            <ToastContainer />
             {/* Agregar campo de búsqueda */}
             <div>
                 <input
@@ -151,43 +167,52 @@ const VerLibros = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-6 py-4 whitespace-nowrap bg-gray-300 overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "400px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.title}>
-                                        {item.title}
-                                    </div>
-                                </td>
-                                <td className="px-4 py-4">{item.year}</td>
-                                <td className="px-4 py-4">{item.edition}</td>
-                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.editorial}>
-                                        {item.editorial}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item['author(s)']}>
-                                        {item['author(s)']}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
-                                        {item.category}
-                                    </div>
-                                </td>
-                                <td className="px-4 py-4">{item.amount}</td>
-                                <td className="px-4 py-4">{item.language}</td>
-                                <td className="px-4 py-4">{item.state}</td>
-                                <td className="px-1 py-1">
-                                    <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
-                                        <img src={Edit} alt="Edit" />
-                                    </button>
-                                    <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
-                                        <img src={Delete} alt="Delete" />
-                                    </button>
+                        {filteredLibros.length === 0 ? (
+                            // Show a message when no matches are found
+                            <tr>
+                                <td colSpan="10" className="text-center text-gray-600 my-4">
+                                    No se encontraron coincidencias en la tabla.
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            currentItems.map((item, index) => (
+                                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                    <td className="px-6 py-4 whitespace-nowrap bg-gray-300 overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "400px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.title}>
+                                            {item.title}
+                                        </div>
+                                    </td>
+                                    <td className="px-4 py-4">{item.year}</td>
+                                    <td className="px-4 py-4">{item.edition}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.editorial}>
+                                            {item.editorial}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item['author(s)']}>
+                                            {item['author(s)']}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
+                                            {item.category}
+                                        </div>
+                                    </td>
+                                    <td className="px-4 py-4">{item.amount}</td>
+                                    <td className="px-4 py-4">{item.language}</td>
+                                    <td className="px-4 py-4">{item.state}</td>
+                                    <td className="px-1 py-1">
+                                        <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
+                                            <img src={Edit} alt="Edit" />
+                                        </button>
+                                        <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
+                                            <img src={Delete} alt="Delete" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>

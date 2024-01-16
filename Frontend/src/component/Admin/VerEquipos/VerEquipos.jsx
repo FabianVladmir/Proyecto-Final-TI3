@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 import EditForm from './EditarFormEquipos';
 
@@ -16,9 +17,9 @@ const VerEquipos = () => {
     const [equipos, setEquipos] = useState([]);
 
 
-     // MODAL
-     const [showEditModal, setShowEditModal] = useState(false);
-     const [selectedEquipmentId, setSelectedEquipmentId] = useState(null);
+    // MODAL
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedEquipmentId, setSelectedEquipmentId] = useState(null);
 
 
     useEffect(() => {
@@ -66,7 +67,7 @@ const VerEquipos = () => {
         setSelectedEquipmentId(itemId);
     };
 
-    
+
 
     const handleEditFormClose = () => {
         // Lógica para cerrar el modal de edición
@@ -93,11 +94,24 @@ const VerEquipos = () => {
     const handleDelete = (itemId) => {
         // Lógica para manejar la eliminación del equipo con el ID itemId
         console.log("Eliminar equipo con ID:", itemId);
+        axios.delete(`http://localhost:4000/api/admin/delete/equipments/${itemId}`)
+            .then((response) => {
+                const updatedEquipos = equipos.filter(equipment => equipment._id !== itemId);
+                toast.success("¡Equipo eliminado con éxito!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+                setEquipos(updatedEquipos);
+            })
+            .catch((error) => {
+                console.error('Error al eliminar el equipo:', error);
+            });
     };
-    
+
 
     return (
         <div>
+            <ToastContainer />
             {/* Agregar campo de búsqueda */}
             <div>
                 <input
@@ -147,35 +161,47 @@ const VerEquipos = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-6 py-4 whitespace-nowrap bg-gray-300 overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.title}>
-                                        {item.name}
-                                    </div>
-                                </td>                                <td className="px-4 py-4">{item.amount}</td>
-                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "800px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.components}>
-                                        {item.components}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
-                                        {item.state}
-                                    </div>
-                                </td>                                
-                                <td className="px-1 py-1">
-                                    <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
-                                        <img src={Edit} alt="Edit" />
-                                    </button>
-                                    <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
-                                        <img src={Delete} alt="Delete" />
-                                    </button>
+                        {filteredEquipos.length === 0 ? (
+                            // Show a message when no matches are found
+                            <tr>
+                                <td colSpan="5" className="text-center text-gray-600 my-4">
+                                    No se encontraron coincidencias en la tabla.
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            currentItems.map((item, index) => (
+                                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                    <td className="px-6 py-4 whitespace-nowrap bg-gray-300 overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.title}>
+                                            {item.name}
+                                        </div>
+                                    </td>                                <td className="px-4 py-4">{item.amount}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "800px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.components}>
+                                            {item.components}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
+                                            {item.state}
+                                        </div>
+                                    </td>
+                                    <td className="px-1 py-1">
+                                        <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
+                                            <img src={Edit} alt="Edit" />
+                                        </button>
+                                        <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
+                                            <img src={Delete} alt="Delete" />
+                                        </button>
+                                    </td>
+                                </tr>
+
+                            ))
+                        )}
                     </tbody>
                 </table>
+
+
             </div>
         </div>
     );

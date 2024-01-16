@@ -58,7 +58,7 @@ const EditForm = ({ equipmentId, onClose, onSave }) => {
     };
 
     return (
-        <>
+        <div className="hero min-h-screen">
             <ToastContainer />
             <form onSubmit={handleSubmitEquipos} className="max-w-lg mx-auto bg-white p-8 border rounded shadow">
                 <div className="mb-4">
@@ -138,7 +138,7 @@ const EditForm = ({ equipmentId, onClose, onSave }) => {
                     </div>
                 </div>
             </form>
-        </>
+        </div>
     );
 }
 
