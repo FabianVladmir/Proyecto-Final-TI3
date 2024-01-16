@@ -21,6 +21,9 @@ function Header(props) {
                     <ul className="menu menu-horizontal p-0">
                         <li><Link to="home">Home</Link></li>
                         <li><Link to="equipos-solicitados">Ver Equipos Solicitados</Link></li>
+                        <li><Link to="devolucion-equipos">Devolucion de Equipos</Link></li>
+                        <li><Link to="ver-equipos">Ver Equipos</Link></li>
+                        <li><Link to="agregar-equipos">Agregar Equipos</Link></li>
                         <li><Link to="reportes">Reportes</Link></li>
                     </ul>
                 </div>

@@ -1,23 +1,26 @@
-import React, { useState } from "react";
-import { toast, ToastContainer } from 'react-toastify';
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
-const AgregarEquipos = () => {
+const EditForm = ({ equipmentId, onClose, onSave }) => {
     const [nuevoFormulario, setNuevoFormulario] = useState({
         name: '',
         components: '',
         amount: '',
-        state: ''
+        state: '',
     });
 
-    const limpiarFormularioEquipos = () => {
-        setNuevoFormulario({
-            name: '',
-            components: '',
-            amount: '',
-            state: '',
-        });
-    };
+
+    useEffect(() => {
+        console.log('Valor de equipmentId:', equipmentId);
+        axios.get(`http://localhost:4000/api/admin/get/equipments/${equipmentId}`)
+            .then(response => {
+                console.log('Datos del equipo obtenidos:', response.data);
+                setNuevoFormulario(response.data);
+            })
+            .catch(error => console.error('Error al obtener los datos del equipo:', error));
+    }, [equipmentId]);
+
 
     const handleNuevoChange = (e) => {
         const { name, value } = e.target;
@@ -27,44 +30,39 @@ const AgregarEquipos = () => {
         }));
     };
 
-    const handleSubmitEquipos = async (e) => {
+
+    const handleSubmitEquipos = (e) => {
         e.preventDefault();
-
-        const camposVacios = Object.entries(nuevoFormulario).some(([key, value]) => value.trim() === '');
-
-        if (camposVacios) {
-            toast.error("Por favor, ingrese llene los campos", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000,
+        axios.put(`http://localhost:4000/api/admin/update/equipments/${equipmentId}`, nuevoFormulario)
+            .then(response => {
+                onSave(response.data);
+                toast.success("¡Equipo actualizado con éxito!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+                onClose();
+            })
+            .catch(error => {
+                console.error('Error al actualizar el equipo:', error);
+                toast.error("Error al actualizar el equipo", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
             });
-            return;
-        }
-        else {
-            try {
-                const response = await axios.post("http://localhost:4000/api/admin/create/equipments", nuevoFormulario);
-
-                toast.success("¡Equipo agregado con éxito!", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 3000,
-                });
-
-                console.log(nuevoFormulario);
-                console.log(response.data); // Aquí puedes manejar la respuesta del servidor si es necesario.
-                setTimeout(limpiarFormularioEquipos, 3000);
-            } catch (error) {
-                console.error(error);
-                toast.error("Error al agregar el equipo", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 3000,
-                });
-            }
-        }
+        console.log(nuevoFormulario);
     };
+
+
+    const handleCancelar = () => {
+        onClose();
+    };
+
     return (
-        <>
+        <div className="hero min-h-screen">
+            <ToastContainer />
             <form onSubmit={handleSubmitEquipos} className="max-w-lg mx-auto bg-white p-8 border rounded shadow">
                 <div className="mb-4">
-                    <label htmlFor="titulo" className="block text-gray-700 font-bold mb-2">
+                    <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
                         Nombre
                     </label>
                     <input
@@ -118,19 +116,30 @@ const AgregarEquipos = () => {
                     </select>
                 </div>
 
-                <div className="flex justify-center">
-                    <div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="flex justify-start">
+                        <div>
+                            <button
+                                type="submit"
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                            >
+                                Actualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex justify-end">
                         <button
-                            type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                            type="button"
+                            onClick={handleCancelar}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                         >
-                            Enviar
+                            Cancelar
                         </button>
                     </div>
                 </div>
             </form>
-        </>
+        </div>
     );
 }
 
-export default AgregarEquipos;
+export default EditForm;

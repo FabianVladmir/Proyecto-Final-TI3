@@ -33,6 +33,15 @@ function HomeAdmin(props) {
                 </div>
                 <div className={styles.stylesInfo}>
                     <a className="btn">
+                        <Link to="/admin/ver-equipos">
+                            <p>Ver Equipos</p>
+                            <img src={OverTime} alt="Agregar Equipos" className={styles.styleImg} />
+                        </Link>
+                        
+                    </a>
+                </div>
+                <div className={styles.stylesInfo}>
+                    <a className="btn">
                         <Link to="/admin/agregar-equipos">
                             <p>Agregar Equipos</p>
                             <img src={OverTime} alt="Agregar Equipos" className={styles.styleImg} />

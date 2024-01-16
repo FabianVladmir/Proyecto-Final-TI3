@@ -46,11 +46,6 @@ const AgregarForm = () => {
                                         Cancelar
                                     </button>
                                 </div>
-                                <div className="text-center lg:text-center">
-                                    <a className="mx-auto flex items-center justify-center">
-                                        <img src={Logo} alt="Logo" className={`${styles.logo}`} />
-                                    </a>
-                                </div>
                                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Agregar Libro</h2>
                                 <AgregarLibros />
 
@@ -70,11 +65,6 @@ const AgregarForm = () => {
                                     >
                                         Cancelar
                                     </button>
-                                </div>
-                                <div className="text-center lg:text-center">
-                                    <a className="mx-auto flex items-center justify-center">
-                                        <img src={Logo} alt="Logo" className={`${styles.logo}`} />
-                                    </a>
                                 </div>
                                 <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Agregar Equipo</h2>
                                 <AgregarEquipos />

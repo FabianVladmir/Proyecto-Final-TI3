@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const bookSchema = new mongoose.Schema({
     title:{
@@ -18,7 +18,7 @@ const bookSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    authors:{
+    'author(s)':{
         type: String,
         require: true
     },

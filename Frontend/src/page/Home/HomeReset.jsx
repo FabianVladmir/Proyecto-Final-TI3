@@ -4,6 +4,7 @@ import Logo from '../../assets/ce-epcc.png';
 import styles from './styles/HomeReset.module.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 function ResetPassword() {
     const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ function ResetPassword() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (formData.email === '') {
@@ -51,14 +52,31 @@ function ResetPassword() {
         }
 
 
-        toast.success('¡Se reinició la contraseña correctamente!', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 1000,
-        });
+        try {
+            const response = await axios.post('http://localhost:4000/api/students/reset-password', {
+                email: formData.email,
+            });
 
-        setTimeout(limpiarFormulario, 1000);
+            if (response.status === 200) {
+                toast.success('Solicitud de cambio de contraseña enviada correctamente. Revisa tu correo electrónico.', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+            } else {
+                toast.error('Error al enviar la solicitud de cambio de contraseña.', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
+            }
 
-        console.log('Estado del formulario después del éxito:', formData);
+            setTimeout(() => {
+                limpiarFormulario();
+                // Redirige a la página deseada después del inicio de sesión
+                //navigate('/client/home'); // Ajusta la ruta según tus necesidades
+            }, 1000);
+        } catch (error) {
+            console.error('Error en la solicitud al servidor:', error);
+        }
     }
 
 
@@ -73,13 +91,13 @@ function ResetPassword() {
                             <a className="mx-auto flex items-center justify-center">
                                 <img src={Logo} alt="Logo" className={`${styles.logo} logo`} />
                             </a>
-                            <h1 className="text-3xl font-bold">REINICIAR CONTRASEÑA</h1>
+                            <h1 className="text-2xl font-bold">SOLICITAR CAMBIO DE CONTRASEÑA</h1>
                         </div>
                         <form onSubmit={handleSubmit}>
-                            <div className="grid grid-cols-2 gap-2">
-                                <div className="flex items-center">
-                                    <label className="block">Correo</label>
-                                </div>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">Correo</span>
+                                </label>
                                 <div>
                                     <input
                                         type="email"
@@ -91,12 +109,12 @@ function ResetPassword() {
                                 </div>
                             </div>
                             <div className="text-center mt-4">
-                                <button type="submit" className="bg-blue-600 text-white rounded p-1">
-                                    REINICIAR CONTRASEÑA
+                                <button type="submit" className={`${styles.button} bg-blue-600 text-white rounded p-2`}>
+                                    ENVIAR
                                 </button>
                             </div>
                             <div className={`${styles.centerText} text-center`}>
-                                <label className="label">Volver a iniciar sesion</label>
+                                <label className="label">Volver a </label>
                                 <Link to="/login" className={`${styles.blueText} label-text-alt link link-hover`}>
                                     Iniciar Sesion
                                 </Link>

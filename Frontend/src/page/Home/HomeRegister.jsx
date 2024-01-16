@@ -96,14 +96,19 @@ function RegistroForm() {
                 // Éxito: Limpiar el formulario y mostrar mensaje de éxito
                 toast.success('Cuenta creada exitosamente', {
                     position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 3000,
+                    autoClose: 2000,
                 });
 
+                toast.info('Tu cuenta no ha sido confirmada. Se ha enviado un correo electrónico para la confirmación. Por favor, revisa tu correo electrónico y sigue las instrucciones para confirmar tu cuenta.', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 5000, // Ajusta el tiempo que deseas mostrar el mensaje
+                });
                 setTimeout(() => {
                     limpiarRegistro();
                     // Redirige a la página deseada después del registro
                     //navigate('/client/home'); // Ajusta la ruta según tus necesidades
                 }, 1000);
+                
             } else {
                 // Manejar otros casos de respuesta del servidor según sea necesario
                 console.error('Error en la solicitud al servidor:', response);
