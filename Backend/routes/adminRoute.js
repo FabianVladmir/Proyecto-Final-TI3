@@ -1,5 +1,5 @@
 import express from 'express';
-import { createItem, getAllItems, updateItemById, deleteItemById, getCategory } from '../controllers/adminControllers.js';
+import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById} from '../controllers/adminControllers.js';
 
 const router = express.Router();
 
@@ -8,6 +8,9 @@ router.post("/create/:type", createItem);
 
 // Obtener todos los elementos de un tipo
 router.get("/get/:type", getAllItems);
+
+// Obtener datos de un libro o equipo por ID
+router.get("/get/:type/:itemId", getItemById);
 
 // Actualizar un elemento por ID
 router.put("/update/:type/:itemId", updateItemById);

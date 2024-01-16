@@ -103,4 +103,34 @@ const getCategory = async (req, res) =>{
     }
 };
 
-export { createItem, getAllItems, updateItemById, deleteItemById, getCategory};
+
+const getItemById = async (req, res) => {
+    const { type, itemId } = req.params;
+
+    if (!type || !VALID_TYPES.includes(type)) {
+        const error = new Error("Tipo de categoría no válido");
+        return res.status(400).json({ msg: error.message });
+    }
+
+    try {
+        let item;
+        if (type === "books") {
+            // Reemplaza 'Book' con el nombre real de tu modelo de libro
+            item = await Book.findById(itemId);
+        } else if (type === "equipments") {
+            // Reemplaza 'Equipment' con el nombre real de tu modelo de equipo
+            item = await Equipment.findById(itemId);
+        }
+
+        if (!item) {
+            return res.status(404).json({ error: 'Elemento no encontrado' });
+        }
+
+        res.json(item);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener los datos del elemento por ID' });
+    }
+};
+
+export { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById};

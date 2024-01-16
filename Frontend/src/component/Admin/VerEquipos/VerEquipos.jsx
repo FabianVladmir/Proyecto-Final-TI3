@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
+import EditForm from './EditarFormEquipos';
 
 import Edit from './assets/edit-3.svg';
 import Delete from './assets/trash-2.svg';
@@ -13,12 +14,18 @@ const VerEquipos = () => {
 
     // Datos de ejemplo para la tabla (puedes reemplazar esto con tu lógica de obtención de datos)
     const [equipos, setEquipos] = useState([]);
+
+
+     // MODAL
+     const [showEditModal, setShowEditModal] = useState(false);
+     const [selectedEquipmentId, setSelectedEquipmentId] = useState(null);
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get("http://localhost:4000/api/admin/get/equipments");
                 setEquipos(response.data);
-                console.log(equipos);
             } catch (error) {
                 console.error('Error al obtener los equipos:', error);
             }
@@ -51,15 +58,43 @@ const VerEquipos = () => {
     const offset = currentPage * itemsPerPage;
     const currentItems = filteredEquipos.slice(offset, offset + itemsPerPage);
 
+    //EDITAR
     const handleEdit = (itemId) => {
         // Lógica para manejar la edición del equipo con el ID itemId
         console.log("Editar equipo con ID:", itemId);
+        setShowEditModal(true);
+        setSelectedEquipmentId(itemId);
     };
 
+    
+
+    const handleEditFormClose = () => {
+        // Lógica para cerrar el modal de edición
+        setShowEditModal(false);
+        setSelectedEquipmentId(null);
+    };
+
+    const handleEditFormSave = (updatedFormData) => {
+        axios.put(`http://localhost:4000/api/admin/update/equipments/${selectedEquipmentId}`, updatedFormData)
+            .then((response) => {
+                const updatedEquipos = equipos.map(equipment => (equipment._id === selectedEquipmentId ? response.data : equipment));
+                setEquipos(updatedEquipos);
+            })
+            .catch((error) => {
+                console.error('Error al actualizar el equipos:', error);
+            });
+
+        // Cerrar el modal después de guardar los cambios
+        setShowEditModal(false);
+        setSelectedEquipmentId(null);
+    };
+
+    // DELETE
     const handleDelete = (itemId) => {
         // Lógica para manejar la eliminación del equipo con el ID itemId
         console.log("Eliminar equipo con ID:", itemId);
     };
+    
 
     return (
         <div>
@@ -73,6 +108,12 @@ const VerEquipos = () => {
                     className="text text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
                 />
             </div>
+
+            {showEditModal && selectedEquipmentId && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
+                    <EditForm equipmentId={selectedEquipmentId} onClose={handleEditFormClose} onSave={handleEditFormSave} />
+                </div>
+            )}
 
             <div className="overflow-x-auto max-h-96"> {/* Establecer una altura máxima */}
                 <div className="mt-4 flex justify-center">
@@ -122,10 +163,10 @@ const VerEquipos = () => {
                                     <div style={{ maxWidth: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.category}>
                                         {item.state}
                                     </div>
-                                </td>                                <td className="px-2 py-2">
+                                </td>                                
+                                <td className="px-1 py-1">
                                     <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
                                         <img src={Edit} alt="Edit" />
-
                                     </button>
                                     <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
                                         <img src={Delete} alt="Delete" />

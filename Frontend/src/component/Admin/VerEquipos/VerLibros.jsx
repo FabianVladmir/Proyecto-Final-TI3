@@ -5,6 +5,8 @@ import axios from 'axios';
 import Edit from './assets/edit-3.svg';
 import Delete from './assets/trash-2.svg';
 
+import EditForm from './EditarFormLibros';
+
 const VerLibros = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
@@ -12,6 +14,11 @@ const VerLibros = () => {
 
     // Datos de ejemplo para la tabla (puedes reemplazar esto con tu lógica de obtención de datos)
     const [libros, setLibros] = useState([]);
+
+
+    // MODAL
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedBookId, setSelectedBookId] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,11 +58,38 @@ const VerLibros = () => {
     const offset = currentPage * itemsPerPage;
     const currentItems = filteredLibros.slice(offset, offset + itemsPerPage);
 
+
+    // EDITAR
     const handleEdit = (itemId) => {
         // Lógica para manejar la edición del libro con el ID itemId
         console.log("Editar libro con ID:", itemId);
+        setShowEditModal(true);
+        setSelectedBookId(itemId);
     };
 
+    const handleEditFormClose = () => {
+        // Lógica para cerrar el modal de edición
+        setShowEditModal(false);
+        setSelectedBookId(null);
+    };
+
+
+    const handleEditFormSave = (updatedFormData) => {
+        axios.put(`http://localhost:4000/api/admin/update/books/${selectedBookId}`, updatedFormData)
+            .then((response) => {
+                const updatedLibros = libros.map(book => (book._id === selectedBookId ? response.data : book));
+                setLibros(updatedLibros);
+            })
+            .catch((error) => {
+                console.error('Error al actualizar el libro:', error);
+            });
+
+        // Cerrar el modal después de guardar los cambios
+        setShowEditModal(false);
+        setSelectedBookId(null);
+    };
+
+    // DELETE
     const handleDelete = (itemId) => {
         // Lógica para manejar la eliminación del libro con el ID itemId
         console.log("Eliminar libro con ID:", itemId);
@@ -73,6 +107,12 @@ const VerLibros = () => {
                     className="text text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
                 />
             </div>
+
+            {showEditModal && selectedBookId && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
+                    <EditForm bookId={selectedBookId} onClose={handleEditFormClose} onSave={handleEditFormSave} />
+                </div>
+            )}
 
             <div className="overflow-x-auto max-h-96"> {/* Establecer una altura máxima */}
                 <div className="mt-4 flex justify-center">
@@ -141,7 +181,6 @@ const VerLibros = () => {
                                 <td className="px-1 py-1">
                                     <button onClick={() => handleEdit(item._id)} className="px-5 py-1 rounded">
                                         <img src={Edit} alt="Edit" />
-
                                     </button>
                                     <button onClick={() => handleDelete(item._id)} className="px- py-1 rounded">
                                         <img src={Delete} alt="Delete" />
