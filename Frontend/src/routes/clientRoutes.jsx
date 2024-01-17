@@ -1,5 +1,7 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { toast, } from 'react-toastify';
 
 import HeaderClient from '../component/Cliente/Header';
 import HomeClient from '../page/Cliente/Home';
@@ -8,7 +10,21 @@ import ReservarClient from '../page/Cliente/HomeReservar';
 import VerEquipos from '../page/Cliente/HomeVerEquipo';
 import Perfil from '../page/Cliente/HomePerfil';
 
+
 function ClientRoutes() {
+  const token = Cookies.get('token');
+
+  useEffect(() => {
+    // Verificar si el usuario tiene un token de sesión
+    const token = Cookies.get('token');
+
+    if (!token) {
+      setTimeout(() => {
+        return <Navigate to="/login" />;
+      }, 3000);
+    }
+  }, []);
+
   return (
     <div>
       <HeaderClient />
@@ -18,7 +34,6 @@ function ClientRoutes() {
         <Route path="/reservar" element={<ReservarClient />} />
         <Route path="/ver-equipos" element={<VerEquipos />} />
         <Route path="/perfil" element={<Perfil />} />
-
 
         <Route
           path="/*"

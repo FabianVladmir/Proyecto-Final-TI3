@@ -67,7 +67,7 @@ function HomeLogin(props) {
                 // Por ejemplo, puedes realizar más acciones, cargar datos adicionales, etc.
 
                 toast.success('¡Inicio de sesión exitoso!', {
-                    position: toast.POSITION.BOTTOM_RIGHT,
+                    position: toast.POSITION.TOP_CENTER,
                     autoClose: 1000,
                 });
 

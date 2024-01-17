@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 import HeaderHome from '../component/Home/Header';
 import Home from '../page/Home/Home';
@@ -18,10 +18,11 @@ function HomeRoutes() {
         <Route path="login" element={<Login />} />
         <Route path="registrar" element={<Register />} />
         <Route path="reiniciar" element={<Reset />} />
-        <Route path="reset-password/:token" element={<CambiarContraseña />}/>
+        <Route path="reset-password/:token" element={<CambiarContraseña />} />
         <Route
           path="*"
-          element={<div><h1 className="text-center text-5xl font-bold">404 Not Found</h1></div>}
+        /*           element={<div><h1 className="text-center text-5xl font-bold">404 Not Found</h1></div>}*/
+        element={<Navigate to="/" />}
         />
       </Routes>
     </div>

@@ -1,12 +1,38 @@
-import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import React, {useState} from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+
 import Logo from '../../assets/ce-epcc.png';
+import Cookies from 'js-cookie';
+
 const styleLogo = {
-    width: '48px', // Ajusta el ancho de la imagen
-    height: '48px', // Ajusta la altura de la imagen
+    width: '48px',
+    height: '48px',
 }
 
 function Header(props) {
+    const navigate = useNavigate();
+    const [loggingOut, setLoggingOut] = useState(false);
+    
+    const handleLogout = () => {
+        // Mostrar el mensaje de "Cerrando sesión" usando toast
+        toast.info('Session Cerrada Exitosamente...', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000, // Duración del mensaje en milisegundos (ajusta según tus necesidades)
+        });
+
+        // Limpiar el token de sesión al cerrar sesión
+        Cookies.remove('token');
+
+        // Configurar el estado para desactivar el botón después de mostrar el mensaje
+        setLoggingOut(true);
+
+        // Redirigir a la página de inicio de sesión o cualquier otra página deseada después de un tiempo
+        setTimeout(() => {
+            navigate('/login'); // Ajusta la ruta según tus necesidades
+        }, 2000); // Espera 2 segundos antes de redirigir (ajusta según tus necesidades)
+    };
+
     return (
         <div>
             <div className="navbar bg-base-100">
@@ -27,11 +53,14 @@ function Header(props) {
                 </div>
                 <div className="navbar-end">
                     <Link to="perfil"><a className="btn">Mi cuenta</a></Link>
-                </div>
+                    <button
+                        onClick={handleLogout}
+                        className="btn ml-2"
+                        disabled={loggingOut}
+                    >
+                        {loggingOut ? 'Cerrando sesión...' : 'Cerrar sesión'}
+                    </button>                </div>
             </div>
-
-
-
         </div>
     );
 }
