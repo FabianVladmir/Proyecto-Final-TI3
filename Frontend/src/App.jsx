@@ -7,7 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import HomeRoutes from './routes/homeRoutes';
 import ClientRoutes from './routes/clientRoutes';
 import AdminRoutes from './routes/adminRoutes';
-
+import HomeLoginAdmin from './page/Admin/HomeLoginAdmin';
 
 const PrivateRoute = ({ element, redirectTo }) => {
   const isLoggedIn = !!Cookies.get('token');
@@ -24,8 +24,6 @@ function App() {
     setIsLoggedIn(!!token);
   }, []);
 
-
-
   return (
     <Router>
       <Routes>
@@ -33,7 +31,9 @@ function App() {
         <Route
           path="client/*"
           element={<PrivateRoute element={<ClientRoutes />} redirectTo="/login" />}
-        />        <Route path="admin/*" element={<AdminRoutes />} />
+        />
+        <Route path="admin/*" element={<AdminRoutes />} />
+        <Route path="/admin/login" element={<HomeLoginAdmin />} />
       </Routes>
     </Router>
   );
