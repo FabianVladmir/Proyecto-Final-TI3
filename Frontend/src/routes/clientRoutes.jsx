@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { toast, } from 'react-toastify';
 
 import HeaderClient from '../component/Cliente/Header';
 import HomeClient from '../page/Cliente/Home';
@@ -12,7 +11,6 @@ import Perfil from '../page/Cliente/HomePerfil';
 
 
 function ClientRoutes() {
-  const token = Cookies.get('token');
 
   useEffect(() => {
     // Verificar si el usuario tiene un token de sesión
