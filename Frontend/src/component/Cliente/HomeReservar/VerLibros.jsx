@@ -152,6 +152,7 @@ const VerLibros = () => {
         <>
             <form onSubmit={handleSubmitLibros} className="grid grid-cols-2 gap-1">
                 <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg" style={{ maxWidth: '900px' }}>
+                    <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Libros Disponibles</h2>
                     <div>
                         <input
                             type="text"
@@ -161,8 +162,23 @@ const VerLibros = () => {
                             onChange={(e) => handleSearchLibros(e.target.value)}
                         />
                     </div>
-                    <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Libros Disponibles</h2>
                     <div className="overflow-x-auto">
+                        <div className="flex justify-center">
+                            <ReactPaginate
+                                previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                                nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                                breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                                pageCount={Math.ceil(librosToDisplay.length / itemsPerPage)}
+                                marginPagesDisplayed={2}
+                                pageRangeDisplayed={5}
+                                onPageChange={handlePageClick}
+                                containerClassName={'pagination flex justify-center'}
+                                subContainerClassName={'pages flex'}
+                                activeClassName={'active'}
+                                pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
+                                pageLinkClassName={'text-gray-800'}
+                            />
+                        </div>
                         <table className="w-full table-auto" style={{ width: '100%', border: '1px solid #000' }}>
                             <thead>
                                 <tr>
@@ -195,22 +211,7 @@ const VerLibros = () => {
                             </tbody>
                         </table>
                     </div>
-                    <div className="mt-4 flex justify-center">
-                        <ReactPaginate
-                            previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
-                            nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
-                            breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
-                            pageCount={Math.ceil(librosToDisplay.length / itemsPerPage)}
-                            marginPagesDisplayed={2}
-                            pageRangeDisplayed={5}
-                            onPageChange={handlePageClick}
-                            containerClassName={'pagination flex justify-center'}
-                            subContainerClassName={'pages flex'}
-                            activeClassName={'active'}
-                            pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
-                            pageLinkClassName={'text-gray-800'}
-                        />
-                    </div>
+
                 </div>
 
                 <div className={`${styles.card} max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg`}>

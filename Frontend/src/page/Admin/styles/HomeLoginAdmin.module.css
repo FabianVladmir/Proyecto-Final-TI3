@@ -7,7 +7,7 @@
 }
 
 .card {
-    background-color:darkgray;
+    background-color:rgb(161, 157, 141);
     width: 600px;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .button {
-    background-color: blue;
+    background-color: black;
     color: #fff;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
