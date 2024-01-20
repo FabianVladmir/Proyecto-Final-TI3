@@ -1,6 +1,6 @@
 import express from 'express';
 import { signIn, profile, confirmAccount, authenticateStudent, forgetPassword, checkToken,
-    newPassword, viewSchedules, viewEquipment, reserverEquipment
+    newPassword, viewSchedules, viewEquipment, reserverEquipment, getUserId
 } from '../controllers/studentController.js';
 import checkAuth from '../middleware/authMiddleware.js';
 
@@ -49,6 +49,7 @@ router.get('/confirmacion-exitosa', (req, res) => {
 router.get("/profile", checkAuth, profile);
 router.post("/reserver-equipments/:type/:idEquip", checkAuth, reserverEquipment);
 
+router.get('/get-user-id', getUserId);
 
 
 

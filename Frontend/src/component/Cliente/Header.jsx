@@ -24,6 +24,10 @@ function Header(props) {
         // Limpiar el token de sesión al cerrar sesión
         Cookies.remove('token');
 
+        localStorage.removeItem('token');
+
+        localStorage.setItem('logoutEvent', Date.now().toString());
+        
         // Configurar el estado para desactivar el botón después de mostrar el mensaje
         setLoggingOut(true);
 

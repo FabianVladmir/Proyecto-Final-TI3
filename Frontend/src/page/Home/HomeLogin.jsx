@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 import styles from './styles/HomeLogin.module.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Cookies from 'js-cookie';
+import { useUser } from '../../context/UserContext';
+
 
 function HomeLogin(props) {
+    const { setUserId } = useUser();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -59,22 +61,35 @@ function HomeLogin(props) {
 
             if (response.ok) {
                 const data = await response.json();
+                // Imprime la respuesta completa en la consola
+                //console.log('Respuesta del servidor:', data);
 
                 // Guarda el token en las cookies del cliente
-                Cookies.set('token', data.token, { expires: 7 });
+
+                localStorage.setItem('token', data.token);
+
+                // Accede al objeto de estudiante y obtén el ID
+
+                const studentId = data.student._id;
+                //setUserId(studentId);
+                console.log('ID del Usuario:', studentId);
 
                 // Aquí puedes continuar con el resto del código después del inicio de sesión exitoso
                 // Por ejemplo, puedes realizar más acciones, cargar datos adicionales, etc.
-
                 toast.success('¡Inicio de sesión exitoso!', {
                     position: toast.POSITION.TOP_CENTER,
                     autoClose: 1000,
                 });
-
+                // Guarda el token y el userId en localStorage
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('logoutEvent', Date.now().toString());
+                localStorage.setItem('userId', studentId);
+                setUserId(studentId);
+                navigate('/client/home'); // Ajusta la ruta según tus necesidades
+                //limpiar el formulario y redirigir a client/home
                 setTimeout(() => {
                     limpiarFormulario();
                     // Redirige a la página deseada después del inicio de sesión
-                    navigate('/client/home'); // Ajusta la ruta según tus necesidades
                 }, 1000);
             } else {
                 const errorData = await response.json();

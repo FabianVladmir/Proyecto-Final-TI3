@@ -341,7 +341,10 @@ const reserverEquipment = async (req, res) => {
 
 }
 
-
+const getUserId = async (req, res) => {
+    const userId = req.student._id;
+    res.json({ userId });
+}
 
 export {
     signIn,
@@ -353,5 +356,6 @@ export {
     newPassword,
     viewSchedules,
     viewEquipment,
-    reserverEquipment
+    reserverEquipment,
+    getUserId
 };

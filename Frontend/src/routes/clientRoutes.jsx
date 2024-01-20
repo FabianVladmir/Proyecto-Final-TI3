@@ -9,35 +9,58 @@ import ReservarClient from '../page/Cliente/HomeReservar';
 import VerEquipos from '../page/Cliente/HomeVerEquipo';
 import Perfil from '../page/Cliente/HomePerfil';
 
+import { useUser } from '../context/UserContext';
 
 function ClientRoutes() {
 
-  useEffect(() => {
-    // Verificar si el usuario tiene un token de sesión
-    const token = Cookies.get('token');
+  const { userId } = useUser();
+  const token = localStorage.getItem('token') //const token = Cookies.get('token');
 
-    if (!token) {
-      setTimeout(() => {
-        return <Navigate to="/login" />;
-      }, 3000);
-    }
-  }, []);
+  if (!token) {
+    // Si no hay token, redirige a la página de inicio de sesión
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div>
       <HeaderClient />
-      <Routes>
-        <Route path="/home" element={<HomeClient />} />
-        <Route path="/horario" element={<HorarioClient />} />
-        <Route path="/reservar" element={<ReservarClient />} />
-        <Route path="/ver-equipos" element={<VerEquipos />} />
-        <Route path="/perfil" element={<Perfil />} />
+        <Routes>
+          <Route
+            path="/home"
+            element={
+              <HomeClient userId={userId} />
+            }
+          />
+          <Route
+            path="/horario"
+            element={
+              <HorarioClient userId={userId} />
+            }
+          />
+          <Route
+            path="/reservar"
+            element={
+              <ReservarClient userId={userId} />
+            }
+          />
+          <Route
+            path="/ver-equipos"
+            element={
+              <VerEquipos userId={userId} />
+            }
+          />
+          <Route
+            path="/perfil"
+            element={
+              <Perfil userId={userId} />
+            }
+          />
 
-        <Route
-          path="/*"
-          element={<div><h1 className="text-center text-5xl font-bold">404 Not Found</h1></div>}
-        />
-      </Routes>
+          <Route
+            path="/*"
+            element={<div><h1 className="text-center text-5xl font-bold">404 Not Found</h1></div>}
+          />
+        </Routes>
     </div>
   );
 }
