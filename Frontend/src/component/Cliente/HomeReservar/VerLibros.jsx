@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from '../../../page/Cliente/styles/HomeReservar.module.css';
 import { toast } from 'react-toastify';
+import { useUser } from '../../../context/UserContext';
 
 const VerLibros = () => {
+    const { userId } = useUser();
     const [formDataLibros, setFormDataLibros] = useState({
         fechaInicio: '',
         fechaFin: '',
@@ -46,7 +48,7 @@ const VerLibros = () => {
     };
 
 
-    const handleSubmitLibros = (e) => {
+    const handleSubmitLibros = async (e) => {
         e.preventDefault();
 
         const camposVacios = Object.entries(formDataLibros).some(([key, value]) => value.trim() === '');
@@ -58,28 +60,55 @@ const VerLibros = () => {
             });
             return;
         }
-
         const reservaData = {
-            title: selectedRow.title,
+            /* title: selectedRow.title,
             year: selectedRow.year,
             category: selectedRow.category,
             'author(s)': selectedRow['author(s)'],
-            language: selectedRow.language,
-            fechaInicio: formDataLibros.fechaInicio,
-            fechaFin: formDataLibros.fechaFin,
+            language: selectedRow.language, */
+
+            userId: userId, // Reemplaza esto con el ID del usuario actual obtenido de tu autenticación
+            bookId: selectedRow._id, // Asegúrate de tener el ID correcto del libro seleccionado
+            type: 'book', // Esto está basado en el enum en ReservationBook.js
+            //verificationCode: generateRandomAlphaNumeric(8),
+            reservationDate: new Date(formDataLibros.fechaInicio), // Utiliza la fecha de inicio proporcionada
+            returnDate: new Date(formDataLibros.fechaFin),
+            duration: new Date(),
+            state: 'PENDIENTE',
         };
 
-        toast.success("¡Libro reservado con éxito!", {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 3000,
-        });
+        try {
+            // Realizar la solicitud POST a la API para crear la reserva
+            const response = await fetch("http://localhost:4000/api/students/reservations/books", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(reservaData),
+            });
 
-        setTimeout(() => {
-            limpiarFormularioLibros();
-            setSelectedRow(null);
-        }, 3000);
+            if (!response.ok) {
+                throw new Error('Error al reservar el libro');
+            }
 
-        console.log(reservaData);
+            toast.success("¡Libro reservado con éxito!", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });
+
+            setTimeout(() => {
+                limpiarFormularioLibros();
+                setSelectedRow(null);
+            }, 1000);
+
+            console.log('Reserva exitosa:', reservaData);
+        } catch (error) {
+            console.error('Error al reservar el libro:', error);
+            toast.error('Error al reservar el libro toast', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+            });
+        }
     };
 
     // Efecto para cargar libros desde el backend
@@ -89,6 +118,7 @@ const VerLibros = () => {
                 const response = await fetch("http://localhost:4000/api/students/view-equipments/books");
                 const data = await response.json();
                 setLibros(data);
+                console.log(libros);
             } catch (error) {
                 console.error("Error fetching libros:", error);
             }
@@ -143,8 +173,6 @@ const VerLibros = () => {
     const end = Math.min(start + itemsPerPage, librosToDisplay.length);
     const librosToDisplayPaginated = librosToDisplay.slice(start, end);
 
-
-
     console.log('Libros To Display:', librosToDisplayPaginated);
 
 
@@ -183,6 +211,7 @@ const VerLibros = () => {
                             <thead>
                                 <tr>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Seleccionar</th>
+                                    <th className="px-6 py-3 bg-blue-500 text-white text-left" style={{ display: 'none' }}>Id</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Titulo</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Año</th>
                                     <th className="px-6 py-3 bg-blue-500 text-white text-left">Categoria</th>
@@ -201,6 +230,7 @@ const VerLibros = () => {
                                                 className={`${styles.form_checkbox} h-5 w-5 text-blue-500`}
                                             />
                                         </td>
+                                        <td className="px-6 py-4 whitespace-nowrap" style={{ display: 'none' }}>{libro._id}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{libro.title}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{libro.year}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{libro.category}</td>

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from '../../../page/Cliente/styles/HomeReservar.module.css';
 import { toast } from 'react-toastify';
+import { useUser } from '../../../context/UserContext';
 
 const VerEquipos = () => {
+    const { userId } = useUser();
     const [formDataEquipos, setFormDataEquipos] = useState({
         fecha: '',
         horaInicio: '',
@@ -44,7 +46,7 @@ const VerEquipos = () => {
         );
     };
 
-    const handleSubmitEquipos = (e) => {
+    const handleSubmitEquipos = async (e) => {
         e.preventDefault();
 
         const camposVacios = Object.entries(formDataEquipos).some(([key, value]) => value.trim() === '');
@@ -58,25 +60,48 @@ const VerEquipos = () => {
         }
 
         const reservaData = {
-            name: selectedRow.name,
-            components: selectedRow.components,
-            state: selectedRow.state,
-            fecha: formDataEquipos.fecha,
-            horaInicio: formDataEquipos.horaInicio,
-            horaFin: formDataEquipos.horaFin,
+            userId: userId,
+            equipmentId: selectedRow._id, // Asegúrate de tener el ID correcto del equipo seleccionado
+            type: 'equipment',
+            //verificationCode: generateRandomAlphaNumeric(8),
+            reservationDateTime: new Date(formDataEquipos.fecha), // Utiliza la fecha proporcionada
+            startHour: formDataEquipos.horaInicio,
+            endHour: formDataEquipos.horaFin,
+            state: 'PENDIENTE',
         };
 
-        toast.success("¡Libro reservado con éxito!", {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 3000,
-        });
+        try {
+            // Realizar la solicitud al backend para la reserva de equipos
+            const response = await fetch("http://localhost:4000/api/students/reservations/equipments", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reservaData),
+            });
 
-        setTimeout(() => {
-            limpiarFormularioEquipos();
-            setSelectedRow(null);
-        }, 3000);
+            if (response.ok) {
+                toast.success("¡Equipo reservado con éxito!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000,
+                });
 
-        console.log(reservaData);
+                setTimeout(() => {
+                    limpiarFormularioEquipos();
+                    setSelectedRow(null);
+                }, 1000);
+
+                console.log('Reserva de equipo exitosa:', reservaData);
+            } else {
+                throw new Error("Error al reservar el equipo");
+            }
+        } catch (error) {
+            console.error("Error al reservar el equipo:", error);
+            toast.error("Error al reservar el equipo", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+            });
+        }
     };
 
     // Efecto para cargar equipos desde el backend

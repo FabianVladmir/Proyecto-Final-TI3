@@ -21,17 +21,17 @@ const reservationEquipmentSchema = mongoose.Schema(
       enum: ["equipment"],
       default: "equipment",
     },
-    reservationDate: {
-      type: Date,      
-      default: Date.now(),
-    },
-    returnDate: {
-      type: Date,      
-      default: Date.now(),
-    },    
-    duration: {
+    reservationDateTime: {
       type: Date,
       default: Date.now()
+    },
+    startHour: {
+      type: String,
+      default: ''
+    },
+    endHour: {
+      type: String,
+      default: ''
     },
     state:{
       type: String,

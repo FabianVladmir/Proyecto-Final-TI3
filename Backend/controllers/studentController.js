@@ -308,38 +308,31 @@ const reserverEquipment = async (req, res) => {
     const VALID_TYPES = ["books", "equipments"];
 
     if (type === VALID_TYPES[0]) {
-
-        const reservationBook = new ReservationBook(req.body);
-        console.log(reservationBook);
-        // try {
-        //     // save the reservation in ReservationBook
-        //     const  reservationBookStored =   await reservationBook.save();
-        //     res.json(reservationBookStored);
-        // } catch (error) {
-        //     console.log(error);
-        // }
-    }
-
-
-    else if (type === VALID_TYPES[1]) {
-
-        const ReservationEquipment = new ReservationEquipment(req.body);
-
+        const reservationBookData = { ...req.body }; // No necesitas agregar status: 'pendiente'
+        const reservationBook = new ReservationBook(reservationBookData)
         try {
-            // save the reservation in ReservationEquipment
-            const ReservationEquipmentStored = await ReservationEquipment.save();
-            res.json(ReservationEquipmentStored)
+            const reservationBookStored = await reservationBook.save();
+            res.json(reservationBookStored);
         } catch (error) {
             console.log(error);
+            res.status(500).json({ msg: 'Error interno del servidor al reservar libro' });
         }
-    }
+    } else if (type === VALID_TYPES[1]) {
+        const reservationEquipment = new ReservationEquipment(req.body);
 
-    else {
-        const error = new Error("No existe tal categoria, debe elegir entre libros o equipos");
+        try {
+            const reservationEquipmentStored = await reservationEquipment.save();
+            res.json(reservationEquipmentStored);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ msg: 'Error interno del servidor al reservar equipo' });
+        }
+    } else {
+        const error = new Error("No existe tal categoría, debe elegir entre libros o equipos");
         return res.status(404).json({ msg: error.message });
     }
+};
 
-}
 
 const getUserId = async (req, res) => {
     const userId = req.student._id;

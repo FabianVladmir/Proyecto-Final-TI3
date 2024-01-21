@@ -3,6 +3,7 @@ import { signIn, profile, confirmAccount, authenticateStudent, forgetPassword, c
     newPassword, viewSchedules, viewEquipment, reserverEquipment, getUserId
 } from '../controllers/studentController.js';
 import checkAuth from '../middleware/authMiddleware.js';
+import ReservationEquipment from '../models/ReservationEquipment.js';
 
 
 const router = express.Router();
@@ -47,7 +48,7 @@ router.get('/confirmacion-exitosa', (req, res) => {
 
 // private routes
 router.get("/profile", checkAuth, profile);
-router.post("/reserver-equipments/:type/:idEquip", checkAuth, reserverEquipment);
+router.post("/reservations/:type", reserverEquipment);
 
 router.get('/get-user-id', getUserId);
 
