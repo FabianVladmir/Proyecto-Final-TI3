@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 const EditForm = ({ bookId, onClose, onSave }) => {
@@ -64,7 +64,6 @@ const EditForm = ({ bookId, onClose, onSave }) => {
 
   return (
     <div>
-      <ToastContainer />
       <form onSubmit={handleSubmitLibros} className="max-w-lg mx-auto bg-white p-5 border rounded shadow">
         <div className="grid grid-cols-2 gap-4">
           <div className="mb-2">

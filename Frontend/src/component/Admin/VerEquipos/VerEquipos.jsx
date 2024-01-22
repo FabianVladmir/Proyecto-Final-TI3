@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import EditForm from './EditarFormEquipos';
 
@@ -111,7 +111,6 @@ const VerEquipos = () => {
 
     return (
         <div>
-            <ToastContainer />
             {/* Agregar campo de búsqueda */}
             <div>
                 <input

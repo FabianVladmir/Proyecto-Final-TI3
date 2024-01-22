@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Logo from '../../assets/ce-epcc.png';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import styles from './styles/HomeAgregarEquipos.module.css';
 import "react-toastify/dist/ReactToastify.css";
 import SeleccionEquipos from '../../component/SeleccionEquipos';
@@ -80,7 +80,6 @@ const verEquipos = () => {
 
     return (
         <div>
-            <ToastContainer />
             <div>
                 {renderForm()}
             </div>

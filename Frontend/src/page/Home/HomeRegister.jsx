@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import styles from './styles/HomeRegister.module.css';
@@ -123,7 +123,6 @@ function RegistroForm() {
 
     return (
         <div>
-            <ToastContainer />
             <div className={`${styles.hero} ${styles.heroContent} hero`}>
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>

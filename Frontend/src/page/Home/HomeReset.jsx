@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 import styles from './styles/HomeReset.module.css';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
@@ -83,7 +83,6 @@ function ResetPassword() {
 
     return (
         <div className={`${styles.hero} hero min-h-screen bg-base-200`}>
-            <ToastContainer />
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>
                     <div className="max-w-screen-xl mx-auto">

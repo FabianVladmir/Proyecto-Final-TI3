@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import WeekRangeComponent from '../../component/Cliente/HomeReservar/GetDay.jsx';
 import SeleccionEquipos from '../../component/SeleccionEquipos.jsx';
@@ -78,7 +77,6 @@ const ReservarForm = (props) => {
       <div>
         {renderForm()}
       </div>
-      <ToastContainer />
     </div>
   );
 };

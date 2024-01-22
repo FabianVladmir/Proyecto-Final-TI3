@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const DetallesModal = ({ details, type, idReservation, onClose }) => {
     const [formulario, setFormulario] = useState({
@@ -48,7 +48,6 @@ const DetallesModal = ({ details, type, idReservation, onClose }) => {
     };
     return (
         <div className="bg-white p-5 border rounded shadow">
-            <ToastContainer />
             <h2 className="text text-center text-2xl font-bold">Detalles del Equipo</h2>
             <div className="grid">
                 <div className="mb-2">

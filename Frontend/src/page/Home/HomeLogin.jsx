@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 import styles from './styles/HomeLogin.module.css';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from '../../context/UserContext';
 
@@ -112,7 +112,6 @@ function HomeLogin(props) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <ToastContainer />
             <div className={`${styles.hero} ${styles.heroContent} hero`}>
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>

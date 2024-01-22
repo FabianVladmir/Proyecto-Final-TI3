@@ -78,7 +78,6 @@ const AgregarForm = () => {
 
     return (
         <div>
-            <ToastContainer />
             <div>
                 {renderForm()}
             </div>
