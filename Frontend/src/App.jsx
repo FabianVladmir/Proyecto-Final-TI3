@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { toast, ToastContainer } from 'react-toastify';
-
 
 import HomeRoutes from './routes/homeRoutes';
 import ClientRoutes from './routes/clientRoutes';
@@ -49,6 +48,7 @@ function App() {
 
   return (
     <UserProvider>
+      <ToastContainer />
       <Router>
         <Routes>
           <Route path="/*" element={<HomeRoutes />} />
