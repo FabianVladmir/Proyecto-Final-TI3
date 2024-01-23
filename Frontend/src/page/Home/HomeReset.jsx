@@ -104,6 +104,8 @@
                                             value={formData.email}
                                             onChange={handleChange}
                                             className="w-full p-3 border border-gray-300 rounded-lg"
+                                            placeholder="ej. usuario@unsa.edu.pe"
+
                                         />
                                     </div>
                                 </div>

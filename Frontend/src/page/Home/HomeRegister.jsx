@@ -165,6 +165,7 @@ function RegistroForm() {
                                         value={formData.CUI}
                                         onChange={handleChange}
                                         className="w-full p-2 border border-gray-300 rounded"
+                                        placeholder='ej. 20001011'
                                     />
                                 </div>
                                 <div>
@@ -175,6 +176,7 @@ function RegistroForm() {
                                         value={formData.email}
                                         onChange={handleChange}
                                         className="w-full p-2 border border-gray-300 rounded"
+                                        placeholder='ej. usuario@unsa.edu.pe'
                                     />
                                 </div>
                                 <div>
@@ -185,6 +187,7 @@ function RegistroForm() {
                                         value={formData.telephone}
                                         onChange={handleChange}
                                         className="w-full p-2 border border-gray-300 rounded"
+                                        placeholder='ej. 999888777'
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
@@ -196,6 +199,7 @@ function RegistroForm() {
                                             value={formData.password}
                                             onChange={handleChange}
                                             className="w-full p-2 border border-gray-300 rounded"
+                                            placeholder='Digite más de 6 caracteres'
                                         />
                                     </div>
                                     <div>
@@ -206,6 +210,7 @@ function RegistroForm() {
                                             value={formData.confimarPassword}
                                             onChange={handleChange}
                                             className="w-full p-2 border border-gray-300 rounded"
+                                            placeholder='Digite más de 6 caracteres'
                                         />
                                     </div>
                                 </div>

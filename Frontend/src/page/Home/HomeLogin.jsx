@@ -131,7 +131,7 @@ function HomeLogin(props) {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    placeholder="email"
+                                    placeholder="usuario@unsa.edu.pe"
                                     className="input input-bordered"
                                 />
                             </div>

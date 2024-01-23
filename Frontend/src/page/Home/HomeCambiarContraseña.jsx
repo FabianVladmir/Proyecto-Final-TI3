@@ -101,6 +101,7 @@ function ResetPasswordPage() {
                                         name="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
+                                        placeholder='Digite más de 6 caracteres'
                                     />
                                 </div>
                             </div>
@@ -115,6 +116,7 @@ function ResetPasswordPage() {
                                         name="confirmPassword"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
+                                        placeholder='Digite más de 6 caracteres'
                                     />
                                 </div>
                             </div>
