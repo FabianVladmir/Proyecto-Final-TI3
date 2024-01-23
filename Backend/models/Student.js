@@ -37,7 +37,7 @@ const studentSchema = mongoose.Schema({
     },
     token:{
         type: String,
-        default: generateID()
+        default: null
     },
     confirmado: {
         type: Boolean,

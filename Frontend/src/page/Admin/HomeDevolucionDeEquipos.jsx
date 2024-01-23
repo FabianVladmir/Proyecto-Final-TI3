@@ -42,6 +42,8 @@ const TableDevolucionDeEquipos = () => {
                     {/* Encabezado de la tabla */}
                     <thead>
                         <tr>
+{/*                             Equipo/Libro  , Estudiante , Fecha en la que deberia ser devuelta , Codigo , Devuelto y tambien edaitar donde se va cambiar la fecha de entrega
+ */}                            
                             <th className="px-6 py-3 bg-blue-500 text-white text-left">Equipo/Libro</th>
                             <th className="px-6 py-3 bg-blue-500 text-white text-left">Solicitante</th>
                             <th className="px-6 py-3 bg-blue-500 text-white text-left">Fecha</th>

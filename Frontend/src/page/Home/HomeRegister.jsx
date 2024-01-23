@@ -180,7 +180,7 @@ function RegistroForm() {
                                 <div>
                                     <label className="block">Teléfono</label>
                                     <input
-                                        type="tel"
+                                        type="number"
                                         name="telephone"
                                         value={formData.telephone}
                                         onChange={handleChange}

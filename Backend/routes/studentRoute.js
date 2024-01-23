@@ -12,13 +12,14 @@ const router = express.Router();
 router.post("/", signIn);
 router.get("/confirmar-cuenta/:token", confirmAccount);
 router.post("/login", authenticateStudent);
+
 router.post("/reset-password", forgetPassword);
 router.route("/reset-password/:token").get(checkToken).post(newPassword);
 
 router.get("/view-schedules/:type", viewSchedules);
 router.get("/view-equipments/:type", viewEquipment);
-// Agrega esta nueva ruta en tu archivo de rutas
 
+// Agrega esta nueva ruta en tu archivo de rutas
 router.get('/confirmacion-exitosa', (req, res) => {
     res.send(`
         <html>

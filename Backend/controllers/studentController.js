@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import nodemailer from 'nodemailer';
-
+import jwt from 'jsonwebtoken';
 import generateID from "../helpers/generateID.js";
 import generateJWT from "../helpers/generateJWT.js";
 import Student from "../models/Student.js";
@@ -223,13 +223,15 @@ const forgetPassword = async (req, res) => {
     }
 
     try {
-        // Generar un nuevo token
-        existStudent.token = generateID();
+        // Generar un nuevo token con información de expiración para restablecimiento de contraseña
+        const token = jwt.sign({ userId: existStudent._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Almacenar el token de restablecimiento de contraseña en el estudiante
+        existStudent.token = token;
         await existStudent.save();
 
-
-        // Enviar correo electrónico con instrucciones y token
-        const resetLink = `http://localhost:5173/reset-password/${existStudent.token}`;
+        // Enviar correo electrónico con instrucciones y token de restablecimiento
+        const resetLink = `http://localhost:5173/reset-password/${token}`;
         sendResetPasswordEmail(existStudent.email, resetLink);
 
         res.json({ msg: 'Hemos enviado un correo electrónico con las instrucciones para restablecer la contraseña.' });
@@ -253,29 +255,29 @@ const checkToken = async (req, res) => {
     }
 }
 
-
 const newPassword = async (req, res) => {
-    // console.log("some");
-    // res.json({msg:"desde newpassword"});
     const { token } = req.params;
     const { password } = req.body;
 
-    const existStudentToken = await Student.findOne({ token });
-    if (!existStudentToken || !existStudentToken.resetTokenHash) {
+    const existStudentToken = await Student.findOne({ token: token });
+
+    if (!existStudentToken || !existStudentToken.token) {
         const error = new Error("Token no válido o ya ha sido utilizado");
         return res.status(400).json({ msg: error.message });
     }
 
     try {
-        //change student model attributes
+        // Cambiar las propiedades del modelo del estudiante
         existStudentToken.token = null;
         existStudentToken.password = password;
         await existStudentToken.save();
-        res.json({ msg: "Password modificado correctamente" });
+
+        res.json({ msg: "Contraseña modificada correctamente" });
     } catch (error) {
         console.log(error);
+        return res.status(400).json({ msg: 'Token no válido o expirado' });
     }
-}
+};
 
 const viewSchedules = async (req, res) => {
 

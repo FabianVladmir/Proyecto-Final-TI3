@@ -24,7 +24,7 @@ router.get("/getCategory", getCategory )
 // Obtener todos los elementos de reservaciones
 router.get("/getReservation/:type", getReservation);
 
-// Obtener todos los elementos de reservaciones
+// Obtener los datos del estudiante
 router.get("/getStudent/:id", getStudentById);
 
 // Actualizar el state de la reserva
