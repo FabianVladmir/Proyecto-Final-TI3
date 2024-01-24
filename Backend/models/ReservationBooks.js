@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 import generateRandomAlphaNumeric from "../helpers/generateCodVal.js";
 
 const reservationBookSchema = mongoose.Schema(
-  { 
-    userId:{
+  {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
     },
-    bookId:{
+    bookId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
     },
@@ -16,30 +16,34 @@ const reservationBookSchema = mongoose.Schema(
       enum: ["book"],
       default: "book",
     },
-    verificationCode:{
+    verificationCode: {
       type: String,
       default: generateRandomAlphaNumeric(8)
     },
     reservationDate: {
-      type: Date,      
+      type: Date,
       default: Date.now(),
     },
     returnDate: {
-      type: Date,      
+      type: Date,
       default: Date.now(),
-    },    
+    },
     duration: {
       type: Date,
       default: Date.now()
     },
-    state:{
+    state: {
       type: String,
-      required: true 
+      required: true
+    },
+    deleteScheduled: {
+      type: Date,
+      default: null,
     }
   },
   { timestamps: true }
 );
 
-const ReservationBook= mongoose.model("ReservationBook", reservationBookSchema);
+const ReservationBook = mongoose.model("ReservationBook", reservationBookSchema);
 
 export default ReservationBook;

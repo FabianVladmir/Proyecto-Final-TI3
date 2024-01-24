@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const DetallesModal = ({ details, type, idReservation, onClose }) => {
+const DetallesModal = ({ details, type, idReservation, stateReservation, onClose }) => {
     const [formulario, setFormulario] = useState({
         title: '',
         name: '',
@@ -12,11 +12,9 @@ const DetallesModal = ({ details, type, idReservation, onClose }) => {
 
     const [state, setState] = useState('');
     useEffect(() => {
-        console.log('Valor de bookId:', details);
         const correctedType = type === 'book' ? 'books' : 'equipments';
         axios.get(`http://localhost:4000/api/admin/get/${correctedType}/${details}`)
             .then(response => {
-                console.log('Datos del libro obtenidos:', response.data);
                 setFormulario(response.data);
             })
             .catch(error => console.error('Error al obtener los datos del libro:', error));
@@ -31,9 +29,10 @@ const DetallesModal = ({ details, type, idReservation, onClose }) => {
 
     const handleSubmitReservation = async (e) => {
         e.preventDefault();
+
         try {
             const correctedType = type === 'book' ? 'books' : 'equipments';
-            const response = await axios.post(`http://localhost:4000/api/admin/update-status/${correctedType}/${idReservation}`, { reservationId: idReservation, newStatus: state });
+            const response = await axios.post(`http://localhost:4000/api/admin/update-reservation/${correctedType}/${idReservation}`, { reservationId: idReservation, newStatus: state });
             toast.success('Estado de la reserva actualizado con éxito', {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000, // Duración en milisegundos
@@ -48,7 +47,8 @@ const DetallesModal = ({ details, type, idReservation, onClose }) => {
     };
     return (
         <div className="bg-white p-5 border rounded shadow">
-            <h2 className="text text-center text-2xl font-bold">Detalles del Equipo</h2>
+            {type === 'book' ? (<h2 className="text text-center text-2xl font-bold">Detalles del Libro</h2>) :
+                (<h2 className="text text-center text-2xl font-bold">Detalles del Equipo</h2>)}
             <div className="grid">
                 <div className="mb-2">
                     <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
@@ -117,13 +117,29 @@ const DetallesModal = ({ details, type, idReservation, onClose }) => {
                             onChange={handleChange}
                             className="w-full p-2 border rounded"
                         >
-                            <option value="">Selecciona un estado</option>
-                            <option value="PENDIENTE">PENDIENTE</option>
-                            <option value="ACEPTADO">ACEPTADO</option>
-                            <option value="RECHAZADO">RECHAZADO</option>
+                            <option value={stateReservation}>{stateReservation}</option>
+                            {stateReservation === 'PENDIENTE' && (
+                                <>
+                                    <option value="ACEPTADO">ACEPTADO</option>
+                                    <option value="RECHAZADO">RECHAZADO</option>
+                                </>
+                            )}
+                            {stateReservation === 'RECHAZADO' && (
+                                <>
+                                    <option value="PENDIENTE">PENDIENTE</option>
+                                    <option value="ACEPTADO">ACEPTADO</option>
+                                </>
+                            )}
+                            {stateReservation === 'ACEPTADO' && (
+                                <>
+                                    <option value="PENDIENTE">PENDIENTE</option>
+                                    <option value="RECHAZADO">RECHAZADO</option>
+                                </>
+                            )}
                         </select>
                     </div>
                 </div>
+
                 <div className="flex justify-center">
                     <div>
                         <button

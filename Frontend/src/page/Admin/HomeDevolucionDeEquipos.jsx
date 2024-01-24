@@ -44,12 +44,13 @@ const TableDevolucionDeEquipos = () => {
                         <tr>
 {/*                             Equipo/Libro  , Estudiante , Fecha en la que deberia ser devuelta , Codigo , Devuelto y tambien edaitar donde se va cambiar la fecha de entrega
  */}                            
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Equipo/Libro</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Solicitante</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Fecha</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Estado</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Código</th>
-                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Devuelto</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Categoria</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Nombre del Estudiante</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Fecha de entrega</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Codigo</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Devolucion</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Estado de Devolucion</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Opcion</th>
                         </tr>
                     </thead>
                     {/* Cuerpo de la tabla */}
@@ -60,7 +61,6 @@ const TableDevolucionDeEquipos = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">{item.solicitante}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{item.fecha}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{item.estado}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.codigo}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         <button type="button">
@@ -84,6 +84,7 @@ const TableDevolucionDeEquipos = () => {
                                         </button>
                                     </div>
                                 </td>
+                                <td className="px-6 py-4 whitespace-nowrap">{item.codigo}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -29,11 +29,13 @@ const signIn = async (req, res) => {
             email,
         });
 
+        const token = generateID();
+        student.token = token;
         // Guardar el nuevo estudiante
         const studentSave = await student.save();
 
         // Enviar correo de confirmación
-        const confirmLink = `${process.env.APP_URL}/api/students/confirmar-cuenta/${student.token}`;
+        const confirmLink = `${process.env.APP_URL}/api/students/confirmar-cuenta/${token}`;
         sendConfirmationEmail(student.email, confirmLink);
 
 

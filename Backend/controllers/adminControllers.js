@@ -173,13 +173,15 @@ const getStudentById = async (req, res) => {
     }
 };
 
-const updateReservationStatus = async (req, res) => {
+const updateReservation = async (req, res) => {
     const { reservationId, newStatus } = req.body;
     const { type } = req.params;
+
     if (!type || !VALID_TYPES.includes(type)) {
         const error = new Error("Tipo de categoría no válido");
         return res.status(400).json({ msg: error.message });
     }
+
     try {
         let reservation;
 
@@ -196,15 +198,47 @@ const updateReservationStatus = async (req, res) => {
         if (!reservation) {
             return res.status(404).json({ msg: 'Reserva no encontrada' });
         }
-        reservation.state = newStatus;  // Cambiar 'status' a 'state'
-        // Guardar los cambios
+
+        // Actualizar el estado
+        reservation.state = newStatus;
+
+        if (newStatus === 'ACEPTADO') {
+            // Reducir la cantidad en uno si el estado es "ACEPTADO"
+            const itemType = type === 'books' ? Book : Equipment;
+
+            // Obtener el ID del libro o equipo según el tipo de reserva
+            const itemId = type === 'books' ? reservation.bookId : reservation.equipmentId;
+
+            // Actualizar la cantidad en el modelo correspondiente
+            await itemType.findByIdAndUpdate(itemId, { $inc: { amount: -1 } });
+        }
+        if (newStatus === 'RECHAZADO') {
+            // Programar la eliminación después de 1 hora
+            const scheduledDeletionTime = new Date();
+            scheduledDeletionTime.setSeconds(scheduledDeletionTime.getSeconds() + 30);
+            //scheduledDeletionTime.setHours(scheduledDeletionTime.getHours() + 1);
+
+            reservation.deleteScheduled = scheduledDeletionTime;
+            await reservation.save();
+        }
+
+        if (newStatus === 'ACEPTADO' || newStatus === 'PENDIENTE') {
+            if (reservation.deleteScheduled) {
+                clearTimeout(reservation.deleteScheduled);
+                reservation.deleteScheduled = null;
+            }
+        }
+        
+        // Guardar los cambios en la reserva
         await reservation.save();
-        res.json({ msg: 'Estado de la reserva actualizado con éxito' });
+
+        res.json({ msg: 'Estado de la reserva actualizado con éxito y cantidad reducida si es necesario' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ msg: 'Error interno del servidor al actualizar el estado de la reserva' });
+        res.status(500).json({ msg: 'Error interno del servidor al actualizar la reserva' });
     }
 };
+
 
 const getItemDetailsById = async (req, res) => {
     const { type, itemId } = req.params;
@@ -233,6 +267,28 @@ const getItemDetailsById = async (req, res) => {
     }
 };
 
+
+const deleteReservation = async (req, res) => {
+    try {
+        const { type, id } = req.params;
+
+        // Determinar el modelo de reserva según el tipo (libro o equipo)
+        const ReservationModel = type === 'book' ? ReservationBooks : ReservationEquipments;
+
+        // Eliminar la reserva por ID
+        const deletedReservation = await ReservationModel.findByIdAndDelete(id);
+
+        if (!deletedReservation) {
+            return res.status(404).json({ success: false, message: 'Reserva no encontrada' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Reserva eliminada correctamente' });
+    } catch (error) {
+        console.error('Error al eliminar la reserva:', error);
+        return res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+};
+
 export {
     createItem,
     getAllItems,
@@ -242,6 +298,7 @@ export {
     getItemById,
     getReservation,
     getStudentById,
-    updateReservationStatus,
-    getItemDetailsById
+    updateReservation,
+    getItemDetailsById,
+    deleteReservation
 };

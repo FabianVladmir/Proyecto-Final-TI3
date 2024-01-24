@@ -1,5 +1,7 @@
 import express from 'express';
-import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, getReservation, getStudentById, updateReservationStatus, getItemDetailsById} from '../controllers/adminControllers.js';
+import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
+    getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation} 
+    from '../controllers/adminControllers.js';
 
 const router = express.Router();
 
@@ -27,8 +29,11 @@ router.get("/getReservation/:type", getReservation);
 // Obtener los datos del estudiante
 router.get("/getStudent/:id", getStudentById);
 
-// Actualizar el state de la reserva
-router.post('/update-status/:type/:reservationId', updateReservationStatus);
+// Actualizar el state de la reserva y amount si state es ACEPTADO
+router.post('/update-reservation/:type/:reservationId', updateReservation);
+
+// Ruta para eliminar reservas por ID y tipo (libro o equipo)
+router.delete('/deleteReservationById/:type/:id', deleteReservation);
 
 // Obtener detalles de un libro o equipo por ID
 router.get("/getDetails/:type/:itemId", getItemDetailsById);

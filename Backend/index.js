@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-
+import  './scheduleTask.js';
 import studentRoute from "./routes/studentRoute.js";
 import adminRoute from "./routes/adminRoute.js";
 import connectionDB from "./config/db.js";
@@ -22,7 +22,6 @@ app.use(cookieParser());
 app.use(express.json());
 // connection with the DB
 connectionDB();
-
 
 
 // redirect all urls

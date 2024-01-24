@@ -3,16 +3,16 @@ import generateRandomAlphaNumeric from "../helpers/generateCodVal.js";
 
 
 const reservationEquipmentSchema = mongoose.Schema(
-  { 
-    userId:{
+  {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
     },
-    equipmentId:{
+    equipmentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Equipment",
-    }, 
-    verificationCode:{
+    },
+    verificationCode: {
       type: String,
       default: generateRandomAlphaNumeric(8)
     },
@@ -33,14 +33,18 @@ const reservationEquipmentSchema = mongoose.Schema(
       type: String,
       default: ''
     },
-    state:{
+    state: {
       type: String,
-      required: true 
+      required: true
+    },
+    deleteScheduled: {
+      type: Date,
+      default: null,
     }
   },
   { timestamps: true }
 );
 
-const ReservationEquipment= mongoose.model("ReservationEquipment", reservationEquipmentSchema);
+const ReservationEquipment = mongoose.model("ReservationEquipment", reservationEquipmentSchema);
 
 export default ReservationEquipment;
