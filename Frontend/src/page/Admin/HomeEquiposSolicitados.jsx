@@ -6,7 +6,6 @@ import axios from 'axios';
 import ModalDetallesEquipo from '../../component/Admin/EquiposSolicitados/ModalDetallesEquipo';
 import { calculateTimeRemaining } from '../../component/Admin/EquiposSolicitados/calculateTimeRamaining';
 
-
 const TableEquiposSolicitados = () => {
     // Datos de ejemplo (puedes reemplazarlos con tus propios datos)
     const [reservas, setReservas] = useState([]);
@@ -95,9 +94,6 @@ const TableEquiposSolicitados = () => {
 
         return () => clearInterval(intervalId); // Limpieza del intervalo al desmontar el componente
     }, [reservas]);
-
-
-
 
     const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
     const itemsPerPage = 10; // Número de elementos por página

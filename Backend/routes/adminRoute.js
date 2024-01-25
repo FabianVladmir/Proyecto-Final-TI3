@@ -1,6 +1,6 @@
 import express from 'express';
 import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
-    getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation} 
+    getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime} 
     from '../controllers/adminControllers.js';
 
 const router = express.Router();
@@ -37,5 +37,8 @@ router.delete('/deleteReservationById/:type/:id', deleteReservation);
 
 // Obtener detalles de un libro o equipo por ID
 router.get("/getDetails/:type/:itemId", getItemDetailsById);
+
+// Actualizar el currentTieme de las reservas y tambien el amount de los equipos o libros
+router.put('/updateCurrentTime/:type/:id/:itemId', updateCurrentTime)
 
 export default router;

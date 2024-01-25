@@ -1,39 +1,124 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { CheckmarkSharp } from 'react-ionicons';
 import { CloseSharp } from 'react-ionicons';
 import './styles/HomePaginationStyles.css';
+import formattedDate from '../../component/Admin/DevolucionDeEquipos/FormattedDate';
+import parseCustomTime from '../../component/Admin/DevolucionDeEquipos/parseCustomTime';
+import getEstadoDevolucion from '../../component/Admin/DevolucionDeEquipos/getEstadoDevolucion';
+import Modal from '../../component/Admin/DevolucionDeEquipos/Modal';
+import ModalEditar from '../../component/Admin/DevolucionDeEquipos/ModalEditarDevolucion';
+
+import { toast } from 'react-toastify';
+
+
+import axios from 'axios';
 
 const TableDevolucionDeEquipos = () => {
-    // Datos de ejemplo (puedes reemplazarlos con tus propios datos)
-    const data = [
-        {
-            equipoLibro: 'Equipo 1',
-            solicitante: 'Juan Pérez',
-            fecha: '2023-10-18',
-            estado: 'Pendiente',
-            codigo: '123456',
-            devuelto: {
-                campo1: 'Icono 1',
-                campo2: 'Icono 2',
-            },
-        },
-        // Agregar más datos según sea necesario
-    ];
 
+    const [reservas, setReservas] = useState([]);
+
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+    const fetchData = async () => {
+        try {
+            const responseBook = await axios.get("http://localhost:4000/api/admin/getReservation/books");
+            const responseEquipment = await axios.get("http://localhost:4000/api/admin/getReservation/equipments");
+            const combinedReservas = [...responseBook.data, ...responseEquipment.data];
+
+            // Ordenar por la propiedad 'createdAt'
+            combinedReservas.sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+
+                // Compara las fechas
+                if (dateA < dateB) return -1;
+                if (dateA > dateB) return 1;
+
+                // Si las fechas son iguales, compara las horas
+                const timeA = dateA.getTime();
+                const timeB = dateB.getTime();
+
+                return timeA - timeB;
+            });
+            const reservasWithNames = await Promise.all(combinedReservas.map(async (item) => {
+                const studentResponse = await axios.get(`http://localhost:4000/api/admin/getStudent/${item.userId}`);
+                const studentName = studentResponse.data.firstname + ' ' + studentResponse.data.lastname;
+                return { ...item, studentName };
+            }));
+            setReservas(reservasWithNames);
+        } catch (error) {
+            console.error('Error al obtener los libros:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+
+    const handleCheckmarkClick = async (reservationId, type, itemId) => {
+        try {
+            console.log(reservationId, type, itemId);
+            // Realizar la solicitud PUT al nuevo endpoint para actualizar currentTime
+            await axios.put(`http://localhost:4000/api/admin/updateCurrentTime/${type}/${reservationId}/${itemId}`);
+            toast.success('Solicitud enviada correctamente', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000, // 3 segundos
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+
+            // Refrescar la lista de reservas
+            fetchData();
+        } catch (error) {
+            console.error('Error al actualizar currentTime:', error);
+        }
+    };
+
+    const handleEditDevolucionClick = (reservationId, type) => {
+        const selected = reservas.find(item => item._id === reservationId);
+        setSelectedItem(selected);
+
+        // Abre el modal
+        setIsModalOpen(true);
+    }
+
+    const closeModal = () => {
+        // Cierra el modal y limpia el estado del item seleccionado
+        setIsModalOpen(false);
+        setSelectedItem(null);
+    };
+
+
+    // Filtrar los datos para mostrar solo los equipos ACEPTADOS
+    const filteredData = reservas.filter(item => item.state === 'ACEPTADO');
     const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
-    const itemsPerPage = 5; // Número de elementos por página
-    const pageCount = Math.ceil(data.length / itemsPerPage); // Cálculo del número total de páginas
+    const itemsPerPage = 10; // Número de elementos por página
+    const pageCount = Math.ceil(filteredData.length / itemsPerPage); // Cálculo del número total de páginas
 
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
 
     const offset = currentPage * itemsPerPage;
-    const currentData = data.slice(offset, offset + itemsPerPage);
-
+    const currentData = filteredData.slice(offset, offset + itemsPerPage);
     return (
-        <div className="max-w-screen-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+        <div className="max-w-screen-xl mx-auto mt-2 p-2 bg-white rounded-lg shadow-lg">
+            {/* Modal */}
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                {/* Renderiza el contenido del modal basado en el tipo de item */}
+                {selectedItem && (
+                    <ModalEditar item={selectedItem} />
+                )}
+            </Modal>
+
+
             <div className="text-center">
                 <p className="text-3xl font-bold mb-4">Devolucion de Equipos</p>
             </div>
@@ -42,28 +127,43 @@ const TableDevolucionDeEquipos = () => {
                     {/* Encabezado de la tabla */}
                     <thead>
                         <tr>
-{/*                             Equipo/Libro  , Estudiante , Fecha en la que deberia ser devuelta , Codigo , Devuelto y tambien edaitar donde se va cambiar la fecha de entrega
- */}                            
+                            {/*Equipo/Libro  , Estudiante , Fecha en la que deberia ser devuelta , Codigo , Devuelto y tambien edaitar donde se va cambiar la fecha de entrega*/}
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Categoria</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Nombre del Estudiante</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Fecha de entrega</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Codigo</th>
-                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Devolucion</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Estado de Devolucion</th>
-                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Opcion</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Devolucion</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">CurrentTime</th>
+
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30"></th>
+
                         </tr>
                     </thead>
                     {/* Cuerpo de la tabla */}
                     <tbody>
                         {currentData.map((item, index) => (
                             <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.equipoLibro}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.solicitante}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.fecha}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.estado}</td>
+                                <td className="px-6 py-4 whitespace-nowrap bg-gray-300">
+                                    {item.type === 'book' ? (<p>Libro</p>) : (<p>Equipo</p>)}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">{item.studentName}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    {item.type === 'equipment' ? (
+                                        <p>{formattedDate(item.reservationDateTime)}, {parseCustomTime(item.endHour)}</p>
+                                    ) : (
+                                        <p>{formattedDate(item.returnDate)}</p>
+                                    )}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">{item.verificationCode}</td>
+                                <td className="text text-center px-6 py-4 whitespace-nowrap">
+                                    <p style={{ color: getEstadoDevolucion(item) === 'EN PLAZO' ? 'green' : 'red' }}>
+                                        {getEstadoDevolucion(item)}
+                                    </p>
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
-                                        <button type="button">
+                                        <button type="button" onClick={() => handleCheckmarkClick(item._id, item.type, item.type === 'book' ? item.bookId : item.equipmentId)}>
                                             <CheckmarkSharp
                                                 color={'green'}
                                                 beat
@@ -73,7 +173,7 @@ const TableDevolucionDeEquipos = () => {
                                             />
                                         </button>
 
-                                        <button type="button">
+                                        {/*                                         <button type="button">
                                             <CloseSharp
                                                 color={'red'}
                                                 beat
@@ -81,10 +181,19 @@ const TableDevolucionDeEquipos = () => {
                                                 height="50px"
                                                 width="50px"
                                             />
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.codigo}</td>
+                                <td>{new Date(item.currentTime).toLocaleString()}</td>
+
+                                <td className="px-4 whitespace-nowrap">
+                                    <button type="button" onClick={() => handleEditDevolucionClick(item._id, item.type)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                            <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                        </svg>
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

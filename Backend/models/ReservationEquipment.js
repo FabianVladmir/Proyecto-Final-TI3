@@ -40,6 +40,10 @@ const reservationEquipmentSchema = mongoose.Schema(
     deleteScheduled: {
       type: Date,
       default: null,
+    },
+    currentTime: {
+      type: Date,
+      default: null,
     }
   },
   { timestamps: true }

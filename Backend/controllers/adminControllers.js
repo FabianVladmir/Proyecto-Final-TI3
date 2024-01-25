@@ -228,7 +228,7 @@ const updateReservation = async (req, res) => {
                 reservation.deleteScheduled = null;
             }
         }
-        
+
         // Guardar los cambios en la reserva
         await reservation.save();
 
@@ -269,6 +269,7 @@ const getItemDetailsById = async (req, res) => {
 
 
 const deleteReservation = async (req, res) => {
+    console.log('Botón de clic ejecutado');
     try {
         const { type, id } = req.params;
 
@@ -289,6 +290,37 @@ const deleteReservation = async (req, res) => {
     }
 };
 
+const updateCurrentTime = async (req, res) => {
+    try {
+        const { type, id, itemId } = req.params;
+
+        // Determinar el modelo de reserva según el tipo (libro o equipo)
+        const ReservationModel = type === 'book' ? ReservationBooks : ReservationEquipments;
+
+        // Actualizar el currentTime por ID
+        const updatedReservation = await ReservationModel.findByIdAndUpdate(
+            id,
+            { currentTime: new Date() },
+            { new: true }
+        );
+
+        if (type === 'book') {
+            await Book.findByIdAndUpdate(itemId, { $inc: { amount: 1 } });
+        } else if (type === 'equipment') {
+            await Equipment.findByIdAndUpdate(itemId, { $inc: { amount: 1 } });
+        }
+
+        if (!updatedReservation) {
+            return res.status(404).json({ success: false, message: 'Reserva no encontrada' });
+        }
+
+        return res.status(200).json({ success: true, message: 'currentTime actualizado correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar currentTime:', error);
+        return res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+};
+
 export {
     createItem,
     getAllItems,
@@ -300,5 +332,6 @@ export {
     getStudentById,
     updateReservation,
     getItemDetailsById,
-    deleteReservation
+    deleteReservation,
+    updateCurrentTime
 };
