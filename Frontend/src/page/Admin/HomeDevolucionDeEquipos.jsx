@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import { CheckmarkSharp } from 'react-ionicons';
-import { CloseSharp } from 'react-ionicons';
-import './styles/HomePaginationStyles.css';
+import { CheckmarkSharp } from 'react-ionicons'; //import { CloseSharp } from 'react-ionicons';
+import './styles/HomePaginationStyles.css'; 
 import formattedDate from '../../component/Admin/DevolucionDeEquipos/FormattedDate';
 import parseCustomTime from '../../component/Admin/DevolucionDeEquipos/parseCustomTime';
 import getEstadoDevolucion from '../../component/Admin/DevolucionDeEquipos/getEstadoDevolucion';
 import Modal from '../../component/Admin/DevolucionDeEquipos/Modal';
 import ModalEditar from '../../component/Admin/DevolucionDeEquipos/ModalEditarDevolucion';
 import Swal from 'sweetalert2';
-
-
 import { toast } from 'react-toastify';
-
 import axios from 'axios';
 
 const TableDevolucionDeEquipos = () => {
-
     const [reservas, setReservas] = useState([]);
-
     const [selectedItem, setSelectedItem] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [autoUpdate, setAutoUpdate] = useState(true);
 
 
     const fetchData = async () => {
@@ -57,8 +52,12 @@ const TableDevolucionDeEquipos = () => {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // Actualizar cada segundo si autoUpdate es verdadero
+        const intervalId = autoUpdate && setInterval(fetchData, 1000);
 
+        // Limpiar el intervalo al desmontar el componente
+        return () => clearInterval(intervalId);
+    }, [fetchData, autoUpdate]);
 
     const handleCheckmarkClick = async (reservationId, type, itemId) => {
         try {
@@ -79,7 +78,7 @@ const TableDevolucionDeEquipos = () => {
                 await axios.put(`http://localhost:4000/api/admin/updateCurrentTime/${type}/${reservationId}/${itemId}`);
                 toast.success('Solicitud enviada correctamente', {
                     position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 1000, // 3 segundos
+                    autoClose: 1000, 
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,

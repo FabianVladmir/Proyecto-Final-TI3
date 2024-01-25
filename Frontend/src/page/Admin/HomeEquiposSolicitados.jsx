@@ -63,7 +63,7 @@ const TableEquiposSolicitados = () => {
                     if (now > scheduledTime) {
                         // Ha pasado una hora, eliminar la reserva
                         await axios.delete(`http://localhost:4000/api/admin/deleteReservationById/${item.type}/${item._id}`);
-                        window.location.reload();
+                        //window.location.reload();
                     }
                 }
                 return item;

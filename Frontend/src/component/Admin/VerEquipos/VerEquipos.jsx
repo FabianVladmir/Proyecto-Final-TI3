@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import Swal from 'sweetalert2';
 import EditForm from './EditarFormEquipos';
-
 import Edit from './assets/edit-3.svg';
 import Delete from './assets/trash-2.svg';
 
@@ -61,8 +60,6 @@ const VerEquipos = () => {
 
     //EDITAR
     const handleEdit = (itemId) => {
-        // Lógica para manejar la edición del equipo con el ID itemId
-        console.log("Editar equipo con ID:", itemId);
         setShowEditModal(true);
         setSelectedEquipmentId(itemId);
     };
@@ -70,7 +67,6 @@ const VerEquipos = () => {
 
 
     const handleEditFormClose = () => {
-        // Lógica para cerrar el modal de edición
         setShowEditModal(false);
         setSelectedEquipmentId(null);
     };
@@ -91,21 +87,31 @@ const VerEquipos = () => {
     };
 
     // DELETE
-    const handleDelete = (itemId) => {
+    const handleDelete = async (itemId) => {
         // Lógica para manejar la eliminación del equipo con el ID itemId
-        console.log("Eliminar equipo con ID:", itemId);
-        axios.delete(`http://localhost:4000/api/admin/delete/equipments/${itemId}`)
-            .then((response) => {
-                const updatedEquipos = equipos.filter(equipment => equipment._id !== itemId);
-                toast.success("¡Equipo eliminado con éxito!", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 3000,
+        const confirmAction = await Swal.fire({
+            title: `¿Estás seguro que deseas eliminar el Equipo?`,
+            icon: 'warning', // Cambiar el icono a 'warning'
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+        });
+        if (confirmAction.isConfirmed) {
+            axios.delete(`http://localhost:4000/api/admin/delete/equipments/${itemId}`)
+                .then((response) => {
+                    const updatedEquipos = equipos.filter(equipment => equipment._id !== itemId);
+                    toast.success("¡Equipo eliminado con éxito!", {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                        autoClose: 3000,
+                    });
+                    setEquipos(updatedEquipos);
+                })
+                .catch((error) => {
+                    console.error('Error al eliminar el equipo:', error);
                 });
-                setEquipos(updatedEquipos);
-            })
-            .catch((error) => {
-                console.error('Error al eliminar el equipo:', error);
-            });
+        }
     };
 
 

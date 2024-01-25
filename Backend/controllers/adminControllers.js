@@ -215,8 +215,8 @@ const updateReservation = async (req, res) => {
         if (newStatus === 'RECHAZADO') {
             // Programar la eliminación después de 1 hora
             const scheduledDeletionTime = new Date();
-            scheduledDeletionTime.setSeconds(scheduledDeletionTime.getSeconds() + 30);
-            //scheduledDeletionTime.setHours(scheduledDeletionTime.getHours() + 1);
+            //scheduledDeletionTime.setSeconds(scheduledDeletionTime.getSeconds() + 30);
+            scheduledDeletionTime.setHours(scheduledDeletionTime.getHours() + 1);
 
             reservation.deleteScheduled = scheduledDeletionTime;
             await reservation.save();

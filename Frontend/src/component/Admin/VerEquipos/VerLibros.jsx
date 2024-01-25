@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
-
+import Swal from 'sweetalert2';
 import Edit from './assets/edit-3.svg';
 import Delete from './assets/trash-2.svg';
-
 import EditForm from './EditarFormLibros';
 
 const VerLibros = () => {
@@ -16,7 +14,6 @@ const VerLibros = () => {
 
     // Datos de ejemplo para la tabla (puedes reemplazar esto con tu lógica de obtención de datos)
     const [libros, setLibros] = useState([]);
-
 
     // MODAL
     const [showEditModal, setShowEditModal] = useState(false);
@@ -63,14 +60,11 @@ const VerLibros = () => {
 
     // EDITAR
     const handleEdit = (itemId) => {
-        // Lógica para manejar la edición del libro con el ID itemId
-        console.log("Editar libro con ID:", itemId);
         setShowEditModal(true);
         setSelectedBookId(itemId);
     };
 
     const handleEditFormClose = () => {
-        // Lógica para cerrar el modal de edición
         setShowEditModal(false);
         setSelectedBookId(null);
     };
@@ -85,29 +79,39 @@ const VerLibros = () => {
             .catch((error) => {
                 console.error('Error al actualizar el libro:', error);
             });
-
         // Cerrar el modal después de guardar los cambios
         setShowEditModal(false);
         setSelectedBookId(null);
     };
 
     // DELETE
-    const handleDelete = (itemId) => {
+    const handleDelete = async (itemId) => {
         // Lógica para manejar la eliminación del libro con el ID itemId
-        console.log("Eliminar libro con ID:", itemId);
-        axios.delete(`http://localhost:4000/api/admin/delete/books/${itemId}`)
-            .then((response) => {
-                const updatedLibros = libros.filter(book => book._id !== itemId);
-                toast.success("¡Libro eliminado con éxito!", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 3000,
-                });
-                setLibros(updatedLibros);
-            })
-            .catch((error) => {
-                console.error('Error al eliminar el libro:', error);
-            });
+        const confirmAction = await Swal.fire({
+            title: `¿Estás seguro que deseas eliminar el Libro?`,
+            icon: 'warning', // Cambiar el icono a 'warning'
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+        });
 
+        if (confirmAction.isConfirmed) {
+
+            axios.delete(`http://localhost:4000/api/admin/delete/books/${itemId}`)
+                .then((response) => {
+                    const updatedLibros = libros.filter(book => book._id !== itemId);
+                    toast.success("¡Libro eliminado con éxito!", {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                        autoClose: 3000,
+                    });
+                    setLibros(updatedLibros);
+                })
+                .catch((error) => {
+                    console.error('Error al eliminar el libro:', error);
+                });
+        }
     };
 
     return (
