@@ -8,9 +8,10 @@ import parseCustomTime from '../../component/Admin/DevolucionDeEquipos/parseCust
 import getEstadoDevolucion from '../../component/Admin/DevolucionDeEquipos/getEstadoDevolucion';
 import Modal from '../../component/Admin/DevolucionDeEquipos/Modal';
 import ModalEditar from '../../component/Admin/DevolucionDeEquipos/ModalEditarDevolucion';
+import Swal from 'sweetalert2';
+
 
 import { toast } from 'react-toastify';
-
 
 import axios from 'axios';
 
@@ -61,21 +62,33 @@ const TableDevolucionDeEquipos = () => {
 
     const handleCheckmarkClick = async (reservationId, type, itemId) => {
         try {
-            console.log(reservationId, type, itemId);
-            // Realizar la solicitud PUT al nuevo endpoint para actualizar currentTime
-            await axios.put(`http://localhost:4000/api/admin/updateCurrentTime/${type}/${reservationId}/${itemId}`);
-            toast.success('Solicitud enviada correctamente', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000, // 3 segundos
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
+
+            const typeItem = type == 'book' ? 'Libro' : 'Equipo';
+            const confirmAction = await Swal.fire({
+                title: `¿Estás seguro que deseas devolver el ${typeItem}?`,
+                icon: 'warning', // Cambiar el icono a 'warning'
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
             });
 
-            // Refrescar la lista de reservas
-            fetchData();
+            if (confirmAction.isConfirmed) {
+                // Realizar la solicitud PUT al nuevo endpoint para actualizar currentTime
+                await axios.put(`http://localhost:4000/api/admin/updateCurrentTime/${type}/${reservationId}/${itemId}`);
+                toast.success('Solicitud enviada correctamente', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000, // 3 segundos
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+                // Refrescar la lista de reservas
+                fetchData();
+            }
         } catch (error) {
             console.error('Error al actualizar currentTime:', error);
         }
@@ -123,6 +136,24 @@ const TableDevolucionDeEquipos = () => {
                 <p className="text-3xl font-bold mb-4">Devolucion de Equipos</p>
             </div>
             <div className="overflow-x-auto">
+                {/* Paginación */}
+                <div className="mt-4 flex justify-center">
+                    <ReactPaginate
+                        previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                        nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                        breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'pagination flex justify-center'}
+                        subContainerClassName={'pages flex'}
+                        activeClassName={'active'}
+                        pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
+                        pageLinkClassName={'text-gray-800'}
+                    />
+                </div>
+
                 <table className="w-full table-auto">
                     {/* Encabezado de la tabla */}
                     <thead>
@@ -199,23 +230,7 @@ const TableDevolucionDeEquipos = () => {
                     </tbody>
                 </table>
             </div>
-            {/* Paginación */}
-            <div className="mt-4 flex justify-center">
-                <ReactPaginate
-                    previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
-                    nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
-                    breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageClick}
-                    containerClassName={'pagination flex justify-center'}
-                    subContainerClassName={'pages flex'}
-                    activeClassName={'active'}
-                    pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
-                    pageLinkClassName={'text-gray-800'}
-                />
-            </div>
+
         </div>
     );
 };

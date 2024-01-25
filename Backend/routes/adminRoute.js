@@ -1,6 +1,6 @@
 import express from 'express';
 import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
-    getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime} 
+    getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime, updateReservationDevolution} 
     from '../controllers/adminControllers.js';
 
 const router = express.Router();
@@ -40,5 +40,10 @@ router.get("/getDetails/:type/:itemId", getItemDetailsById);
 
 // Actualizar el currentTieme de las reservas y tambien el amount de los equipos o libros
 router.put('/updateCurrentTime/:type/:id/:itemId', updateCurrentTime)
+
+
+// Ruta para la actualización de reservas fecha y hora de entrega
+router.put('/updateReservationDevolution/:type/:id', updateReservationDevolution);
+
 
 export default router;

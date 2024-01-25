@@ -3,7 +3,7 @@ import Equipment from "../models/Equipment.js";
 import ReservationBooks from '../models/ReservationBooks.js';
 import ReservationEquipments from '../models/ReservationEquipment.js';
 import Student from '../models/Student.js';
-
+import userHistory from "../models/History.js";
 const VALID_TYPES = ['books', 'equipments'];
 
 const createItem = async (req, res) => {
@@ -304,6 +304,36 @@ const updateCurrentTime = async (req, res) => {
             { new: true }
         );
 
+        // Construir el objeto de datos para el historial
+        const historyData = {
+            userId: updatedReservation.userId,
+            itemId: type === 'book' ? updatedReservation.bookId : updatedReservation.equipmentId,
+            itemType: type === 'book' ? 'Book' : 'Equipment',
+            returnDate: type === 'book' ? updatedReservation.returnDate : updatedReservation.reservationDateTime,
+            state: updatedReservation.state,
+            currentTime: updatedReservation.currentTime, // Usar el currentTime actualizado
+        };
+
+        // Verificar si endHour existe en la reserva antes de incluirlo en historyData
+        if ('endHour' in updatedReservation) {
+            historyData.endHour = updatedReservation.endHour;
+        }
+
+        // Crear un nuevo registro en el historial
+        const historyRecord = new userHistory(historyData);
+
+        // Verificar si hay errores de validación
+        const validationError = historyRecord.validateSync();
+        if (validationError) {
+            console.error('Error de validación al crear el registro en el historial:', validationError.errors);
+            return res.status(400).json({ success: false, message: 'Error de validación al crear el registro en el historial' });
+        }
+        // Guardar el nuevo registro en el historial
+        await historyRecord.save();
+
+        // Eliminar la reserva después de guardarla en el historial
+        await ReservationModel.findByIdAndDelete(id);
+
         if (type === 'book') {
             await Book.findByIdAndUpdate(itemId, { $inc: { amount: 1 } });
         } else if (type === 'equipment') {
@@ -321,6 +351,43 @@ const updateCurrentTime = async (req, res) => {
     }
 };
 
+
+const updateReservationDevolution = async (req, res) => {
+    try {
+        const { type, id } = req.params;
+
+        // Determinar el modelo de reserva según el tipo (libro o equipo)
+        const ReservationModel = type === 'book' ? ReservationBooks : ReservationEquipments;
+        // Construir el objeto de actualización según el tipo
+        let updateObject = {};
+        if (type === 'book') {
+            updateObject = { returnDate: req.body.returnDate };
+        } else if (type === 'equipment') {
+            updateObject = {
+                reservationDateTime: req.body.reservationDateTime,
+                endHour: req.body.endHour
+            };
+        }
+
+        // Realizar la actualización
+        const updatedReservation = await ReservationModel.findByIdAndUpdate(
+            id,
+            updateObject,
+            { new: true }
+        );
+
+        if (!updatedReservation) {
+            return res.status(404).json({ success: false, message: `${type} no encontrado` });
+        }
+
+        return res.status(200).json({ success: true, message: `${type} actualizado correctamente` });
+    } catch (error) {
+        console.error(`Error al actualizar la reserva de ${type}:`, error);
+        return res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+};
+
+
 export {
     createItem,
     getAllItems,
@@ -333,5 +400,6 @@ export {
     updateReservation,
     getItemDetailsById,
     deleteReservation,
-    updateCurrentTime
+    updateCurrentTime,
+    updateReservationDevolution
 };

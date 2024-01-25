@@ -1,40 +1,40 @@
 import mongoose from "mongoose";
 
 const userHistorySchema = mongoose.Schema(
-  { 
-    userId:{
+  {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
     },
-    bookId:{
+    itemId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Book",
-    },
-    equipmentId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Equipment",
+      refPath: 'itemType', // Referencia condicional al campo 'itemType'
     },
     itemType: {
       type: String,
       enum: ['Book', 'Equipment']
     },
-    reservationDate: {
-      type: Date,
-      required: true,
-      default: Date.now(),
-    },
     returnDate: {
       type: Date,
       required: true,
       default: Date.now(),
-    },  
-    state:{
+    },
+    state: {
       type: String,
-      required: true 
+      required: true
+    },
+    endHour: {
+      type: String,
+      default: ''
+    },
+    currentTime: {
+      type: Date,
+      required: true,
+      default: Date.now(),
     }
-  }  
+  }
 );
 
-const userHistory= mongoose.model("userHistory", userHistorySchema);
+const userHistory = mongoose.model("userHistory", userHistorySchema);
 
 export default userHistory;

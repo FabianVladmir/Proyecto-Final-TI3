@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
+import { toast } from 'react-toastify';
 
 const formatDate = (dateString) => {
     // Verificar si dateString es un valor válido
@@ -14,26 +17,67 @@ const formatDate = (dateString) => {
 const ModalEditar = ({ item, onClose  }) => {
     const [formData, setFormData] = useState({
         returnDate: formatDate(item.returnDate),
-        reservationDateTime: formatDate(item.reservationDateTime)
+        reservationDateTime: formatDate(item.reservationDateTime),
+        endHour: item.endHour
     });
 
-    const handleBook = (e) => {
+    const handleBook = async (e) => {
         e.preventDefault();
-        // Realizar acciones necesarias para la reserva de libros con formData.returnDate
+    
+        try {
+            const response = await axios.put(`http://localhost:4000/api/admin/updateReservationDevolution/${item.type}/${item._id}`, {
+                returnDate: formData.returnDate
+            });
+            toast.success(`Libro actualizado exitosamente!`, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000, // 3 segundos
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            onClose();  // Cierra el modal después de la actualización
+        } catch (error) {
+            console.error('Error al actualizar reserva de libros:', error);
+            // Manejar el error, mostrar un mensaje al usuario, etc.
+        }
     };
 
     const handleChangeBook = (e) => {
         setFormData({ ...formData, returnDate: e.target.value });
     };
 
-    const handleEquipment = (e) => {
+    const handleEquipment = async (e) => {
         e.preventDefault();
-        // Realizar acciones necesarias para la reserva de equipos con formData.reservationDateTime y formData.endHour
+    
+        try {
+            console.log(item._id);
+            console.log(formData.reservationDateTime);
+            console.log(item.endHour);
+            const response = await axios.put(`http://localhost:4000/api/admin/updateReservationDevolution/${item.type}/${item._id}`, {
+                reservationDateTime: formData.reservationDateTime,
+                endHour: formData.endHour
+            });
+            toast.success(`Equipo actualizado exitosamente!`, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000, // 3 segundos
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            onClose();  // Cierra el modal después de la actualización
+        } catch (error) {
+            console.error('Error al actualizar reserva de equipo:', error);
+            // Manejar el error, mostrar un mensaje al usuario, etc.
+        }
     };
 
     const handleChangeEquipment = (e) => {
-        setFormData({ ...formData, reservationDateTime: e.target.value });
-
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     return (
@@ -98,7 +142,7 @@ const ModalEditar = ({ item, onClose  }) => {
                             type="time"
                             id="endHour"
                             name="endHour"
-                            value={item.endHour || ''}
+                            value={formData.endHour}
                             onChange={handleChangeEquipment}
                             className="w-full p-2 border rounded"
                         />
