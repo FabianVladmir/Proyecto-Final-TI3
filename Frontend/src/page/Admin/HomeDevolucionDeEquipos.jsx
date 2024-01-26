@@ -164,10 +164,9 @@ const TableDevolucionDeEquipos = () => {
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Codigo</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Estado de Devolucion</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Devolucion</th>
-                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">CurrentTime</th>
-
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30"></th>
-
+{/*                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">CurrentTime</th>
+ */}
                         </tr>
                     </thead>
                     {/* Cuerpo de la tabla */}
@@ -219,8 +218,8 @@ const TableDevolucionDeEquipos = () => {
                                         </button> */}
                                         </div>
                                     </td>
-                                    <td>{new Date(item.currentTime).toLocaleString()}</td>
-
+{/*                                     <td>{new Date(item.currentTime).toLocaleString()}</td>
+ */}
                                     <td className="px-4 whitespace-nowrap">
                                         <button type="button" onClick={() => handleEditDevolucionClick(item._id, item.type)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
