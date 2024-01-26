@@ -1,9 +1,8 @@
 import express from 'express';
 import { signIn, profile, confirmAccount, authenticateStudent, forgetPassword, checkToken,
-    newPassword, viewSchedules, viewEquipment, reserverEquipment, getUserId
+    newPassword, viewSchedules, viewEquipment, reserverEquipment, getUserId, getUserHistoryById
 } from '../controllers/studentController.js';
 import checkAuth from '../middleware/authMiddleware.js';
-import ReservationEquipment from '../models/ReservationEquipment.js';
 
 
 const router = express.Router();
@@ -52,6 +51,11 @@ router.get("/profile", checkAuth, profile);
 router.post("/reservations/:type", reserverEquipment);
 
 router.get('/get-user-id', getUserId);
+
+// obtener las reservas por id
+router.get('/user-history-by-id/:userId', getUserHistoryById);
+
+
 
 
 

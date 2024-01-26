@@ -64,6 +64,7 @@ const TableReporte = () => {
     const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
     const itemsPerPage = 10; // Número de elementos por página
     const pageCount = Math.ceil(historyData.length / itemsPerPage); // Cálculo del número total de páginas
+
     const offset = currentPage * itemsPerPage;
     const currentData = historyData.slice(offset, offset + itemsPerPage);
     return (

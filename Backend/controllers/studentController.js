@@ -6,6 +6,7 @@ import generateJWT from "../helpers/generateJWT.js";
 import Student from "../models/Student.js";
 import ReservationBook from "../models/ReservationBooks.js";
 import ReservationEquipment from "../models/ReservationEquipment.js";
+import UserHistory from '../models/History.js';
 
 const signIn = async (req, res) => {
     const { email, firstname, lastname, CUI, telephone, password } = req.body;
@@ -343,6 +344,23 @@ const getUserId = async (req, res) => {
     res.json({ userId });
 }
 
+const getUserHistoryById = async (req, res) => {
+    try {
+        const requestedUserId = req.params.userId;
+
+        // Buscar historial del usuario por el ID proporcionado
+        const userHistory = await UserHistory.find({ userId: requestedUserId }).populate('userId');
+
+        if (!userHistory) {
+            return res.status(404).json({ msg: 'Historial no encontrado para el ID proporcionado' });
+        }
+        res.json(userHistory);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error interno del servidor al obtener historial del usuario' });
+    }
+};
+
 export {
     signIn,
     profile,
@@ -354,5 +372,6 @@ export {
     viewSchedules,
     viewEquipment,
     reserverEquipment,
-    getUserId
+    getUserId,
+    getUserHistoryById
 };
