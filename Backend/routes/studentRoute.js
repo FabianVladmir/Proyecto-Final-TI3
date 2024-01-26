@@ -1,6 +1,9 @@
 import express from 'express';
 import { signIn, profile, confirmAccount, authenticateStudent, forgetPassword, checkToken,
-    newPassword, viewSchedules, viewEquipment, reserverEquipment, getUserId, getUserHistoryById
+    newPassword, viewSchedules, viewEquipment, reserverEquipment, getUserId, getUserHistoryById,
+    getStudentById,
+    getItemById,
+    updateStudentById
 } from '../controllers/studentController.js';
 import checkAuth from '../middleware/authMiddleware.js';
 
@@ -55,8 +58,13 @@ router.get('/get-user-id', getUserId);
 // obtener las reservas por id
 router.get('/user-history-by-id/:userId', getUserHistoryById);
 
+// Obtener los datos del estudiante
+router.get("/getStudentById/:userId", getStudentById);
 
+// Agrega esta nueva ruta en tu archivo de rutas
+router.get('/get-item-by-id/:itemType/:itemId', getItemById);
 
-
+//Actualizar estudiante por id
+router.put('/update-student-by-id/:id', updateStudentById);
 
 export default router;

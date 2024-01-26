@@ -7,6 +7,8 @@ import Student from "../models/Student.js";
 import ReservationBook from "../models/ReservationBooks.js";
 import ReservationEquipment from "../models/ReservationEquipment.js";
 import UserHistory from '../models/History.js';
+import Book from '../models/Book.js'
+import Equipment from "../models/Equipment.js";
 
 const signIn = async (req, res) => {
     const { email, firstname, lastname, CUI, telephone, password } = req.body;
@@ -361,6 +363,67 @@ const getUserHistoryById = async (req, res) => {
     }
 };
 
+
+const getStudentById = async (req, res) => {
+    try {
+        const studentId = req.params.userId;
+        // Busca al estudiante por ID en la base de datos
+        const student = await Student.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ error: 'Estudiante no encontrado' });
+        }
+        // Retorna los datos del estudiante
+        console.log()
+        res.json(student);
+    } catch (error) {
+        console.error('Error al obtener los datos del estudiante:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+const getItemById = async (req, res) => {
+    try {
+        const { itemId, itemType } = req.params;
+
+        // Determinar si se debe buscar un libro o un equipo
+        let productModel, product;
+
+        if (itemType === 'Book') {
+            productModel = Book;
+        } else if (itemType === 'Equipment') {
+            productModel = Equipment;
+        } else {
+            return res.status(400).json({ error: 'Tipo de producto no válido' });
+        }
+
+        // Buscar el producto por ID en la base de datos
+        product = await productModel.findById(itemId);
+
+        if (!product) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        // Retorna los datos del producto
+        res.json(product);
+    } catch (error) {
+        console.error('Error al obtener los datos del producto:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+
+const updateStudentById = async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body; // Datos actualizados del estudiante
+
+    try {
+        const updatedStudent = await Student.findByIdAndUpdate(id, updateData, { new: true });
+        res.json(updatedStudent);
+    } catch (error) {
+        console.error('Error al actualizar estudiante:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 export {
     signIn,
     profile,
@@ -373,5 +436,8 @@ export {
     viewEquipment,
     reserverEquipment,
     getUserId,
-    getUserHistoryById
+    getUserHistoryById,
+    getStudentById,
+    getItemById,
+    updateStudentById
 };
