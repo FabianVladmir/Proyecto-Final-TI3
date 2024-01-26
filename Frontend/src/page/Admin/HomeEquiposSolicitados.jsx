@@ -143,6 +143,23 @@ const TableEquiposSolicitados = () => {
                 <p className='text-3xl font-bold mb-4'>Equipos/Libros Solicitados del día</p>
             </div>
             <div className="overflow-x-auto">
+                {/* Paginación */}
+                <div className="mt-4 flex justify-center">
+                    <ReactPaginate
+                        previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                        nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                        breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'pagination flex justify-center'}
+                        subContainerClassName={'pages flex'}
+                        activeClassName={'active'}
+                        pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
+                        pageLinkClassName={'text-gray-800'}
+                    />
+                </div>
                 <table className="w-full table-auto">
                     {/* Encabezado de la tabla */}
                     <thead>
@@ -201,23 +218,7 @@ const TableEquiposSolicitados = () => {
                     </tbody>
                 </table>
             </div>
-            {/* Paginación */}
-            <div className="mt-4 flex justify-center">
-                <ReactPaginate
-                    previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
-                    nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
-                    breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageClick}
-                    containerClassName={'pagination flex justify-center'}
-                    subContainerClassName={'pages flex'}
-                    activeClassName={'active'}
-                    pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
-                    pageLinkClassName={'text-gray-800'}
-                />
-            </div>
+
         </div>
     );
 };

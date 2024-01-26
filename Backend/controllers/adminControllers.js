@@ -259,7 +259,6 @@ const getItemDetailsById = async (req, res) => {
         if (!item) {
             return res.status(404).json({ error: 'Elemento no encontrado' });
         }
-
         res.json(item);
     } catch (error) {
         console.error(error);
@@ -387,6 +386,19 @@ const updateReservationDevolution = async (req, res) => {
     }
 };
 
+const getUserHistory = async (req, res) => {
+    try {
+        // Obtener todos los registros del historial
+        const historyData = await userHistory.find();
+        res.json(historyData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener el historial de usuarios' });
+    }
+};
+
+
+
 
 export {
     createItem,
@@ -401,5 +413,6 @@ export {
     getItemDetailsById,
     deleteReservation,
     updateCurrentTime,
-    updateReservationDevolution
+    updateReservationDevolution,
+    getUserHistory
 };

@@ -1,7 +1,10 @@
 import express from 'express';
 import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
-    getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime, updateReservationDevolution} 
+    getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime, 
+    updateReservationDevolution, getUserHistory} 
     from '../controllers/adminControllers.js';
+
+    import checkAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -44,6 +47,9 @@ router.put('/updateCurrentTime/:type/:id/:itemId', updateCurrentTime)
 
 // Ruta para la actualización de reservas fecha y hora de entrega
 router.put('/updateReservationDevolution/:type/:id', updateReservationDevolution);
+
+// Ruta para obtener el historial de usuarios
+router.get('/user-history', getUserHistory);
 
 
 export default router;

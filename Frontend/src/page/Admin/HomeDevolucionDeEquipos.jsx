@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { CheckmarkSharp } from 'react-ionicons'; //import { CloseSharp } from 'react-ionicons';
-import './styles/HomePaginationStyles.css'; 
+import './styles/HomePaginationStyles.css';
 import formattedDate from '../../component/Admin/DevolucionDeEquipos/FormattedDate';
 import parseCustomTime from '../../component/Admin/DevolucionDeEquipos/parseCustomTime';
 import getEstadoDevolucion from '../../component/Admin/DevolucionDeEquipos/getEstadoDevolucion';
@@ -78,7 +78,7 @@ const TableDevolucionDeEquipos = () => {
                 await axios.put(`http://localhost:4000/api/admin/updateCurrentTime/${type}/${reservationId}/${itemId}`);
                 toast.success('Solicitud enviada correctamente', {
                     position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 1000, 
+                    autoClose: 1000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -172,38 +172,43 @@ const TableDevolucionDeEquipos = () => {
                     </thead>
                     {/* Cuerpo de la tabla */}
                     <tbody>
-                        {currentData.map((item, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-6 py-4 whitespace-nowrap bg-gray-300">
-                                    {item.type === 'book' ? (<p>Libro</p>) : (<p>Equipo</p>)}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.studentName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    {item.type === 'equipment' ? (
-                                        <p>{formattedDate(item.reservationDateTime)}, {parseCustomTime(item.endHour)}</p>
-                                    ) : (
-                                        <p>{formattedDate(item.returnDate)}</p>
-                                    )}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">{item.verificationCode}</td>
-                                <td className="text text-center px-6 py-4 whitespace-nowrap">
-                                    <p style={{ color: getEstadoDevolucion(item) === 'EN PLAZO' ? 'green' : 'red' }}>
-                                        {getEstadoDevolucion(item)}
-                                    </p>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                        <button type="button" onClick={() => handleCheckmarkClick(item._id, item.type, item.type === 'book' ? item.bookId : item.equipmentId)}>
-                                            <CheckmarkSharp
-                                                color={'green'}
-                                                beat
-                                                title="Subir icono 1"
-                                                height="50px"
-                                                width="50px"
-                                            />
-                                        </button>
+                        {currentData.filter(item => item.state == 'ACEPTADO').length === 0 ? (
+                            <tr>
+                                <td colSpan="7" className="text-center py-4 text-gray-500">No existen reservas por el momento.</td>
+                            </tr>
+                        ) : (
+                            currentData.map((item, index) => (
+                                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                    <td className="px-6 py-4 whitespace-nowrap bg-gray-300">
+                                        {item.type === 'book' ? (<p>Libro</p>) : (<p>Equipo</p>)}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{item.studentName}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {item.type === 'equipment' ? (
+                                            <p>{formattedDate(item.reservationDateTime)}, {parseCustomTime(item.endHour)}</p>
+                                        ) : (
+                                            <p>{formattedDate(item.returnDate)}</p>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{item.verificationCode}</td>
+                                    <td className="text text-center px-6 py-4 whitespace-nowrap">
+                                        <p style={{ color: getEstadoDevolucion(item) === 'EN PLAZO' ? 'green' : 'red' }}>
+                                            {getEstadoDevolucion(item)}
+                                        </p>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="flex items-center">
+                                            <button type="button" onClick={() => handleCheckmarkClick(item._id, item.type, item.type === 'book' ? item.bookId : item.equipmentId)}>
+                                                <CheckmarkSharp
+                                                    color={'green'}
+                                                    beat
+                                                    title="Subir icono 1"
+                                                    height="50px"
+                                                    width="50px"
+                                                />
+                                            </button>
 
-                                        {/*                                         <button type="button">
+                                            {/*                                         <button type="button">
                                             <CloseSharp
                                                 color={'red'}
                                                 beat
@@ -212,20 +217,21 @@ const TableDevolucionDeEquipos = () => {
                                                 width="50px"
                                             />
                                         </button> */}
-                                    </div>
-                                </td>
-                                <td>{new Date(item.currentTime).toLocaleString()}</td>
+                                        </div>
+                                    </td>
+                                    <td>{new Date(item.currentTime).toLocaleString()}</td>
 
-                                <td className="px-4 whitespace-nowrap">
-                                    <button type="button" onClick={() => handleEditDevolucionClick(item._id, item.type)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                            <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="px-4 whitespace-nowrap">
+                                        <button type="button" onClick={() => handleEditDevolucionClick(item._id, item.type)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                                <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                                <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
