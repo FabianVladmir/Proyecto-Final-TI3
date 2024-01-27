@@ -10,6 +10,8 @@ import UserHistory from '../models/History.js';
 import Book from '../models/Book.js'
 import Equipment from "../models/Equipment.js";
 
+const VALID_TYPES = ['books', 'equipments'];
+
 const signIn = async (req, res) => {
     const { email, firstname, lastname, CUI, telephone, password } = req.body;
 
@@ -424,6 +426,62 @@ const updateStudentById = async (req, res) => {
     }
 };
 
+
+const getAcceptedReservations = async (req, res) => {
+    const { type } = req.params;
+
+    if (!type || !VALID_TYPES.includes(type)) {
+        const error = new Error("Tipo de categoría no válido");
+        return res.status(400).json({ msg: error.message });
+    }
+
+    try {
+        let collection;
+        if (type === "books") {
+            collection = await ReservationBook.find({ state: "ACEPTADO" });
+        } else if (type === "equipments") {
+            collection = await ReservationEquipment.find({ state: "ACEPTADO" });
+        }
+        res.json(collection);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al obtener las reservaciones aceptadas" });
+    }
+};
+
+const getItemDetailsById = async (req, res) => {
+    const { type, itemId } = req.params;
+    const VALID_TYPES = ['books', 'equipments'];
+
+    if (!type || !VALID_TYPES.includes(type)) {
+        const error = new Error("Tipo de categoría no válido");
+        return res.status(400).json({ msg: error.message });
+    }
+
+    try {
+        let item;
+
+        // Utiliza el modelo específico según el tipo para buscar el elemento por ID
+        if (type === 'books') {
+            item = await Book.findById(itemId);
+        } else if (type === 'equipments') {
+            item = await Equipment.findById(itemId);
+        } else {
+            return res.status(400).json({ error: 'Tipo de producto no válido' });
+        }
+
+        if (!item) {
+            return res.status(404).json({ error: 'Elemento no encontrado' });
+        }
+        // Retornar los detalles del elemento
+        res.json(item);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener los detalles del elemento por ID' });
+    }
+};
+
+
 export {
     signIn,
     profile,
@@ -433,11 +491,13 @@ export {
     checkToken,
     newPassword,
     viewSchedules,
-    viewEquipment,
+    viewEquipment,  
     reserverEquipment,
     getUserId,
     getUserHistoryById,
     getStudentById,
     getItemById,
-    updateStudentById
+    updateStudentById,
+    getAcceptedReservations,
+    getItemDetailsById
 };

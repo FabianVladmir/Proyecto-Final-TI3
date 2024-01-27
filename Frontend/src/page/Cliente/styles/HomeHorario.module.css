@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100%;
 }
 
 .containerSearch {
@@ -38,9 +39,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 60vh;
+    height: 80vh;
 }
 
 .calendarContainer {
-    height: 400px;
+    justify-content: center;
 }

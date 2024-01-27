@@ -3,7 +3,9 @@ import { signIn, profile, confirmAccount, authenticateStudent, forgetPassword, c
     newPassword, viewSchedules, viewEquipment, reserverEquipment, getUserId, getUserHistoryById,
     getStudentById,
     getItemById,
-    updateStudentById
+    updateStudentById,
+    getAcceptedReservations,
+    getItemDetailsById
 } from '../controllers/studentController.js';
 import checkAuth from '../middleware/authMiddleware.js';
 
@@ -66,5 +68,12 @@ router.get('/get-item-by-id/:itemType/:itemId', getItemById);
 
 //Actualizar estudiante por id
 router.put('/update-student-by-id/:id', updateStudentById);
+
+// Obtener las reservaciones segun el tipo
+router.get("/accepted-reservations/:type", getAcceptedReservations);
+
+//Obtener libro o equipo por id
+router.get("/getDetailsItem/:type/:itemId", getItemDetailsById);
+
 
 export default router;
