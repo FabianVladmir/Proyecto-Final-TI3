@@ -32,8 +32,23 @@ function RegistroAdmin() {
                 email: decodeURIComponent(emailFromLink),
             }));
         }
-    }, [location.search]);
 
+        const checkAdminData = async () => {
+            try {
+                // Verificar si el correo ya está registrado
+                const response = await axios.get(`http://localhost:4000/api/admin/getAdminData/${formData.email}`);
+                const adminData = response.data;
+                // Si el correo ya está registrado, redirigir a la página de inicio de sesión con un mensaje
+                toast.info('Ya estás registrado como administrador. Por favor, inicia sesión.');
+                navigate('/admin/login');
+            } catch (error) {
+                // Si el correo no está registrado, continuar mostrando el formulario
+            }
+        };
+
+        // Verificar si el correo ya está registrado al cargar el componente
+        checkAdminData();
+    }, [formData.email, location.search, navigate]);
 
     const limpiarRegistro = () => {
         setFormData({
@@ -104,8 +119,7 @@ function RegistroAdmin() {
                 limpiarRegistro();
             }, 2000);
         } catch (error) {
-            console.error('Error al registrar el administrador:', error.message);
-            toast.error('Error al registrar el administrador', {
+            toast.error(`Este correo ya esta registrado`, {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 2000,
             });

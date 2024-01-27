@@ -42,8 +42,6 @@ const signIn = async (req, res) => {
         // Enviar correo de confirmación
         const confirmLink = `${process.env.APP_URL}/api/students/confirmar-cuenta/${token}`;
         sendConfirmationEmail(student.email, confirmLink);
-
-
         // Enviar una respuesta exitosa
         res.json(studentSave);
     } catch (error) {

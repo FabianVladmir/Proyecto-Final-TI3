@@ -456,6 +456,30 @@ const registerAdmin = async (req, res) => {
     }
 };
 
+const getAdminData = async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        const existingAdmin = await Admin.findOne({ email });
+
+        if (existingAdmin) {
+            // Si el correo ya está registrado, devolver los datos del administrador
+            return res.json({
+                email: existingAdmin.email,
+                firstname: existingAdmin.firstname,
+                lastname: existingAdmin.lastname,
+                telephone: existingAdmin.telephone,
+            });
+        }
+
+        // Si el correo no está registrado, devolver un mensaje indicando que no se encontró el administrador
+        return res.status(404).json({ error: 'No se encontró el administrador' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener los datos del administrador' });
+    }
+};
+
 export {
     createItem,
     getAllItems,
@@ -472,5 +496,6 @@ export {
     updateReservationDevolution,
     getUserHistory,
     generateTokenAndSendEmail,
-    registerAdmin
+    registerAdmin,
+    getAdminData
 };
