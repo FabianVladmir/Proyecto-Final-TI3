@@ -10,9 +10,17 @@ import HomeLoginAdmin from './page/Admin/HomeLoginAdmin';
 
 import { UserProvider } from './context/UserContext';
 
+const PrivateRouteAdmin = ({ element }) => {
+  const adminToken = localStorage.getItem('adminToken');
 
+  if (!adminToken) {
+    return <Navigate to="/admin/login" />;
+  }
 
-const PrivateRoute = ({ element, redirectTo }) => {
+  return <Route element={element} />;
+};
+
+const PrivateRouteClient = ({ element, redirectTo }) => {
   const isLoggedIn = !!localStorage.getItem('token'); //  const isLoggedIn = !!Cookies.get('token');
   return isLoggedIn ? element : <Navigate to={redirectTo} />;
 };
@@ -28,12 +36,14 @@ function App() {
 
   useEffect(() => {
     const handleStorageChange = (event) => {
-      if (event.key === 'logoutEvent') {
-        // Realizar acciones adicionales cuando se detecta el cierre de sesión en otra pestaña
-        // Por ejemplo, puedes redirigir al usuario a la página de inicio de sesión
-        //window.location.href = '/login';
-        window.location.reload();
-
+      // Verificar si la ruta actual no comienza con '/admin'
+      if (!window.location.pathname.startsWith('/admin')) {
+        if (event.key === 'logoutEvent') {
+          // Realizar acciones adicionales cuando se detecta el cierre de sesión en otra pestaña
+          // Por ejemplo, puedes redirigir al usuario a la página de inicio de sesión
+          // window.location.href = '/login';
+          window.location.reload();
+        }
       }
     };
     // Agregar el evento de escucha
@@ -55,10 +65,13 @@ function App() {
           <Route
             path="client/*"
             element={
-              <PrivateRoute element={<ClientRoutes />} redirectTo="/login" />
+              <PrivateRouteClient element={<ClientRoutes />} redirectTo="/login" />
             }
           />
-          <Route path="admin/*" element={<AdminRoutes />} />
+          <Route
+            path="admin/*"
+            element={<PrivateRouteAdmin element={<AdminRoutes />} />}
+          />
           <Route path="/admin/login" element={<HomeLoginAdmin />} />
         </Routes>
       </Router>
