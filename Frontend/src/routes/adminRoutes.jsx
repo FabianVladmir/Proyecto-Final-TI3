@@ -9,6 +9,7 @@ import AgregarEquipos from '../page/Admin/HomeAgregarEquipos';
 
 import Reportes from '../page/Admin/HomeReportes';
 import VerEquipos from '../page/Admin/HomeVerEquipos';
+import CrearAdmin from '../page/Admin/HomeCrearAdmin';
 
 function adminRoutes() {
   return (
@@ -21,6 +22,7 @@ function adminRoutes() {
         <Route path="/ver-equipos" element={<VerEquipos />} />
         <Route path="/agregar-equipos" element={<AgregarEquipos />} />
         <Route path="/reportes" element={<Reportes />} />
+        <Route path="/crear-admin" element={<CrearAdmin />} />
         <Route
           path="/*"
           element={<div><h1 className="text-center text-5xl font-bold">404 Not Found</h1></div>}

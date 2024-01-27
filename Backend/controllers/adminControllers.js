@@ -5,6 +5,9 @@ import ReservationEquipments from '../models/ReservationEquipment.js';
 import Student from '../models/Student.js';
 import userHistory from "../models/History.js";
 const VALID_TYPES = ['books', 'equipments'];
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+import Admin from '../models/Admin.js';
 
 const createItem = async (req, res) => {
     const { type } = req.params;
@@ -397,8 +400,61 @@ const getUserHistory = async (req, res) => {
     }
 };
 
+const generateTokenAndSendEmail = async (req, res) => {
+    try {
+        const { email } = req.body;
 
+        // Genera un token con la información del correo y una expiración de 24 horas
+        const token = jwt.sign({ email }, 'secreto', { expiresIn: '24h' });
 
+        // Configura el transporte de correo para Gmail
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.GMAIL_USER, // Reemplaza con tu correo de Gmail
+                pass: process.env.GMAIL_PASS, // Reemplaza con tu contraseña de Gmail
+            },
+        });
+
+        // Construye el enlace con el token y el correo como parámetro
+        const link = `http://localhost:5173/registro-admin/${token}?email=${encodeURIComponent(email)}`;
+        const mailOptions = {
+            from: process.env.GMAIL_USER,
+            to: email,
+            subject: 'Registro como Administrador',
+            text: `Por favor, haz clic en el siguiente enlace para completar tus datos: ${link}`,
+        };
+
+        // Envía el correo
+        await transporter.sendMail(mailOptions);
+
+        res.json({ message: 'Correo con enlace enviado exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al enviar el correo con el enlace' });
+    }
+};
+
+const registerAdmin = async (req, res) => {
+    try {
+        const { firstname, lastname, email, telephone, password } = req.body;
+
+        // Verifica si el correo ya está registrado
+        const existingAdmin = await Admin.findOne({ email });
+        if (existingAdmin) {
+            return res.status(400).json({ error: 'El correo ya está registrado' });
+        }
+
+        // Crea un nuevo administrador
+        const newAdmin = new Admin({ firstname, lastname, email, telephone, password });
+        await newAdmin.save();
+
+        res.status(201).json({ message: 'Administrador registrado correctamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al registrar el administrador' });
+    }
+};
 
 export {
     createItem,
@@ -414,5 +470,7 @@ export {
     deleteReservation,
     updateCurrentTime,
     updateReservationDevolution,
-    getUserHistory
+    getUserHistory,
+    generateTokenAndSendEmail,
+    registerAdmin
 };

@@ -1,7 +1,7 @@
 import express from 'express';
 import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
     getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime, 
-    updateReservationDevolution, getUserHistory} 
+    updateReservationDevolution, getUserHistory, generateTokenAndSendEmail, registerAdmin} 
     from '../controllers/adminControllers.js';
 
     import checkAuth from '../middleware/authMiddleware.js';
@@ -51,5 +51,10 @@ router.put('/updateReservationDevolution/:type/:id', updateReservationDevolution
 // Ruta para obtener el historial de usuarios
 router.get('/user-history', getUserHistory);
 
+// Ruta para generar y enviar el token al administrador
+router.post('/generate-token', generateTokenAndSendEmail);
+
+// Agrega la nueva ruta
+router.post('/registrar-admin', registerAdmin);
 
 export default router;
