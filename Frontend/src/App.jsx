@@ -6,19 +6,22 @@ import Cookies from 'js-cookie';
 import HomeRoutes from './routes/homeRoutes';
 import ClientRoutes from './routes/clientRoutes';
 import AdminRoutes from './routes/adminRoutes';
-import HomeLoginAdmin from './page/Admin/HomeLoginAdmin';
+import HomeLoginAdmin from './page/Home/HomeLoginAdmin';
 
 import { UserProvider } from './context/UserContext';
+import { AdminProvider } from './context/AdminContext';
+import { endOfToday } from 'date-fns';
 
 const PrivateRouteAdmin = ({ element }) => {
   const adminToken = localStorage.getItem('adminToken');
 
   if (!adminToken) {
-    return <Navigate to="/admin/login" />;
+    return <Navigate to="/admin/login" replace={true} />;
   }
 
-  return <Route element={element} />;
+  return element;
 };
+
 
 const PrivateRouteClient = ({ element, redirectTo }) => {
   const isLoggedIn = !!localStorage.getItem('token'); //  const isLoggedIn = !!Cookies.get('token');
@@ -33,6 +36,7 @@ function App() {
     const token = localStorage.getItem('token'); //    const token = Cookies.get('token');
     setIsLoggedIn(!!token);
   }, []);
+  
 
   useEffect(() => {
     const handleStorageChange = (event) => {
@@ -41,8 +45,15 @@ function App() {
         if (event.key === 'logoutEvent') {
           // Realizar acciones adicionales cuando se detecta el cierre de sesión en otra pestaña
           // Por ejemplo, puedes redirigir al usuario a la página de inicio de sesión
-          // window.location.href = '/login';
-          window.location.reload();
+          window.location.href = '/login';
+          //window.location.reload();
+        }
+      } else if(!window.location.pathname.startsWith('/client')) {
+        if (event.key === 'logoutEventAdmin') {
+          // Realizar acciones adicionales cuando se detecta el cierre de sesión en otra pestaña
+          // Por ejemplo, puedes redirigir al usuario a la página de inicio de sesión
+          window.location.href = '/admin/home';
+          //window.location.reload();
         }
       }
     };
@@ -57,25 +68,27 @@ function App() {
 
 
   return (
-    <UserProvider>
-      <ToastContainer />
-      <Router>
-        <Routes>
-          <Route path="/*" element={<HomeRoutes />} />
-          <Route
-            path="client/*"
-            element={
-              <PrivateRouteClient element={<ClientRoutes />} redirectTo="/login" />
-            }
-          />
-          <Route
-            path="admin/*"
-            element={<PrivateRouteAdmin element={<AdminRoutes />} />}
-          />
-          <Route path="/admin/login" element={<HomeLoginAdmin />} />
-        </Routes>
-      </Router>
-    </UserProvider>
+    <AdminProvider>
+      <UserProvider>
+        <ToastContainer />
+        <Router>
+          <Routes>
+            <Route path="/*" element={<HomeRoutes />} />
+            <Route
+              path="client/*"
+              element={
+                <PrivateRouteClient element={<ClientRoutes />} redirectTo="/login" />
+              }
+            />
+            <Route
+              path="admin/*"
+              element={<PrivateRouteAdmin element={<AdminRoutes />} />}
+            />
+            <Route path="/admin/login" element={<HomeLoginAdmin />} />
+          </Routes>
+        </Router>
+      </UserProvider>
+    </AdminProvider>
   );
 }
 

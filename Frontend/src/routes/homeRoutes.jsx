@@ -15,6 +15,7 @@ import { useLocation } from 'react-router-dom';
 function HomeRoutes() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   // Verifica si la ruta actual es "registro-admin/:token"
   const hideHeaderInRegistroAdmin = location.pathname.includes('registro-admin/');
@@ -22,17 +23,22 @@ function HomeRoutes() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Si ya hay un token, redirige al usuario a la página de inicio del cliente
       if (!hideHeaderInRegistroAdmin) {
         navigate('/client/home');
       }
     } else {
-      // Si no hay token, limpia el evento de inicio de sesión
       localStorage.removeItem('loginEvent');
     }
   }, [navigate]);
 
-
+  useEffect(() => {
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken) {
+      setIsAdminLoggedIn(true);
+    } else {
+      localStorage.removeItem('loginEvent');
+    }
+  }, []);
 
   return (
     <div>

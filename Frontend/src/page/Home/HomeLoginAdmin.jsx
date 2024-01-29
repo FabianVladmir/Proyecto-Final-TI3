@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 import styles from './styles/HomeLoginAdmin.module.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Cookies from 'js-cookie';
-
+import { useAdmin } from '../../context/AdminContext';
 function HomeLoginAdmin(props) {
+    const { setAdminId } = useAdmin();  // Modificado para extraer setAdminId del contexto
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -49,50 +49,48 @@ function HomeLoginAdmin(props) {
             return;
         }
         try {
-            const response = await fetch("http://localhost:4000/api/students/login", {
-                method: "POST",
+            // Send login request to server
+            const response = await fetch('http://localhost:4000/api/admin/loginAdmin', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });
 
             if (response.ok) {
                 const data = await response.json();
+                const { token } = data;
 
-                // Guarda el token en las cookies del cliente
-                Cookies.set('token', data.token, { expires: 7 });
+                localStorage.setItem('adminToken', token);
+                console.log(data);
+                const adminId = data.admin._id;
+                console.log('ID del admin:', adminId);
 
-                // Aquí puedes continuar con el resto del código después del inicio de sesión exitoso
-                // Por ejemplo, puedes realizar más acciones, cargar datos adicionales, etc.
-
-                toast.success('¡Inicio de sesión exitoso!', {
+                console.log(token);
+                toast.success('¡Inicio de sesión exitoso como Aministrador!', {
                     position: toast.POSITION.TOP_CENTER,
                     autoClose: 1000,
                 });
-
-                setTimeout(() => {
-                    limpiarFormulario();
-                    // Redirige a la página deseada después del inicio de sesión
-                    navigate('/admin/home'); // Ajusta la ruta según tus necesidades
-                }, 1000);
+                limpiarFormulario();
+                localStorage.setItem('logoutEventAdmin', Date.now().toString());
+                localStorage.setItem('adminID', adminId);
+                setAdminId(adminId);
+                navigate('/admin/home');
             } else {
-                const errorData = await response.json();
-                toast.error(errorData.msg || "Error durante el inicio de sesión", {
+                toast.error('Credenciales incorrectas', {
                     position: toast.POSITION.BOTTOM_RIGHT,
                     autoClose: 1000,
                 });
             }
         } catch (error) {
-            console.error("Error durante el inicio de sesión:", error);
-            toast.error(
-                "Error durante el inicio de sesión. Por favor, inténtelo de nuevo.",
-                {
-                    position: toast.POSITION.BOTTOM_RIGHT,
-                    autoClose: 1000,
-                }
-            );
+            console.error('Error during login:', error);
+            toast.error('Error interno del servidor', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 1000,
+            });
         }
+
     };
 
     return (
@@ -143,7 +141,7 @@ function HomeLoginAdmin(props) {
                                     Iniciar Sesión
                                 </button>
                             </div>
-{/*                             <div className={`${styles.centerText} text-center`}>
+                            {/*                             <div className={`${styles.centerText} text-center`}>
                                 <label className="label">¿No tienes una cuenta? </label>
                                 <Link to="/registrar" className={`${styles.blueText} label-text-alt link link-hover`}>
                                     Registrarse

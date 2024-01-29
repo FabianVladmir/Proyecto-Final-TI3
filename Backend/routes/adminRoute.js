@@ -1,10 +1,10 @@
 import express from 'express';
 import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
     getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime, 
-    updateReservationDevolution, getUserHistory, generateTokenAndSendEmail, registerAdmin, getAdminData} 
+    updateReservationDevolution, getUserHistory, generateTokenAndSendEmail, registerAdmin, getAdminData, loginAdmin} 
     from '../controllers/adminControllers.js';
 
-    import checkAuth from '../middleware/authMiddleware.js';
+import checkAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -57,7 +57,10 @@ router.post('/generate-token', generateTokenAndSendEmail);
 // Agrega la nueva ruta
 router.post('/registrar-admin', registerAdmin);
 
-
 // Obtener los datos del administrador
 router.get('/getAdminData/:email', getAdminData);
+
+// Login Admin
+router.post('/loginAdmin', loginAdmin);
+
 export default router;

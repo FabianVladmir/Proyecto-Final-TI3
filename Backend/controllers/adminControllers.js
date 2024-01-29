@@ -480,6 +480,37 @@ const getAdminData = async (req, res) => {
     }
 };
 
+
+const loginAdmin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Find the admin by email
+        const admin = await Admin.findOne({ email });
+
+        // Check if admin exists and password is correct
+        if (!admin || !(await admin.checkPasswordMethod(password))) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Generate and sign a JWT token
+        const token = jwt.sign({ email }, 'secreto', { expiresIn: '24h' });
+
+        res.json({ token,
+            admin: {
+                _id: admin._id,
+                firstname: admin.firstname,
+                lastname: admin.lastname,
+                email: admin.email,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
 export {
     createItem,
     getAllItems,
@@ -497,5 +528,6 @@ export {
     getUserHistory,
     generateTokenAndSendEmail,
     registerAdmin,
-    getAdminData
+    getAdminData,
+    loginAdmin
 };
