@@ -62,6 +62,14 @@ const TableDevolucionDeEquipos = () => {
         return () => clearInterval(intervalId);
     }, [fetchData, autoUpdate]);
 
+    const handleUpdateStateIfAmountIsZero = async (type, id) => {
+        try {
+            const response = await axios.put(`http://localhost:4000/api/admin/update-state-to-available-if-zero/${type}/${id}`);
+        } catch (error) {
+            console.error('Error al actualizar el estado:', error.response?.data?.error || 'Error desconocido');
+        }
+    };
+
     const handleCheckmarkClick = async (reservationId, type, itemId) => {
         try {
 
@@ -78,9 +86,9 @@ const TableDevolucionDeEquipos = () => {
 
             if (confirmAction.isConfirmed) {
                 // Realizar la solicitud PUT al nuevo endpoint para actualizar currentTime
-
+                await handleUpdateStateIfAmountIsZero(type, itemId);
                 await axios.put(`http://localhost:4000/api/admin/updateCurrentTime/${type}/${reservationId}/${itemId}`);
-                toast.success('Solicitud enviada correctamente', {
+                toast.success(`Se devolvio correctamente el ${typeItem}`, {
                     position: toast.POSITION.BOTTOM_RIGHT,
                     autoClose: 1000,
                     hideProgressBar: false,

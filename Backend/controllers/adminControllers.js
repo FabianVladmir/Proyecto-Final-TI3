@@ -496,7 +496,8 @@ const loginAdmin = async (req, res) => {
         // Generate and sign a JWT token
         const token = jwt.sign({ email }, 'secreto', { expiresIn: '24h' });
 
-        res.json({ token,
+        res.json({
+            token,
             admin: {
                 _id: admin._id,
                 firstname: admin.firstname,
@@ -512,36 +513,67 @@ const loginAdmin = async (req, res) => {
 
 const updateStateIfAmountIsZero = async (req, res) => {
     try {
-      const { type, id } = req.params;
-  
-      let model;
-      if (type === 'book') {
-        model = Book;
-      } else if (type === 'equipment') {
-        model = Equipment;
-      } else {
-        return res.status(400).json({ error: 'Tipo no válido' });
-      }
-  
-      const item = await model.findById(id);
-  
-      if (!item) {
-        return res.status(404).json({ error: 'Elemento no encontrado' });
-      }
-  
-      if (item.amount === 0) {
-        // Actualizar el estado a "FUERA DE STOCK"
-        await model.findByIdAndUpdate(id, { state: 'FUERA DE STOCK' });
-        return res.json({ message: 'Estado actualizado correctamente' });
-      } else {
-        return res.status(400).json({ error: 'La cantidad no es cero' });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error interno del servidor' });
-    }
-  };
+        const { type, id } = req.params;
 
+        let model;
+        if (type === 'book') {
+            model = Book;
+        } else if (type === 'equipment') {
+            model = Equipment;
+        } else {
+            return res.status(400).json({ error: 'Tipo no válido' });
+        }
+
+        const item = await model.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ error: 'Elemento no encontrado' });
+        }
+
+        if (item.amount === 0) {
+            // Actualizar el estado a "FUERA DE STOCK"
+            await model.findByIdAndUpdate(id, { state: 'FUERA DE STOCK' });
+            return res.json({ message: 'Estado actualizado correctamente' });
+        } else {
+            return res.status(400).json({ error: 'La cantidad no es cero' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+const updateStateToAvailableIfZero = async (req, res) => {
+    try {
+        const { type, id } = req.params;
+
+        let model;
+        if (type === 'book') {
+            model = Book;
+        } else if (type === 'equipment') {
+            model = Equipment;
+        } else {
+            return res.status(400).json({ error: 'Tipo no válido' });
+        }
+
+        const item = await model.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ error: 'Elemento no encontrado' });
+        }
+
+        if (item.amount === 0 && item.state !== 'DISPONIBLE') {
+            // Actualizar el estado a "DISPONIBLE" solo si la cantidad es 0 y el estado no es "DISPONIBLE" actualmente
+            await model.findByIdAndUpdate(id, { state: 'DISPONIBLE' });
+            return res.json({ message: 'Estado actualizado correctamente a DISPONIBLE' });
+        } else {
+            return res.json({ message: 'No se hizo ninguna actualización, la cantidad no es 0 o el estado ya es DISPONIBLE' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
 
 export {
     createItem,
@@ -562,5 +594,6 @@ export {
     registerAdmin,
     getAdminData,
     loginAdmin,
-    updateStateIfAmountIsZero
+    updateStateIfAmountIsZero,
+    updateStateToAvailableIfZero
 };
