@@ -276,6 +276,33 @@ const VerEquipos = () => {
                             Reservar
                         </button>
                     </div>
+
+                    <div className='max-w-4xl mx-auto mt-10'>
+                        Encargado(a) de la semana <p className='text-2xl font-bold text-orange-300'>Helmit </p>
+                        <div className='overflow-x-auto'>
+                            <table className='min-w-full bg-white border border-gray-300 mt-5'>
+                                <thead>
+                                    <tr>
+                                        <th class="py-2 px-4 border-b">---</th>
+
+                                        <th class="py-2 px-4 border-b">Lunes</th>
+                                        <th class="py-2 px-4 border-b">Martes</th>
+                                        <th class="py-2 px-4 border-b">Miércoles</th>
+                                        <th class="py-2 px-4 border-b">Jueves</th>
+                                        <th class="py-2 px-4 border-b">Viernes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <td class="py-2 px-4 border-b">Hora</td>
+                                    <td class="py-2 px-4 border-b">8:00 - 19:00</td>
+                                    <td class="py-2 px-4 border-b">8:00 - 19:00</td>
+                                    <td class="py-2 px-4 border-b">8:00 - 19:00</td>
+                                    <td class="py-2 px-4 border-b">8:00 - 19:00</td>
+                                    <td class="py-2 px-4 border-b">8:00 - 19:00</td>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </form>
         </>
