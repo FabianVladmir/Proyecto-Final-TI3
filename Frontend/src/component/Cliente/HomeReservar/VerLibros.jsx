@@ -60,11 +60,13 @@ const VerLibros = () => {
             });
             return;
         }
-
-
         // Validación de la fecha
-        const fechaActual = new Date().toLocaleDateString();
-        const seleccionadaFecha = new Date(formDataLibros.fechaInicio + 'T00:00:00').toLocaleDateString(); // Añade la hora para evitar problemas de zona horaria
+        const fechaActual = new Date();
+        fechaActual.setHours(0, 0, 0, 0); // Establece la hora, minutos, segundos y milisegundos a cero
+        const seleccionadaFecha = new Date(`${formDataLibros.fechaInicio}T00:00:00`);
+        seleccionadaFecha.setHours(0, 0, 0, 0); // Establece la hora, minutos, segundos y milisegundos a cero
+        console.log(fechaActual);
+        console.log(seleccionadaFecha);
         if (seleccionadaFecha < fechaActual) {
             toast.error("La fecha de inicio debe ser mayor o igual a la fecha actual", {
                 position: toast.POSITION.BOTTOM_RIGHT,
@@ -72,8 +74,8 @@ const VerLibros = () => {
             });
             return;
         }
-        const fechafFin =  new Date(formDataLibros.fechaFin + 'T00:00:00').toLocaleDateString();
-        if(fechafFin < seleccionadaFecha){
+        const fechafFin = new Date(formDataLibros.fechaFin + 'T00:00:00');
+        if (fechafFin < seleccionadaFecha) {
             toast.error("La fecha de fin debe ser mayor o igual a la fecha inicio", {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 3000,

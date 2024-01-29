@@ -59,8 +59,10 @@ const VerEquipos = () => {
             return;
         }
         // Validación de la fecha
-        const fechaActual = new Date().toLocaleDateString();
-        const seleccionadaFecha = new Date(formDataEquipos.fecha + 'T00:00:00').toLocaleDateString(); // Añade la hora para evitar problemas de zona horaria
+        const fechaActual = new Date();
+        fechaActual.setHours(0, 0, 0, 0); // Establece la hora, minutos, segundos y milisegundos a cero
+        const seleccionadaFecha = new Date(`${formDataEquipos.fecha}T00:00:00`);
+        seleccionadaFecha.setHours(0, 0, 0, 0); // Establece la hora, minutos, segundos y milisegundos a cero
         console.log(fechaActual);
         console.log(seleccionadaFecha);
         if (seleccionadaFecha < fechaActual) {
