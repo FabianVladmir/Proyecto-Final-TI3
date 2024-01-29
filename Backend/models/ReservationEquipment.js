@@ -14,7 +14,7 @@ const reservationEquipmentSchema = mongoose.Schema(
     },
     verificationCode: {
       type: String,
-      default: generateRandomAlphaNumeric(8)
+      default: () => generateRandomAlphaNumeric(8)
     },
     type: {
       type: String,

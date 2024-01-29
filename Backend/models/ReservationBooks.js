@@ -18,7 +18,7 @@ const reservationBookSchema = mongoose.Schema(
     },
     verificationCode: {
       type: String,
-      default: generateRandomAlphaNumeric(8)
+      default: () => generateRandomAlphaNumeric(8)
     },
     reservationDate: {
       type: Date,
