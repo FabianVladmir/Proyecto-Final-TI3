@@ -8,8 +8,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import styles from './styles/HomeRegister.module.css';
 
 import axios from 'axios';  // Importa Axios
+import { useNavigate } from 'react-router-dom';
 
 function RegistroForm() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
@@ -105,6 +107,7 @@ function RegistroForm() {
                 });
                 setTimeout(() => {
                     limpiarRegistro();
+                    navigate('/login');
                     // Redirige a la página deseada después del registro
                     //navigate('/client/home'); // Ajusta la ruta según tus necesidades
                 }, 1000);

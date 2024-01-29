@@ -138,7 +138,8 @@ const VerLibros = () => {
             try {
                 const response = await fetch("http://localhost:4000/api/students/view-equipments/books");
                 const data = await response.json();
-                setLibros(data);
+                const filteredLibros = data.filter((libro) => libro.amount > 0);
+                setLibros(filteredLibros);
             } catch (error) {
                 console.error("Error fetching libros:", error);
             }

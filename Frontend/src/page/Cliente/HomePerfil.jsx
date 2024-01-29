@@ -203,7 +203,7 @@ function Perfil() {
     // Filtrar los datos para mostrar solo los equipos ACEPTADOS
     const filteredData = reservas.filter(item => item.userId === userId);
     const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
-    const itemsPerPage = 10; // Número de elementos por página
+    const itemsPerPage = 5; // Número de elementos por página
     const pageCount = Math.ceil(filteredData.length / itemsPerPage); // Cálculo del número total de páginas
 
     const handlePageClick = ({ selected }) => {

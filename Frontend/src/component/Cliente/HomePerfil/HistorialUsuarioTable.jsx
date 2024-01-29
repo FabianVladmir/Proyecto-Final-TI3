@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import formattedDate from '../../Admin/DevolucionDeEquipos/FormattedDate';
 import parseCustomTime from '../../Admin/DevolucionDeEquipos/parseCustomTime';
 import getEstadoDevolucion from '../../Admin/Reportes/getEstadoDevolucion';
@@ -21,23 +21,37 @@ function HistorialUsuarioTable({ userHistory, itemDetails, currentData, pageCoun
     const [currentPage, setCurrentPage] = useState(0);
     const [showReportes, setShowReportes] = useState(true); // State to toggle between reportes and reservas
     const itemsPerPage = 5; // Número de elementos por página
+    const [localUserHistory, setLocalUserHistory] = useState(userHistory);
+    const [localCurrentData, setLocalCurrentData] = useState(currentData);
 
+
+    useEffect(() => {
+        // Actualiza los datos locales cuando `userHistory` cambia
+        setLocalUserHistory(userHistory);
+    }, [userHistory]);
+
+    useEffect(() => {
+        // Actualiza los datos locales cuando `currentData` cambia
+        setLocalCurrentData(currentData);
+    }, [currentData]);
+
+    
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
 
     const offset = currentPage * itemsPerPage;
-    const currentItems = userHistory.slice(offset, offset + itemsPerPage);
+    const currentItems = localUserHistory.slice(offset, offset + itemsPerPage);
 
-    const pageCount = Math.ceil(userHistory.length / itemsPerPage);
+    const pageCount = Math.ceil(localUserHistory.length / itemsPerPage);
     return (
         <div className="flex flex-col items-center h-screen">
             <div>
                 <button
                     onClick={() => setShowReportes(true)}
                     className={`${showReportes
-                            ? 'bg-green-500 hover:bg-green-700'
-                            : 'bg-gray-500 hover:bg-gray-700'
+                        ? 'bg-green-500 hover:bg-green-700'
+                        : 'bg-gray-500 hover:bg-gray-700'
                         } text-white font-bold py-2 px-4 rounded-full`}
                 >
                     Mostrar Reportes
@@ -45,8 +59,8 @@ function HistorialUsuarioTable({ userHistory, itemDetails, currentData, pageCoun
                 <button
                     onClick={() => setShowReportes(false)}
                     className={`${!showReportes
-                            ? 'bg-red-500 hover:bg-red-700'
-                            : 'bg-gray-500 hover:bg-gray-700'
+                        ? 'bg-red-500 hover:bg-red-700'
+                        : 'bg-gray-500 hover:bg-gray-700'
                         } text-white font-bold py-2 px-4 rounded-full ml-4`}
                 >
                     Mostrar Reservas
