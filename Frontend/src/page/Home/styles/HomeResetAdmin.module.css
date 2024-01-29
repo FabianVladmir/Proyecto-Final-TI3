@@ -2,17 +2,14 @@
     background-color:darkcyan;
 }
 
-.hero {
-    min-height: 100vh;
+.logo {
+    width: 90px;
+    height: 90px;
 }
 
 .card {
     width: 600px;
-}
-
-.logo {
-    width: 90px;
-    height: 90px;
+    height: 320px;
 }
 
 .blueText {
@@ -27,13 +24,10 @@
     height: 100%;
 }
 
-.heroContent {
-    flex-direction: column;
+.hero {
+    min-height: 100vh;
 }
 
-.formControl {
-    margin-bottom: 1rem;
-}
 
 .button {
     background-color: black;

@@ -75,7 +75,10 @@
                     //navigate('/client/home'); // Ajusta la ruta según tus necesidades
                 }, 1000);
             } catch (error) {
-                console.error('Error en la solicitud al servidor:', error);
+                toast.error('No existe el correo electronico.', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 3000,
+                });
             }
         }
 

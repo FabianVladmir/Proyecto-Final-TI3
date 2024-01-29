@@ -2,7 +2,7 @@ import express from 'express';
 import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
     getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime, 
     updateReservationDevolution, getUserHistory, generateTokenAndSendEmail, registerAdmin, getAdminData, loginAdmin, 
-    updateStateIfAmountIsZero, updateStateToAvailableIfZero} 
+    updateStateIfAmountIsZero, updateStateToAvailableIfZero, forgetPasswordAdmin, updateAdminPassword} 
     from '../controllers/adminControllers.js';
 
 import checkAuth from '../middleware/authMiddleware.js';
@@ -69,6 +69,12 @@ router.put('/update-state-item/:type/:id', updateStateIfAmountIsZero);
 
 // Nueva ruta para verificar si el estado es 0 y cambiarlo a DISPONIBLE si es así
 router.put('/update-state-to-available-if-zero/:type/:id', updateStateToAvailableIfZero);
+
+// Enviar solictud cambio de contraseña del administrador
+router.post("/reset-password-admin", forgetPasswordAdmin);
+
+// Ruta para actualizar la contraseña del administrador
+router.post('/update-password', updateAdminPassword);
 
 
 export default router;

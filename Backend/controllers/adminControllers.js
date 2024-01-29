@@ -575,6 +575,103 @@ const updateStateToAvailableIfZero = async (req, res) => {
     }
 };
 
+
+const sendResetPasswordEmail = (email, resetLink) => {
+    // Configurar el transporte del nodemailer, similar a como lo has hecho para la confirmación de cuenta
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS,
+        },
+    });
+
+    // Configurar las opciones del correo electrónico
+    const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: email,
+        subject: 'Instrucciones para restablecer la contraseña del Administrador',
+        html: `
+            <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+            <a href="${resetLink}">${resetLink}</a>
+        `,
+    };
+
+    // Enviar el correo electrónico
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error al enviar el correo electrónico de restablecimiento de contraseña:', error);
+        } else {
+            console.log('Correo electrónico de restablecimiento de contraseña enviado:', info.response);
+        }
+    });
+};
+
+
+const forgetPasswordAdmin = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const existAdmin = await Admin.findOne({ email });
+
+        if (!existAdmin) {
+            const error = new Error('El usuario no existe');
+            return res.status(400).json({ msg: error.message });
+        }
+
+        const token = jwt.sign({ userId: existAdmin._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        const resetLink = `http://localhost:5173/admin/reset-password-admin/${token}?email=${encodeURIComponent(email)}`;
+
+        existAdmin.resetPasswordToken = token;
+        existAdmin.resetPasswordExpires = Date.now() + 3600000; // 1 hora de expiración
+        await existAdmin.save();
+
+        await sendResetPasswordEmail(existAdmin.email, resetLink);
+
+        res.json({ msg: 'Hemos enviado un correo electrónico con las instrucciones para restablecer la contraseña.' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: 'Error interno del servidor' });
+    }
+};
+
+
+
+const updateAdminPassword = async (req, res) => {
+    try {
+        const { email, newPassword, token } = req.body;
+
+        const admin = await Admin.findOne({ email });
+
+        if (!admin) {
+            return res.status(404).json({ error: 'Administrador no encontrado' });
+        }
+
+        // Verificar si el token ha expirado
+        if (admin.resetPasswordExpires && admin.resetPasswordExpires < Date.now()) {
+            return res.status(400).json({ error: 'El enlace para restablecer la contraseña ha expirado. Solicite un nuevo enlace.' });
+        }
+
+        // Verificar si el token almacenado en el administrador coincide con el proporcionado en la solicitud
+        if (admin.resetPasswordToken !== token) {
+            return res.status(400).json({ error: 'Token no válido para restablecer la contraseña.' });
+        }
+
+        admin.password = newPassword;
+        admin.resetPasswordToken = null;
+        admin.resetPasswordExpires = null;
+        await admin.save();
+
+        res.json({ message: 'Contraseña actualizada correctamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor al actualizar la contraseña' });
+    }
+};
+
+
+
 export {
     createItem,
     getAllItems,
@@ -595,5 +692,7 @@ export {
     getAdminData,
     loginAdmin,
     updateStateIfAmountIsZero,
-    updateStateToAvailableIfZero
+    updateStateToAvailableIfZero,
+    forgetPasswordAdmin,
+    updateAdminPassword
 };

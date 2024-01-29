@@ -7,6 +7,8 @@ import HomeRoutes from './routes/homeRoutes';
 import ClientRoutes from './routes/clientRoutes';
 import AdminRoutes from './routes/adminRoutes';
 import HomeLoginAdmin from './page/Home/HomeLoginAdmin';
+import HomeResetAadmin from './page/Home/HomeResetAmin';
+import HomeCambiarContraseñaAdmin from './page/Home/HomeCambiarContraseñaAdmin';
 
 import { UserProvider } from './context/UserContext';
 import { AdminProvider } from './context/AdminContext';
@@ -85,6 +87,9 @@ function App() {
               element={<PrivateRouteAdmin element={<AdminRoutes />} />}
             />
             <Route path="/admin/login" element={<HomeLoginAdmin />} />
+            <Route path="/admin/reiniciar-admin" element={<HomeResetAadmin />} />
+            <Route path="/admin/reset-password-admin/:token" element={<HomeCambiarContraseñaAdmin />} />
+
           </Routes>
         </Router>
       </UserProvider>

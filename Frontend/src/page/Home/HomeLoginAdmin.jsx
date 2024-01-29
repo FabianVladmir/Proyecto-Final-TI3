@@ -132,7 +132,7 @@ function HomeLoginAdmin(props) {
                                 />
                             </div>
                             <div className="flex justify-end">
-                                <Link to="/reiniciar" className={`${styles.blueText} label-text-alt link link-hover`}>
+                                <Link to="/admin/reiniciar-admin" className={`${styles.blueText} label-text-alt link link-hover`}>
                                     ¿Olvidaste tu contraseña?
                                 </Link>
                             </div>

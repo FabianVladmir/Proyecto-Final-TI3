@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Logo from '../../assets/ce-epcc.png';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './styles/HomeCambiarContraseña.module.css';
+import styles from './styles/HomeCambiarContraseñaAdmin.module.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -12,9 +12,11 @@ function ResetPasswordPage() {
     const { token } = useParams();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    // Obtener la URL actual
+    const url = window.location.href;
+    // Extraer el parámetro "email" de la URL
+    const emailParam = new URLSearchParams(new URL(url).search).get('email');
 
-    //Error al modificar la contraseña. Por favor, solicite un nuevo token para el cambio de contraseña.
-    console.log("token", token);
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -26,16 +28,16 @@ function ResetPasswordPage() {
             });
             return;
         }
-        
+
         // Validar que ambas contraseñas tengan más de 6 caracteres
-        if (password.length < 7 || confirmPassword.length < 7) {
-            toast.error('Ambas contraseñas deben tener al menos 7 caracteres.', {
+        if (password.length < 6 || confirmPassword.length < 6) {
+            toast.error('Ambas contraseñas deben tener al menos 6 caracteres.', {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 2000,
             });
             return;
         }
-        
+
         // Validar que ambas contraseñas coincidan
         if (password !== confirmPassword) {
             toast.error('Las contraseñas no coinciden.', {
@@ -46,13 +48,15 @@ function ResetPasswordPage() {
         }
         // Enviar solicitud al backend para cambiar la contraseña
         try {
-            const response = await axios.post(`http://localhost:4000/api/students/reset-password/${token}`, {
-                password,
+            const response = await axios.post('http://localhost:4000/api/admin/update-password', {
+                email: emailParam, // Reemplaza con el email correspondiente
+                newPassword: password, // Estoy asumiendo que deseas cambiar la contraseña a la que ingresaste en el formulario
+                token: token
             });
 
             if (response.status === 200) {
                 // Contraseña modificada satisfactoriamente
-                toast.success('Contraseña modificada correctamente. Ya puedes iniciar sesión', {
+                toast.success('Contraseña modificada correctamente. Ya puedes iniciar sesión como Administrador', {
                     position: toast.POSITION.BOTTOM_RIGHT,
                     autoClose: 2000,
                 });
@@ -60,7 +64,7 @@ function ResetPasswordPage() {
                 // Limpiar el formulario después de 2000 milisegundos (3 segundos)
                 setTimeout(() => {
                     setPassword('');
-                    navigate('login');
+                    navigate('/admin/login');
                 }, 2000);
             } else {
                 // Manejar el caso en que el token es inválido o ya ha sido utilizado
@@ -70,16 +74,19 @@ function ResetPasswordPage() {
                 });
             }
         } catch (error) {
-            console.error('Error en la solicitud al servidor:', error);
             toast.error(error.response.data.msg || 'Error al modificar la contraseña. Por favor, solicite un nuevo token para el cambio de contraseña.', {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 2000,
             });
+            setTimeout(() => {
+                navigate('/admin/reiniciar-admin');
+            }, 2000);
         }
     };
 
+
     return (
-        <div className={`${styles.hero} hero min-h-screen bg-base-200`}>
+        <div className={`${styles.hero} ${styles.blackBackground} hero min-h-screen bg-base-200`}>
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className={`${styles.card} card flex-shrink-0 w-full max-w-screen-xl h-full shadow-2xl bg-base-100`}>
                     <div className="max-w-screen-xl mx-auto">

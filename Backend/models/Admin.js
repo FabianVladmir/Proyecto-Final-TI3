@@ -30,7 +30,16 @@ const adminSchema = mongoose.Schema({
         type: Number,
         default: null,
         trim: true,
-    }
+    },
+    resetPasswordToken: {
+        type: String,
+        default: null,
+    },
+    resetPasswordExpires: {
+        type: Date,
+        default: null,
+    },
+
 });
 
 // Encriptar las contraseñas antes de guardarlas en la base de datos
