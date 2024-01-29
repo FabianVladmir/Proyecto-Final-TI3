@@ -194,7 +194,7 @@ const VerEquipos = () => {
     const start = currentPage * itemsPerPage;
     const end = Math.min(start + itemsPerPage, equiposToDisplay.length);
     const equiposToDisplayPaginated = equiposToDisplay.slice(start, end);
-    
+
     return (
         <>
             <form onSubmit={handleSubmitEquipos} className="grid grid-cols-2 gap-1">
@@ -212,6 +212,22 @@ const VerEquipos = () => {
                     </div>
                     <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">Equipos Disponibles</h2>
                     <div className="overflow-x-auto">
+                        <div className="mt-4 flex justify-center">
+                            <ReactPaginate
+                                previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
+                                nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
+                                breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
+                                pageCount={Math.ceil(equiposToDisplay.length / itemsPerPage)}
+                                marginPagesDisplayed={2}
+                                pageRangeDisplayed={5}
+                                onPageChange={handlePageClick}
+                                containerClassName={'pagination flex justify-center'}
+                                subContainerClassName={'pages flex'}
+                                activeClassName={'active'}
+                                pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
+                                pageLinkClassName={'text-gray-800'}
+                            />
+                        </div>
                         <table className="w-full table-auto" style={{ width: '100%', border: '1px solid #000' }}>
                             <thead>
                                 <tr>
@@ -240,22 +256,7 @@ const VerEquipos = () => {
                             </tbody>
                         </table>
                     </div>
-                    <div className="mt-4 flex justify-center">
-                        <ReactPaginate
-                            previousLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Anterior</span>}
-                            nextLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">Siguiente</span>}
-                            breakLabel={<span className="px-2 py-1 rounded border border-gray-300 bg-white">...</span>}
-                            pageCount={Math.ceil(equiposToDisplay.length / itemsPerPage)}
-                            marginPagesDisplayed={2}
-                            pageRangeDisplayed={5}
-                            onPageChange={handlePageClick}
-                            containerClassName={'pagination flex justify-center'}
-                            subContainerClassName={'pages flex'}
-                            activeClassName={'active'}
-                            pageClassName={'px-2 py-1 rounded border border-gray-300 bg-white'}
-                            pageLinkClassName={'text-gray-800'}
-                        />
-                    </div>
+
                 </div>
 
                 <div className={`${styles.card} max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg`}>

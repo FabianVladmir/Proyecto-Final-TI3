@@ -10,7 +10,9 @@ const TableEquiposSolicitados = () => {
     // Datos de ejemplo (puedes reemplazarlos con tus propios datos)
     const [reservas, setReservas] = useState([]);
     const [remainingTimes, setRemainingTimes] = useState({});
-    const [fetchData, setFetchData] = useState(false);
+    const [fetchData, setFetchData] = useState(false);  
+    const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
+    const itemsPerPage = 10; // Número de elementos por página
 
     // OBTENER TODAS LAS RESERVACIONES DEL LIBRO
     useEffect(() => {
@@ -90,22 +92,19 @@ const TableEquiposSolicitados = () => {
                 }
             });
             setRemainingTimes(updatedTimes);
+            setReservas(reservas);
         }, 1000);
 
         return () => clearInterval(intervalId); // Limpieza del intervalo al desmontar el componente
     }, [reservas]);
 
-    const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
-    const itemsPerPage = 10; // Número de elementos por página
-    const pageCount = Math.ceil(reservas.length / itemsPerPage); // Cálculo del número total de páginas
-
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
-
+    const filteredData = reservas.filter(item => item.state !== 'ACEPTADO');
     const offset = currentPage * itemsPerPage;
-    const currentData = reservas.slice(offset, offset + itemsPerPage);
-
+    const currentData = filteredData.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredData.length / itemsPerPage); // Cálculo del número total de páginas
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [selectedItemDetails, setSelectedItemDetails] = useState(null);
     const [typeItem, setTypeItem] = useState(null);
@@ -176,7 +175,7 @@ const TableEquiposSolicitados = () => {
                     </thead>
                     {/* Cuerpo de la tabla */}
                     <tbody>
-                        {currentData.filter(item => item.state !== 'ACEPTADO').length === 0 ? (
+                        {currentData.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="text-center py-4 text-gray-500">No existen reservas por el momento.</td>
                             </tr>
