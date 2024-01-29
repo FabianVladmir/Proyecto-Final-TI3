@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import axios from 'axios';
 import Modal from 'react-modal';
 import HistorialUsuarioTable from '../../component/Cliente/HomePerfil/HistorialUsuarioTable';
 import { toast } from 'react-toastify';
-
 import userFoto from '../../assets/userData.png'
 
 function Perfil() {
@@ -13,11 +13,9 @@ function Perfil() {
     const navigate = useNavigate();
     const [userHistory, setUserHistory] = useState([]);
     const [userData, setUserData] = useState([]);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [originalUserData, setOriginalUserData] = useState({}); // Nuevo estado para almacenar los datos originales
     const [showHistorial, setShowHistorial] = useState(true); // Nuevo estado para controlar qué vista mostrar
-
 
     useEffect(() => {
         const fetchUserHistory = async () => {
@@ -160,102 +158,163 @@ function Perfil() {
         setShowHistorial((prevShowHistorial) => !prevShowHistorial); // Cambia el estado para alternar entre historial y detalles de cuenta
     };
 
+    const handleReservasClick = () => {
+        toggleView();
+    };
+
+
+    const [reservas, setReservas] = useState([]);
+    const fetchData = async () => {
+        try {
+            const responseBook = await axios.get("http://localhost:4000/api/admin/getReservation/books");
+            const responseEquipment = await axios.get("http://localhost:4000/api/admin/getReservation/equipments");
+            const combinedReservas = [...responseBook.data, ...responseEquipment.data];
+            // Ordenar por la propiedad 'createdAt' 
+            combinedReservas.sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+
+                // Compara las fechas
+                if (dateA < dateB) return -1;
+                if (dateA > dateB) return 1;
+
+                // Si las fechas son iguales, compara las horas
+                const timeA = dateA.getTime();
+                const timeB = dateB.getTime();
+
+                return timeA - timeB;
+            });
+            const reservasWithNames = await Promise.all(combinedReservas.map(async (item) => {
+                const correctedType = item.type === 'book' ? 'books' : 'equipments';
+                const categoryResponse = await axios.get(`http://localhost:4000/api/admin/get/${correctedType}/${item.type === 'book' ? item.bookId : item.equipmentId}`);
+                const categoryName = item.type === 'book' ? categoryResponse.data.title : categoryResponse.data.name;
+                return { ...item, categoryName };
+            }));
+            setReservas(reservasWithNames);
+        } catch (error) {
+            console.error('Error al obtener los libros:', error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+    // Filtrar los datos para mostrar solo los equipos ACEPTADOS
+    const filteredData = reservas.filter(item => item.userId === userId);
+    const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
+    const itemsPerPage = 10; // Número de elementos por página
+    const pageCount = Math.ceil(filteredData.length / itemsPerPage); // Cálculo del número total de páginas
+
+    const handlePageClick = ({ selected }) => {
+        setCurrentPage(selected);
+    };
+
+    const offset = currentPage * itemsPerPage;
+    const currentData = filteredData.slice(offset, offset + itemsPerPage);
     return (
-        <div className="max-w-screen-xl mx-auto mt-2 p-2 bg-white rounded-lg shadow-lg">
-            <div className='justify justify-center'>
-                <button onClick={toggleView} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4 float-right">
-                    {showHistorial ? 'Mostrar Historial' : 'Mostrar Detalles de Cuenta'}
-                </button>
-            </div>
-
-            {showHistorial ? (
-                <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
-                    <img src={userFoto} alt="Foto de perfil" className="w-32 h-32 mx-auto mb-2 rounded-full" />
-
-                    <form onSubmit={handleUpdate}>
-
-                        <div className='text text-center'>
-                            <label htmlFor="firstname" className="text-xl font-semibold">Nombre:</label>
-                            <input
-                                type="text"
-                                id="firstname"
-                                name="firstname"
-                                value={userData.firstname}
-                                onChange={handleChange}
-                                className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
-                                disabled={!isEditing}
-                            />
-
-                            <label htmlFor="lastname" className="text-xl font-semibold">Apellido:</label>
-                            <input
-                                type="text"
-                                id="lastname"
-                                name="lastname"
-                                value={userData.lastname}
-                                onChange={handleChange}
-                                className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
-                                disabled={!isEditing}
-                            />
-
-                            <label htmlFor="telephone" className="text-gray-600">Teléfono:</label>
-                            <input
-                                type="tel"
-                                id="telephone"
-                                name="telephone"
-                                value={userData.telephone}
-                                onChange={handleChange}
-                                className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
-                                disabled={!isEditing}
-                            />
-
-                            <label htmlFor="cui" className="text-gray-600">CUI:</label>
-                            <input
-                                type="number"
-                                id="cui"
-                                name="CUI"
-                                value={userData.CUI}
-                                onChange={handleChange}
-                                className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
-                                disabled={!isEditing}
-                            />
-
-                            <label htmlFor="email" className="text-gray-600">Correo:</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={userData.email}
-                                onChange={handleChange}
-                                className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
-                                disabled
-                            />
-                            {isEditing ? (
-                                <div>
-                                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4">
-                                        Guardar cambios
-                                    </button>
-                                    <button type="button" onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full mt-4 ml-4">
-                                        Cancelar
-                                    </button>
-                                </div>
-                            ) : (
-                                // Mostrar el botón "Editar" cuando no esté en modo de edición
-                                <button type="button" onClick={handleEdit} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full mt-4">
-                                    Editar
-                                </button>
-                            )}
-                        </div>
-                    </form>
-                </div>
-
-            ) : (
-                <div className="max-w-screen-xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
-                    <div className="w-full">
-                        <HistorialUsuarioTable userHistory={userHistory} itemDetails={itemDetails} />
+        <div>
+            <div className="max-w-screen-xl mx-auto mt-2 p-2 bg-white rounded-lg shadow-lg">
+                <div className='flex justify-between'>
+                    <div className='justify-end'>
+                        <button onClick={toggleView} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4">
+                            {showHistorial ? 'Mostrar Historial' : 'Mostrar Detalles de Cuenta'}
+                        </button>
                     </div>
                 </div>
-            )}
+
+                {
+                    showHistorial ? (
+                        <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
+                            <img src={userFoto} alt="Foto de perfil" className="w-32 h-32 mx-auto mb-2 rounded-full" />
+
+                            <form onSubmit={handleUpdate}>
+
+                                <div className='text text-center'>
+                                    <label htmlFor="firstname" className="text-xl font-semibold">Nombre:</label>
+                                    <input
+                                        type="text"
+                                        id="firstname"
+                                        name="firstname"
+                                        value={userData.firstname}
+                                        onChange={handleChange}
+                                        className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
+                                        disabled={!isEditing}
+                                    />
+
+                                    <label htmlFor="lastname" className="text-xl font-semibold">Apellido:</label>
+                                    <input
+                                        type="text"
+                                        id="lastname"
+                                        name="lastname"
+                                        value={userData.lastname}
+                                        onChange={handleChange}
+                                        className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
+                                        disabled={!isEditing}
+                                    />
+
+                                    <label htmlFor="telephone" className="text-gray-600">Teléfono:</label>
+                                    <input
+                                        type="tel"
+                                        id="telephone"
+                                        name="telephone"
+                                        value={userData.telephone}
+                                        onChange={handleChange}
+                                        className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
+                                        disabled={!isEditing}
+                                    />
+
+                                    <label htmlFor="cui" className="text-gray-600">CUI:</label>
+                                    <input
+                                        type="number"
+                                        id="cui"
+                                        name="CUI"
+                                        value={userData.CUI}
+                                        onChange={handleChange}
+                                        className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
+                                        disabled={!isEditing}
+                                    />
+
+                                    <label htmlFor="email" className="text-gray-600">Correo:</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={userData.email}
+                                        onChange={handleChange}
+                                        className="block w-full border-b-2 border-gray-300 mb-4 focus:outline-none focus:border-blue-500 text text-center"
+                                        disabled
+                                    />
+                                    {isEditing ? (
+                                        <div>
+                                            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4">
+                                                Guardar cambios
+                                            </button>
+                                            <button type="button" onClick={handleCancel} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full mt-4 ml-4">
+                                                Cancelar
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        // Mostrar el botón "Editar" cuando no esté en modo de edición
+                                        <button type="button" onClick={handleEdit} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full mt-4">
+                                            Editar
+                                        </button>
+                                    )}
+                                </div>
+                            </form>
+                        </div>
+
+                    ) : (
+                        <div className="max-w-screen-xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
+                            <div className="w-full">
+                                <HistorialUsuarioTable userHistory={userHistory} itemDetails={itemDetails} currentData={currentData} pageCountReserva={pageCount} handlePageClickReserva={handlePageClick} />
+                            </div>
+                        </div>
+                    )
+                }
+            </div >
         </div>
+
     );
 }
 
