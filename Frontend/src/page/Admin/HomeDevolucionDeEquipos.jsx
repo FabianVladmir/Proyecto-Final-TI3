@@ -17,6 +17,7 @@ const TableDevolucionDeEquipos = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [autoUpdate, setAutoUpdate] = useState(true);
 
+    const [shouldUpdateTable, setShouldUpdateTable] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -99,16 +100,27 @@ const TableDevolucionDeEquipos = () => {
                 });
                 // Refrescar la lista de reservas
                 fetchData();
+                setShouldUpdateTable(true);
             }
         } catch (error) {
             console.error('Error al actualizar currentTime:', error);
         }
     };
 
+
+    useEffect(() => {
+        if (shouldUpdateTable) {
+            fetchData();
+            setShouldUpdateTable(false);
+        }
+    
+        // Resto del código del useEffect
+    }, [shouldUpdateTable, fetchData, autoUpdate]);
+    
     const handleEditDevolucionClick = (reservationId, type) => {
         const selected = reservas.find(item => item._id === reservationId);
         setSelectedItem(selected);
-
+        
         // Abre el modal
         setIsModalOpen(true);
     }

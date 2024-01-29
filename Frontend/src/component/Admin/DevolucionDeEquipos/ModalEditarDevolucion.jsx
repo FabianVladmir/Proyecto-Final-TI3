@@ -61,7 +61,7 @@ const ModalEditar = ({ item, onClose  }) => {
             });
             toast.success(`Equipo actualizado exitosamente!`, {
                 position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000, // 3 segundos
+                autoClose: 1000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -69,6 +69,9 @@ const ModalEditar = ({ item, onClose  }) => {
                 progress: undefined,
             });
             onClose();  // Cierra el modal después de la actualización
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             console.error('Error al actualizar reserva de equipo:', error);
             // Manejar el error, mostrar un mensaje al usuario, etc.

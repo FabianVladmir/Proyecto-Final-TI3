@@ -31,13 +31,27 @@ const DetallesModal = ({ details, type, idReservation, stateReservation, id, onC
 
         try {
             const correctedType = type === 'book' ? 'books' : 'equipments';
+            const correct = type === 'book' ? 'libro' : 'equipo';
+
             const response = await axios.post(`http://localhost:4000/api/admin/update-reservation/${correctedType}/${idReservation}`, { reservationId: idReservation, newStatus: state });
-            toast.success('Estado de la reserva actualizado con éxito', {
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 1000, // Duración en milisegundos
-            });
-            await axios.put(`http://localhost:4000/api/admin/update-state-item/${type}/${id}`);
-            onClose(); // Cierra el modal después de la actualización
+            // Verificar si el amount es cero antes de intentar actualizar el estado del equipo
+            if (formulario.amount === 1) {
+                await axios.put(`http://localhost:4000/api/admin/update-state-item/${type}/${id}`);
+                onClose(); // Cierra el modal después de la actualización
+                // Mostrar toast de éxito solo si la solicitud se completó sin errores
+                toast.success(`Estado de la reserva y el ${correct} actualizado con éxito`, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000, // Duración en milisegundos
+                });
+            }
+            else {
+                onClose(); // Cierra el modal después de la actualización
+                // Mostrar toast de éxito solo si la solicitud se completó sin errores
+                toast.success('Estado de la reserva actualizado con éxito', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 1000, // Duración en milisegundos
+                });
+            }
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
