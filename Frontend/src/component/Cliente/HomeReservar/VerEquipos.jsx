@@ -58,6 +58,39 @@ const VerEquipos = () => {
             });
             return;
         }
+        // Validación de la fecha
+        const fechaActual = new Date().toLocaleDateString();
+        const seleccionadaFecha = new Date(formDataEquipos.fecha + 'T00:00:00').toLocaleDateString(); // Añade la hora para evitar problemas de zona horaria
+        console.log(fechaActual);
+        console.log(seleccionadaFecha);
+        if (seleccionadaFecha < fechaActual) {
+            toast.error("La fecha debe ser mayor o igual a la fecha actual", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+            });
+            return;
+        }
+
+        // Validación de la hora de inicio
+        const fechaActual2 = new Date();
+        const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        if (formDataEquipos.fecha === fechaActual2.toISOString().split('T')[0] && formDataEquipos.horaInicio < horaActual) {
+            toast.error("La hora de inicio debe ser mayor o igual a la hora actual", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+            });
+            return;
+        }
+
+        // Validación de la hora de fin
+        if (formDataEquipos.horaFin <= formDataEquipos.horaInicio) {
+            toast.error("La hora de fin debe ser mayor que la hora de inicio", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+            });
+            return;
+        }
+
 
         const reservaData = {
             userId: userId,
@@ -161,9 +194,7 @@ const VerEquipos = () => {
     const start = currentPage * itemsPerPage;
     const end = Math.min(start + itemsPerPage, equiposToDisplay.length);
     const equiposToDisplayPaginated = equiposToDisplay.slice(start, end);
-
-    console.log('Equipos To Display:', equiposToDisplayPaginated);
-
+    
     return (
         <>
             <form onSubmit={handleSubmitEquipos} className="grid grid-cols-2 gap-1">

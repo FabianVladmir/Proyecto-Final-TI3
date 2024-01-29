@@ -60,6 +60,27 @@ const VerLibros = () => {
             });
             return;
         }
+
+
+        // Validación de la fecha
+        const fechaActual = new Date().toLocaleDateString();
+        const seleccionadaFecha = new Date(formDataLibros.fechaInicio + 'T00:00:00').toLocaleDateString(); // Añade la hora para evitar problemas de zona horaria
+        if (seleccionadaFecha < fechaActual) {
+            toast.error("La fecha de inicio debe ser mayor o igual a la fecha actual", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+            });
+            return;
+        }
+        const fechafFin =  new Date(formDataLibros.fechaFin + 'T00:00:00').toLocaleDateString();
+        if(fechafFin < seleccionadaFecha){
+            toast.error("La fecha de fin debe ser mayor o igual a la fecha inicio", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+            });
+            return;
+        }
+
         const reservaData = {
             /* title: selectedRow.title,
             year: selectedRow.year,
@@ -118,7 +139,6 @@ const VerLibros = () => {
                 const response = await fetch("http://localhost:4000/api/students/view-equipments/books");
                 const data = await response.json();
                 setLibros(data);
-                console.log(libros);
             } catch (error) {
                 console.error("Error fetching libros:", error);
             }
@@ -172,9 +192,6 @@ const VerLibros = () => {
     const start = currentPage * itemsPerPage;
     const end = Math.min(start + itemsPerPage, librosToDisplay.length);
     const librosToDisplayPaginated = librosToDisplay.slice(start, end);
-
-    console.log('Libros To Display:', librosToDisplayPaginated);
-
 
     return (
         <>
