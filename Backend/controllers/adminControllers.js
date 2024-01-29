@@ -510,6 +510,38 @@ const loginAdmin = async (req, res) => {
     }
 };
 
+const updateStateIfAmountIsZero = async (req, res) => {
+    try {
+      const { type, id } = req.params;
+  
+      let model;
+      if (type === 'book') {
+        model = Book;
+      } else if (type === 'equipment') {
+        model = Equipment;
+      } else {
+        return res.status(400).json({ error: 'Tipo no válido' });
+      }
+  
+      const item = await model.findById(id);
+  
+      if (!item) {
+        return res.status(404).json({ error: 'Elemento no encontrado' });
+      }
+  
+      if (item.amount === 0) {
+        // Actualizar el estado a "FUERA DE STOCK"
+        await model.findByIdAndUpdate(id, { state: 'FUERA DE STOCK' });
+        return res.json({ message: 'Estado actualizado correctamente' });
+      } else {
+        return res.status(400).json({ error: 'La cantidad no es cero' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
+
 
 export {
     createItem,
@@ -529,5 +561,6 @@ export {
     generateTokenAndSendEmail,
     registerAdmin,
     getAdminData,
-    loginAdmin
+    loginAdmin,
+    updateStateIfAmountIsZero
 };

@@ -42,7 +42,10 @@ const TableDevolucionDeEquipos = () => {
             const reservasWithNames = await Promise.all(combinedReservas.map(async (item) => {
                 const studentResponse = await axios.get(`http://localhost:4000/api/admin/getStudent/${item.userId}`);
                 const studentName = studentResponse.data.firstname + ' ' + studentResponse.data.lastname;
-                return { ...item, studentName };
+                const correctedType = item.type === 'book' ? 'books' : 'equipments';
+                const categoryResponse = await axios.get(`http://localhost:4000/api/admin/get/${correctedType}/${item.type === 'book' ? item.bookId : item.equipmentId}`);
+                const categoryName = item.type === 'book' ? categoryResponse.data.title : categoryResponse.data.name;
+                return { ...item, studentName, categoryName};
             }));
             setReservas(reservasWithNames);
         } catch (error) {
@@ -75,6 +78,7 @@ const TableDevolucionDeEquipos = () => {
 
             if (confirmAction.isConfirmed) {
                 // Realizar la solicitud PUT al nuevo endpoint para actualizar currentTime
+
                 await axios.put(`http://localhost:4000/api/admin/updateCurrentTime/${type}/${reservationId}/${itemId}`);
                 toast.success('Solicitud enviada correctamente', {
                     position: toast.POSITION.BOTTOM_RIGHT,
@@ -160,6 +164,7 @@ const TableDevolucionDeEquipos = () => {
                             {/*Equipo/Libro  , Estudiante , Fecha en la que deberia ser devuelta , Codigo , Devuelto y tambien edaitar donde se va cambiar la fecha de entrega*/}
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Categoria</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Nombre del Estudiante</th>
+                            <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Nombre de la categoria</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Fecha de entrega</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Codigo</th>
                             <th className="sm:px-2 py-3 bg-gray-800 text-white text-center sm:min-w-20 md:min-w-30">Estado de Devolucion</th>
@@ -182,6 +187,7 @@ const TableDevolucionDeEquipos = () => {
                                         {item.type === 'book' ? (<p>Libro</p>) : (<p>Equipo</p>)}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">{item.studentName}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{item.categoryName}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         {item.type === 'equipment' ? (
                                             <p>{formattedDate(item.reservationDateTime)}, {parseCustomTime(item.endHour)}</p>
@@ -189,6 +195,7 @@ const TableDevolucionDeEquipos = () => {
                                             <p>{formattedDate(item.returnDate)}</p>
                                         )}
                                     </td>
+
                                     <td className="px-6 py-4 whitespace-nowrap">{item.verificationCode}</td>
                                     <td className="text text-center px-6 py-4 whitespace-nowrap">
                                         <p style={{ color: getEstadoDevolucion(item) === 'EN PLAZO' ? 'green' : 'red' }}>

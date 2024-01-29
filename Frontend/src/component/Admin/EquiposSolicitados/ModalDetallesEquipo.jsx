@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const DetallesModal = ({ details, type, idReservation, stateReservation, onClose }) => {
+const DetallesModal = ({ details, type, idReservation, stateReservation, id, onClose }) => {
     const [formulario, setFormulario] = useState({
         title: '',
         name: '',
@@ -26,7 +26,6 @@ const DetallesModal = ({ details, type, idReservation, stateReservation, onClose
         setState(value); // Actualiza el estado con el nuevo valor
     };
 
-
     const handleSubmitReservation = async (e) => {
         e.preventDefault();
 
@@ -37,12 +36,13 @@ const DetallesModal = ({ details, type, idReservation, stateReservation, onClose
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000, // Duración en milisegundos
             });
+            await axios.put(`http://localhost:4000/api/admin/update-state-item/${type}/${id}`);
             onClose(); // Cierra el modal después de la actualización
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
         } catch (error) {
-            console.error('Error al actualizar el estado de la reserva:', error.response.data.msg);
+            console.error('Error al actualizar el estado de la reserva:', error.response?.data?.msg || error.message || 'Error desconocido');
         }
     };
     return (

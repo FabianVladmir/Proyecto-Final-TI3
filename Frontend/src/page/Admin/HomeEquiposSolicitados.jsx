@@ -113,8 +113,9 @@ const TableEquiposSolicitados = () => {
     const [stateReservation, setStateReservation] = useState(null);
     // Mostrar mas detalles del Equipo
     const [selectedItem, setSelectedItem] = useState(null);
+    const [getItemId, setGetItemId] =useState(null);
 
-    const handleVerDetallesClick = async (type, itemId, reservationId, estadoReserva) => {
+    const handleVerDetallesClick = async (type, itemId, reservationId, estadoReserva, idBookEquipment) => {
         try {
             // Corrige el tipo de categoría aquí
             const correctedType = type === 'book' ? 'books' : 'equipments';
@@ -125,7 +126,7 @@ const TableEquiposSolicitados = () => {
             setIdReserva(reservationId); // Actualizar el id de la reserva 
             setTypeItem(type); //actualizar el type del equipo o libro
             setStateReservation(estadoReserva); //actualizar el estado de la reserva
-
+            setGetItemId(idBookEquipment); //actualizar el estado del id del equipo o libro
             console.log(selectedItem);
             // Abre tu modal aquí
         } catch (error) {
@@ -134,9 +135,9 @@ const TableEquiposSolicitados = () => {
     }
     return (
         <div className="max-w-screen-xl mx-auto mt-2 p-2 bg-white rounded-lg shadow-lg">
-            {showDetailsModal && selectedItemDetails && typeItem && idReserva && (
+            {showDetailsModal && selectedItemDetails && typeItem && idReserva && getItemId && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
-                    <ModalDetallesEquipo details={selectedItemDetails} type={typeItem} idReservation={idReserva} stateReservation={stateReservation} onClose={() => setShowDetailsModal(false)} />
+                    <ModalDetallesEquipo details={selectedItemDetails} type={typeItem} idReservation={idReserva} stateReservation={stateReservation} id={getItemId} onClose={() => setShowDetailsModal(false)} />
                 </div>
             )}
             <div className='text-center lg:text-center'>
@@ -205,10 +206,10 @@ const TableEquiposSolicitados = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {item.type === 'book' ? (
-                                                <button onClick={() => handleVerDetallesClick(item.type, item.bookId, item._id, item.state)} className="px-5 py-1 rounded bg-green-500 text-white hover:bg-blue-700">
+                                                <button onClick={() => handleVerDetallesClick(item.type, item.bookId, item._id, item.state, item.bookId)} className="px-5 py-1 rounded bg-green-500 text-white hover:bg-blue-700">
                                                     Ver más detalles
                                                 </button>) : (
-                                                <button onClick={() => handleVerDetallesClick(item.type, item.equipmentId, item._id, item.state)} className="px-5 py-1 rounded bg-green-500 text-white hover:bg-blue-700">
+                                                <button onClick={() => handleVerDetallesClick(item.type, item.equipmentId, item._id, item.state, item.equipmentId)} className="px-5 py-1 rounded bg-green-500 text-white hover:bg-blue-700">
                                                     Ver más detalles
                                                 </button>)}
                                         </td>

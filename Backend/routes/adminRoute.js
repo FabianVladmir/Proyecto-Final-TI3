@@ -1,7 +1,7 @@
 import express from 'express';
 import { createItem, getAllItems, updateItemById, deleteItemById, getCategory, getItemById, 
     getReservation, getStudentById, updateReservation, getItemDetailsById, deleteReservation, updateCurrentTime, 
-    updateReservationDevolution, getUserHistory, generateTokenAndSendEmail, registerAdmin, getAdminData, loginAdmin} 
+    updateReservationDevolution, getUserHistory, generateTokenAndSendEmail, registerAdmin, getAdminData, loginAdmin, updateStateIfAmountIsZero} 
     from '../controllers/adminControllers.js';
 
 import checkAuth from '../middleware/authMiddleware.js';
@@ -62,5 +62,9 @@ router.get('/getAdminData/:email', getAdminData);
 
 // Login Admin
 router.post('/loginAdmin', loginAdmin);
+
+// Ruta para actualizar el estado si la cantidad es cero
+router.put('/update-state-item/:type/:id', updateStateIfAmountIsZero);
+
 
 export default router;
