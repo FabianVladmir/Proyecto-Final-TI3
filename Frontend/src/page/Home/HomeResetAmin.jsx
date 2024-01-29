@@ -43,13 +43,13 @@ function ResetPassword() {
             return;
         }
 
-        if (!validarCorreoElectronico(formData.email)) {
+        /* if (!validarCorreoElectronico(formData.email)) {
             toast.error('El correo electrónico no es válido.', {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000,
             });
             return;
-        }
+        } */
 
 
         try {
