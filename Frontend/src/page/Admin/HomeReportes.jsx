@@ -46,8 +46,7 @@ const TableReporte = () => {
                                 setItemDetails(prevState => ({
                                     ...prevState,
                                     [item.userId]: {
-                                        firstname: studentResponse.data.firstname,
-                                        lastname: studentResponse.data.lastname,
+                                        userName: studentResponse.data.firstname +' '+ studentResponse.data.lastname,
                                     },
                                 }));
                             })
@@ -61,12 +60,19 @@ const TableReporte = () => {
                 console.error('Error al obtener el historial en el frontend:', error);
             });
     }, []);
+
+
+    const filteredData = historyData.filter(item => {
+        const userName = itemDetails[item.userId] && itemDetails[item.userId].userName;
+        return userName && userName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
     const [currentPage, setCurrentPage] = useState(0); // Estado para rastrear la página actual
     const itemsPerPage = 10; // Número de elementos por página
-    const pageCount = Math.ceil(historyData.length / itemsPerPage); // Cálculo del número total de páginas
+    const pageCount = Math.ceil(filteredData.length / itemsPerPage); // Cálculo del número total de páginas
 
     const offset = currentPage * itemsPerPage;
-    const currentData = historyData.slice(offset, offset + itemsPerPage);
+    const currentData = filteredData.slice(offset, offset + itemsPerPage);
     return (
         <div className="max-w-screen-xl mx-auto mt-2 p-2 bg-white rounded-lg shadow-lg">
             <div className='text text-center'>
@@ -136,8 +142,8 @@ const TableReporte = () => {
                             currentData.map((item, index) => (
                                 <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                                     <td className="px-6 py-4 whitespace-nowrap bg-gray-300">
-                                        {itemDetails[item.userId] && itemDetails[item.userId].firstname && itemDetails[item.userId].lastname
-                                            ? `${itemDetails[item.userId].firstname} ${itemDetails[item.userId].lastname}`
+                                        {itemDetails[item.userId] && itemDetails[item.userId].userName
+                                            ? `${itemDetails[item.userId].userName}`
                                             : 'No details available'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">{item.itemType === 'Book' ? (<p>{formattedDate(item.returnDate)}</p>) : (<p>{formattedDate(item.returnDate) + ' ' + parseCustomTime(item.endHour)}</p>)}</td>
