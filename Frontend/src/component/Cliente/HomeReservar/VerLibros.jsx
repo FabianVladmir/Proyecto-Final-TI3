@@ -65,8 +65,6 @@ const VerLibros = () => {
         fechaActual.setHours(0, 0, 0, 0); // Establece la hora, minutos, segundos y milisegundos a cero
         const seleccionadaFecha = new Date(`${formDataLibros.fechaInicio}T00:00:00`);
         seleccionadaFecha.setHours(0, 0, 0, 0); // Establece la hora, minutos, segundos y milisegundos a cero
-        console.log(fechaActual);
-        console.log(seleccionadaFecha);
         if (seleccionadaFecha < fechaActual) {
             toast.error("La fecha de inicio debe ser mayor o igual a la fecha actual", {
                 position: toast.POSITION.BOTTOM_RIGHT,
