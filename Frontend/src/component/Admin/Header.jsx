@@ -3,6 +3,8 @@ import { Link, Outlet } from 'react-router-dom';
 import Logo from '../../assets/ce-epcc.png';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAdmin } from '../../context/AdminContext';
+import Swal from 'sweetalert2';
 
 const styleLogo = {
     width: '48px', // Ajusta el ancho de la imagen
@@ -10,12 +12,13 @@ const styleLogo = {
 }
 
 function Header(props) {
+    const { adminId } = useAdmin();
     const navigate = useNavigate();
     const [loggingOut, setLoggingOut] = useState(false);
 
     const handleLogout = () => {
         // Mostrar el mensaje de "Cerrando sesión" usando toast
-        toast.info('Session Cerrada Exitosamente...', {
+        toast.info('Sesión Cerrada Exitosamente...', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 2000, // Duración del mensaje en milisegundos (ajusta según tus necesidades)
         });
@@ -39,6 +42,20 @@ function Header(props) {
         }, 2000); // Espera 2 segundos antes de redirigir (ajusta según tus necesidades)
     };
 
+    const handleClick = () => {
+        console.log('handleClick ejecutado');  // Agrega esta línea
+        if (adminId === '65b547c848c86c75bce9c8e0') {
+            // Redirige al usuario a la ruta 'crear-admin'
+            navigate('/admin/crear-admin');
+        } else {
+            // Muestra la alerta de que no puede ingresar
+            Swal.fire({
+                icon: 'error',
+                title: 'No puede ingresar a este ruta',
+                text: 'Solo pueden ingresar los administrador principales',
+            });
+        }
+    };
     return (
         <div>
             <div className="navbar bg-base-100">
@@ -60,20 +77,22 @@ function Header(props) {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to="crear-admin">
-                        <a className="btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                <path d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
-                            </svg>
-                        </a>
-                    </Link>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-6 h-6 cursor-pointer"
+                        onClick={handleClick}
+                    >
+                        <path d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
+                    </svg>
                     <Link to="home"><a className="btn">Mi cuenta</a></Link>
                     <button
                         className="btn ml-2"
                         onClick={handleLogout}
                         disabled={loggingOut}
                     >
-                        Cerrar Sesión
+                        {loggingOut ? 'Cerrando sesión...' : 'Cerrar sesión'}
                     </button>
                 </div>
             </div>

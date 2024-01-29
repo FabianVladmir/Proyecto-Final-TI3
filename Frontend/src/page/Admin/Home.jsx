@@ -5,8 +5,11 @@ import Calendar from '@vscode/codicons/src/icons/Calendar.svg';
 import OverTime from '@tabler/icons/calendar-repeat.svg';
 import MultipleSmarphones from '@tabler/icons/file-report.svg'
 import styles from './styles/Home.module.css';
+import { useAdmin } from '../../context/AdminContext';
 
 function HomeAdmin(props) {
+    const { adminId } = useAdmin();
+    console.log(adminId);
     return (
         <div className={styles.containerStyles}>
             <div>
