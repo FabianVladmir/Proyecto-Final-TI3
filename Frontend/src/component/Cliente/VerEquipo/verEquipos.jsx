@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+import equiposData from './ImgEquipos.json'
 
 const EquiposTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -58,12 +59,13 @@ const EquiposTable = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="text text-center w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 mb-4"
-                    />
+                />
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
+                            <th className="px-6 py-3 bg-blue-500 text-white text-left">Imagen</th>
                             <th className="px-6 py-3 bg-blue-500 text-white text-left">Nombre</th>
                             <th className="px-6 py-3 bg-blue-500 text-white text-left">Cantidad</th>
                             <th className="px-6 py-3 bg-blue-500 text-white text-left">Componentes</th>
@@ -71,19 +73,52 @@ const EquiposTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-6 py-4 whitespace-nowrap bg-gray-300">{item.name}</td>
-                                <td className="text-center px-6 py-4 whitespace-nowrap">{item.amount}</td>
-                                <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                    <div style={{ maxWidth: "300px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.components}>
-                                        {item.components}
-                                    </div>
-                                </td>
+                        {currentItems.map((item, index) => {
+                            // Convertir objetos numerados en un array
+                            const equiposArray = Object.values(equiposData.Equipos);
 
-                                <td className="px-6 py-4 whitespace-nowrap">{item.state}</td>
-                            </tr>
-                        ))}
+                            // Buscar la correspondencia en el array
+                            const equipo = equiposArray.find((equipo) => equipo.Nombre === item.name);
+                            return (
+                                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {equipo ? (
+                                            // Mostrar la imagen si se encuentra la correspondencia en el JSON Equipos
+                                            <a href={equipo.Foto} target="_blank" rel="noopener noreferrer">
+                                                <img
+                                                    src={equipo.Foto}
+                                                    alt={equipo.Nombre}
+                                                    className="max-w-full h-auto"
+                                                    width={130}  // Ajusta este valor según tus necesidades
+                                                    height={130} // Ajusta este valor según tus necesidades
+                                                />
+                                            </a>
+                                        ) : (
+                                            // Mostrar un mensaje de error o imagen de reserva si no se encuentra la correspondencia
+                                            <a href='https://previews.123rf.com/images/vectorwin/vectorwin2101/vectorwin210100881/162435111-no-hay-foto-tachada-vector-de-icono-de-glifo-de-signo-no-hay-foto-tachada-s%C3%ADmbolo-de-contorno.jpg' target="_blank" rel="noopener noreferrer">
+
+                                                <img
+                                                    src="https://previews.123rf.com/images/vectorwin/vectorwin2101/vectorwin210100881/162435111-no-hay-foto-tachada-vector-de-icono-de-glifo-de-signo-no-hay-foto-tachada-s%C3%ADmbolo-de-contorno.jpg" // Reemplaza con la ruta de tu imagen de reserva
+                                                    alt="Imagen de Reserva"
+                                                    className="max-w-full h-auto"
+                                                    width={130}  // Ajusta este valor según tus necesidades
+                                                    height={130} // Ajusta este valor según tus necesidades
+                                                />
+                                            </a>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap bg-gray-300">{item.name}</td>
+                                    <td className="text-center px-6 py-4 whitespace-nowrap">{item.amount}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                        <div style={{ maxWidth: "300px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.components}>
+                                            {item.components}
+                                        </div>
+                                    </td>
+
+                                    <td className="px-6 py-4 whitespace-nowrap">{item.state}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
