@@ -63,9 +63,9 @@ function RegistroForm() {
             validationErrors.push('CUI (debe tener exactamente 8 dígitos)');
         }
 
-        // if (!email || !/^[^\s@]+@unsa\.edu\.pe$/.test(email)) {
-        //     validationErrors.push('Correo Electrónico (debe tener el formato correcto {ej. cualquiera@unsa.edu.pe})');
-        // }
+        if (!email || !/^[^\s@]+@unsa\.edu\.pe$/.test(email)) {
+            validationErrors.push('Correo Electrónico (debe tener el formato correcto {ej. cualquiera@unsa.edu.pe})');
+        }
 
         if (!telephone || telephone.toString().length !== 9) {
             validationErrors.push('Teléfono (debe tener exactamente 9 dígitos)');

@@ -76,6 +76,7 @@ function HomeLoginAdmin(props) {
                 localStorage.setItem('logoutEventAdmin', Date.now().toString());
                 localStorage.setItem('adminID', adminId);
                 setAdminId(adminId);
+                console.log(adminId);
                 navigate('/admin/home');
             } else {
                 toast.error('Credenciales incorrectas', {

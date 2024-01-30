@@ -32,6 +32,13 @@ function CrearAdmin(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!formData.email || !/^[^\s@]+@unsa\.edu\.pe$/.test(formData.email)) {
+            toast.error('Correo Electrónico (debe tener el formato correcto {ej. cualquiera@unsa.edu.pe})', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 2000,
+            });
+        }
+
         try {
             await axios.post('http://localhost:4000/api/admin/generate-token', { email: formData.email });
             toast.success('Correo con enlace enviado exitosamente', {

@@ -43,7 +43,7 @@ function Header(props) {
     };
 
     const handleClick = () => {
-        console.log('handleClick ejecutado');  // Agrega esta línea
+        console.log('handleClick ejecutado',adminId);  // Agrega esta línea
         if (adminId === '65b547c848c86c75bce9c8e0') {
             // Redirige al usuario a la ruta 'crear-admin'
             navigate('/admin/crear-admin');
@@ -86,7 +86,6 @@ function Header(props) {
                     >
                         <path d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
                     </svg>
-                    <Link to="home"><a className="btn">Mi cuenta</a></Link>
                     <button
                         className="btn ml-2"
                         onClick={handleLogout}

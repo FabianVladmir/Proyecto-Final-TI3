@@ -43,14 +43,13 @@ function ResetPassword() {
             return;
         }
 
-        /* if (!validarCorreoElectronico(formData.email)) {
-            toast.error('El correo electrónico no es válido.', {
+        if (!validarCorreoElectronico(formData.email)) {
+            toast.error('Correo Electrónico (debe tener el formato correcto {ej. cualquiera@unsa.edu.pe}).', {
                 position: toast.POSITION.BOTTOM_RIGHT,
                 autoClose: 1000,
             });
             return;
-        } */
-
+        }
 
         try {
             const response = await axios.post('http://localhost:4000/api/admin/reset-password-admin', {
