@@ -236,7 +236,8 @@ const forgetPassword = async (req, res) => {
         await existStudent.save();
 
         // Enviar correo electrónico con instrucciones y token de restablecimiento
-        const resetLink = `http://localhost:5173/reset-password/${token}`;
+        console.log(process.env.APP_URL_FRON)
+        const resetLink = `${process.env.APP_URL_FRON}/reset-password/${token}`;
         sendResetPasswordEmail(existStudent.email, resetLink);
 
         res.json({ msg: 'Hemos enviado un correo electrónico con las instrucciones para restablecer la contraseña.' });

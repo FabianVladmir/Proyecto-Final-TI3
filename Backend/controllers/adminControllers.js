@@ -417,7 +417,7 @@ const generateTokenAndSendEmail = async (req, res) => {
         });
 
         // Construye el enlace con el token y el correo como parámetro
-        const link = `http://localhost:5173/registro-admin/${token}?email=${encodeURIComponent(email)}`;
+        const link = `${process.env.APP_URL_FRON}/registro-admin/${token}?email=${encodeURIComponent(email)}`;
         const mailOptions = {
             from: process.env.GMAIL_USER,
             to: email,
@@ -621,7 +621,7 @@ const forgetPasswordAdmin = async (req, res) => {
 
         const token = jwt.sign({ userId: existAdmin._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        const resetLink = `http://localhost:5173/admin/reset-password-admin/${token}?email=${encodeURIComponent(email)}`;
+        const resetLink = `${process.env.APP_URL_FRON}/admin/reset-password-admin/${token}?email=${encodeURIComponent(email)}`;
 
         existAdmin.resetPasswordToken = token;
         existAdmin.resetPasswordExpires = Date.now() + 3600000; // 1 hora de expiración
